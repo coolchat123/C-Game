@@ -59,6 +59,7 @@ namespace Game
             this.WindowClearColour = windowColour;
             this.Window = new RenderWindow(new VideoMode(windowWidth, windowHeight), windowTitle);
             this.GameTime = new GameTime();
+            Window.Closed += Window_Closed;
         }
 
         // De Run method bevat de game loop.
@@ -100,7 +101,10 @@ namespace Game
                 }
             }
         }
-
+        private void Window_Closed(object sender, EventArgs a)
+        {
+            Window.Close();
+        }
         public abstract void LoadContent();
         public abstract void Initialise();
         public abstract void Update(GameTime gameTime);

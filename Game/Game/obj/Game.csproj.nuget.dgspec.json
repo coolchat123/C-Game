@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\chads\\source\\repos\\C-Game\\Game\\Game\\Game.csproj": {}
+    "C:\\xampp\\htdocs\\C-Game\\Game\\Game\\Game.csproj": {}
   },
   "projects": {
-    "C:\\Users\\chads\\source\\repos\\C-Game\\Game\\Game\\Game.csproj": {
+    "C:\\xampp\\htdocs\\C-Game\\Game\\Game\\Game.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\chads\\source\\repos\\C-Game\\Game\\Game\\Game.csproj",
+        "projectUniqueName": "C:\\xampp\\htdocs\\C-Game\\Game\\Game\\Game.csproj",
         "projectName": "Game",
-        "projectPath": "C:\\Users\\chads\\source\\repos\\C-Game\\Game\\Game\\Game.csproj",
-        "packagesPath": "C:\\Users\\chads\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\chads\\source\\repos\\C-Game\\Game\\Game\\obj\\",
+        "projectPath": "C:\\xampp\\htdocs\\C-Game\\Game\\Game\\Game.csproj",
+        "packagesPath": "C:\\Users\\Abdel\\.nuget\\packages\\",
+        "outputPath": "C:\\xampp\\htdocs\\C-Game\\Game\\Game\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\chads\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Abdel\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -49,10 +46,16 @@
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

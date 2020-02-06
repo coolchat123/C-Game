@@ -101,6 +101,7 @@ namespace Game
                 }
             }
         }
+        //Closed de window zodra de close button in de game is geklikt.
         private void Window_Closed(object sender, EventArgs a)
         {
             Window.Close();

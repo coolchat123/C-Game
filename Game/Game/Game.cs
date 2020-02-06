@@ -26,7 +26,7 @@ namespace Game
         // We spelen de constant properties DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT en DEFAULT_WINDOW_TITLE door
         // naar de GameLoop contructor als parameters.
         // Ook geven we Color.Blue door als achtergrondkleur; dit is een van de kleuren die SFML bij naam kent.
-        public Game() : base(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, Color.Blue)
+        public Game() : base(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, Color.Red)
         {
 
         }

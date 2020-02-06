@@ -41,3 +41,4 @@ C:\xampp\htdocs\C-Game\Game\Game\obj\Debug\netcoreapp2.1\Game.AssemblyInfo.cs
 C:\xampp\htdocs\C-Game\Game\Game\obj\Debug\netcoreapp2.1\Game.csproj.CopyComplete
 C:\xampp\htdocs\C-Game\Game\Game\obj\Debug\netcoreapp2.1\Game.dll
 C:\xampp\htdocs\C-Game\Game\Game\obj\Debug\netcoreapp2.1\Game.pdb
+C:\xampp\htdocs\C-Game\Game\Game\bin\Debug\netcoreapp2.1\sprite.cs

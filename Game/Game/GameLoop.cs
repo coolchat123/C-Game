@@ -60,6 +60,8 @@ namespace Game
             this.Window = new RenderWindow(new VideoMode(windowWidth, windowHeight), windowTitle);
             this.GameTime = new GameTime();
             Window.Closed += Window_Closed;
+            Window.KeyPressed += Window_KeyPressed;
+            Window.KeyReleased += Window_KeyReleased;
         }
 
         // De Run method bevat de game loop.
@@ -101,10 +103,28 @@ namespace Game
                 }
             }
         }
-        //Closed de window zodra de close button in de game is geklikt.
+        //Closed de window zodra de close button in de game is gepressed.
         private void Window_Closed(object sender, EventArgs a)
         {
             Window.Close();
+        }
+        private void Window_KeyPressed(object sender, KeyEventArgs e)
+        {
+            if (e.Code == Keyboard.Key.E)
+            {
+                Window.SetTitle("checksss");
+            }
+        }
+        private void Window_KeyReleased(object sender, KeyEventArgs e)
+        {
+            if (e.Code == Keyboard.Key.Escape)
+            {
+                Window.SetTitle("check");
+            }
+            if (e.Code == Keyboard.Key.Space)
+            {
+                Window.SetTitle("nice");
+            }
         }
         public abstract void LoadContent();
         public abstract void Initialise();

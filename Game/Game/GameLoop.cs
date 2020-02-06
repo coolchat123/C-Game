@@ -96,7 +96,9 @@ namespace Game
                     Update(GameTime);
 
                     Window.Clear(WindowClearColour);
+
                     Draw(GameTime);
+
                     Window.Display();
                 }
             }

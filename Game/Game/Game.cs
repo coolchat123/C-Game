@@ -50,17 +50,15 @@ namespace Game
         {
             float buttonSmallSize = sMenuOptions.Texture.Size.X;
             float buttonLargeSize = sMenuPong.Texture.Size.X;
-            float gamePreviewX = Window.Size.X / 4;
-            float gamePreviewY = Window.Size.Y / 3 * 2;
-            float gamePreviewExcess = Window.Size.X - buttonLargeSize * 4;
+            float gamePreviewExcess = (Window.Size.X - buttonLargeSize * 4) / 3.5f;
 
-            sMenuTitle.Position = new Vector2f(Window.Size.X / 2 - sMenuTitle.Texture.Size.X / 2, gamePreviewY / 2 - sMenuTitle.Texture.Size.Y / 2);
-            sMenuPong.Position = new Vector2f(gamePreviewX - buttonLargeSize - gamePreviewExcess / 8, gamePreviewY - buttonLargeSize / 2);
-            sMenuGame4.Position = new Vector2f(gamePreviewX * 2 - buttonLargeSize - gamePreviewExcess / 8, gamePreviewY - buttonLargeSize / 2);
-            sMenuRacing.Position = new Vector2f(gamePreviewX * 3 - buttonLargeSize - gamePreviewExcess / 8, gamePreviewY - buttonLargeSize / 2);
-            sMenuBreakout.Position = new Vector2f(gamePreviewX * 4 - buttonLargeSize - gamePreviewExcess / 8, gamePreviewY - buttonLargeSize / 2);
-            sMenuOptions.Position = new Vector2f(Window.Size.X / 6 - buttonSmallSize / 2, gamePreviewY / 2 - buttonSmallSize / 2);
-            sMenuGallery.Position = new Vector2f(Window.Size.X / 6 * 5 - buttonSmallSize / 2, gamePreviewY / 2 - buttonSmallSize / 2);
+            sMenuTitle.Position = new Vector2f(Window.Size.X / 2 - sMenuTitle.Texture.Size.X / 2, Window.Size.Y / 4 - sMenuTitle.Texture.Size.Y / 2);
+            sMenuPong.Position = new Vector2f(gamePreviewExcess, Window.Size.Y / 2);
+            sMenuGame4.Position = new Vector2f(gamePreviewExcess * 1.5f + buttonLargeSize, Window.Size.Y / 2);
+            sMenuRacing.Position = new Vector2f(gamePreviewExcess * 2f + buttonLargeSize * 2, Window.Size.Y / 2);
+            sMenuBreakout.Position = new Vector2f(gamePreviewExcess * 2.5f + buttonLargeSize * 3, Window.Size.Y / 2);
+            sMenuOptions.Position = new Vector2f(Window.Size.X / 6 - buttonSmallSize / 2, Window.Size.Y / 4 - sMenuOptions.Texture.Size.Y / 2);
+            sMenuGallery.Position = new Vector2f(Window.Size.X / 6 * 5 - buttonSmallSize / 2, Window.Size.Y / 4 - sMenuGallery.Texture.Size.Y / 2);
         }
         public override void Update(GameTime gameTime)
         {

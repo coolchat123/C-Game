@@ -32,7 +32,7 @@
     <None Update="Content\Menu\Gallery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Menu\Game4.png">
+    <None Update="Content\Menu\Snake.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Menu\Options.png">
@@ -41,7 +41,7 @@
     <None Update="Content\Menu\Pong.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Menu\Racing.png">
+    <None Update="Content\Menu\Pacman.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Menu\Title.png">

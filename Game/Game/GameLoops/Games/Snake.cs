@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Game
 {
-    public class Game4 : GameLoop
+    public class Snake : GameLoop
     {
-        public Game4() : base() { }
+        public Snake() : base() { }
 
         public override void LoadContent()
         {

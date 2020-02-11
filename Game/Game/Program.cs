@@ -11,6 +11,7 @@ namespace Game
     {
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
+        public static readonly Color WindowClearColour = Color.Blue;
 
         // "Sprites" is a list of sprites that should be drawn.
         // It is updated by the GameLoop class and its child classes.
@@ -25,7 +26,6 @@ namespace Game
         static void Main(string[] args)
         {
             // Initialise the RenderWindow.
-            WindowClearColour = Color.Blue;
             Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color");
             Window.Closed += Window_Closed;
 
@@ -91,8 +91,6 @@ namespace Game
         }
 
         public static GameTime GameTime;
-
-        public static Color WindowClearColour;
 
         public static void Click()
         {

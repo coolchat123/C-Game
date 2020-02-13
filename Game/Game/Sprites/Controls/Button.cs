@@ -36,8 +36,6 @@ namespace Game
         public event EventHandler MouseEnter;
         public void PerformMouseEnter()
         {
-            Scale = new Vector2f(1.2f, 1.2f);
-            Position = new Vector2f(RealPosition.X + (1f - Scale.X) * Texture.Size.X / 2, RealPosition.Y + (1f - Scale.Y) * Texture.Size.Y / 2);
             MouseEnter(this, EventArgs.Empty);
         }
 
@@ -45,8 +43,6 @@ namespace Game
         public event EventHandler MouseLeave;
         public void PerformMouseLeave()
         {
-            Scale = new Vector2f(1f, 1f);
-            Position = RealPosition;
             MouseLeave(this, EventArgs.Empty);
         }
 

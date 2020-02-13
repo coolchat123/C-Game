@@ -9,10 +9,21 @@ namespace Game
 {
     class Program
     {
+        public enum GameName
+        {
+            None = 0,
+            Pong = 1,
+            Snake = 2,
+            Pacman = 3,
+            Breakout = 4
+        }
+
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
         public static float Scale = 3f;
         public static readonly Color WindowClearColour = Color.Blue;
+
+        public static GameName ChangeGame = GameName.None;
 
         // "Sprites" is a list of sprites that should be drawn.
         // It is updated by the GameLoop class and its child classes.
@@ -55,6 +66,27 @@ namespace Game
 
                 if (totalTimeBeforeUpdate >= TIME_UNTIL_UPDATE)
                 {
+                    if(ChangeGame != GameName.None)
+                    {
+                        switch (ChangeGame)
+                        {
+                            case GameName.Pong:
+                                LoadNewGame(new Pong());
+                                break;
+                            case GameName.Pacman:
+                                LoadNewGame(new Pacman());
+                                break;
+                            case GameName.Snake:
+                                LoadNewGame(new Snake());
+                                break;
+                            case GameName.Breakout:
+                                LoadNewGame(new Breakout());
+                                break;
+                        }
+
+                        ChangeGame = GameName.None;
+                    }
+
                     // Update game time
                     GameTime.Update(totalTimeBeforeUpdate, clock.ElapsedTime.AsSeconds());
                     totalTimeBeforeUpdate = 0f;
@@ -90,6 +122,7 @@ namespace Game
                     if (button.MouseOver)
                     {
                         button.PerformClick();
+                        return;
                     }
                 }
             }

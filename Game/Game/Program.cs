@@ -11,6 +11,11 @@ namespace Game
     {
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
+<<<<<<< Updated upstream
+=======
+        public static float Scale = 3f;
+        public static readonly Color WindowClearColour = Color.Black;
+>>>>>>> Stashed changes
 
         // "Sprites" is a list of sprites that should be drawn.
         // It is updated by the GameLoop class and its child classes.
@@ -29,12 +34,16 @@ namespace Game
             Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color");
             Window.Closed += Window_Closed;
 
+<<<<<<< Updated upstream
             // Create an instance of the Menu class to occupy RunningGame.
             RunningGame = new Menu();
 
             // Load Menu's content and initialise it.
             RunningGame.LoadContent();
             RunningGame.Initialise();
+=======
+            LoadNewGame(new Pacman());
+>>>>>>> Stashed changes
 
             // Create an instance of the Clock class provided by SFML.
             Clock clock = new Clock();

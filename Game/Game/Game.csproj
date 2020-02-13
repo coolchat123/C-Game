@@ -47,10 +47,10 @@
     <None Update="Content\Menu\Title.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Pacman\Map.png">
+    <None Update="Content\Pacman\Ghost.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Pacman\mapgood.png">
+    <None Update="Content\Pacman\Map.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="csfml-audio-2.dll">

@@ -34,7 +34,6 @@ namespace Game
         {
             Program.Sprites.Add(this);
             RealPosition = Position;
-            Scale = new Vector2f(Program.Scale, Program.Scale);
         }
 
         public SSprite(Texture texture, float locationX, float locationY) : this(texture)

@@ -69,9 +69,9 @@ namespace Game
         // It is called after LoadOptions.
         public void InitialiseOptions()
         {
-            OptionResolution.SetPosition(-Program.Window.Size.X / 2 - OptionResolution.Texture.Size.X * Program.Scale / 2, Program.Window.Size.Y / 2);
-            OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X * Program.Scale, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y * Program.Scale / 2);
-            OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X * Program.Scale, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y * Program.Scale / 2);
+            OptionResolution.SetPosition(-Program.Texture.Size.X / 2 - OptionResolution.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+            OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
+            OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
         }
 
         public override void LoadContent()
@@ -110,17 +110,17 @@ namespace Game
         public override void Initialise()
         {
             // Place all SSprites on the menu.
-            float buttonSmallSize = MenuOptions.Texture.Size.X * MenuOptions.Scale.X;
-            float buttonLargeSize = MenuPong.Texture.Size.X * MenuPong.Scale.X;
-            float gamePreviewExcess = (Program.Window.Size.X - buttonLargeSize * 4) / 3.5f;
+            float buttonSmallSize = MenuOptions.Texture.Size.X;
+            float buttonLargeSize = MenuPong.Texture.Size.X;
+            float gamePreviewExcess = (Program.Texture.Size.X - buttonLargeSize * 4) / 3.5f;
 
-            MenuTitle.SetPosition(Program.Window.Size.X / 2 - MenuTitle.Texture.Size.X * MenuTitle.Scale.X / 2, Program.Window.Size.Y / 4 - MenuTitle.Texture.Size.Y * MenuTitle.Scale.Y / 2);
-            MenuPong.SetPosition(gamePreviewExcess, Program.Window.Size.Y / 2);
-            MenuSnake.SetPosition(gamePreviewExcess * 1.5f + buttonLargeSize, Program.Window.Size.Y / 2);
-            MenuPacman.SetPosition(gamePreviewExcess * 2f + buttonLargeSize * 2, Program.Window.Size.Y / 2);
-            MenuBreakout.SetPosition(gamePreviewExcess * 2.5f + buttonLargeSize * 3, Program.Window.Size.Y / 2);
-            MenuOptions.SetPosition(Program.Window.Size.X / 6 - buttonSmallSize / 2, Program.Window.Size.Y / 4 - MenuOptions.Texture.Size.Y / 2);
-            MenuGallery.SetPosition(Program.Window.Size.X / 6 * 5 - buttonSmallSize / 2, Program.Window.Size.Y / 4 - MenuGallery.Texture.Size.Y / 2);
+            MenuTitle.SetPosition(Program.Texture.Size.X / 2 - MenuTitle.Texture.Size.X / 2, Program.Texture.Size.Y / 4 - MenuTitle.Texture.Size.Y / 2);
+            MenuPong.SetPosition(gamePreviewExcess, Program.Texture.Size.Y / 2);
+            MenuSnake.SetPosition(gamePreviewExcess * 1.5f + buttonLargeSize, Program.Texture.Size.Y / 2);
+            MenuPacman.SetPosition(gamePreviewExcess * 2f + buttonLargeSize * 2, Program.Texture.Size.Y / 2);
+            MenuBreakout.SetPosition(gamePreviewExcess * 2.5f + buttonLargeSize * 3, Program.Texture.Size.Y / 2);
+            MenuOptions.SetPosition(Program.Texture.Size.X / 6 - buttonSmallSize / 2, Program.Texture.Size.Y / 4 - MenuOptions.Texture.Size.Y / 2);
+            MenuGallery.SetPosition(Program.Texture.Size.X / 6 * 5 - buttonSmallSize / 2, Program.Texture.Size.Y / 4 - MenuGallery.Texture.Size.Y / 2);
         }
 
         public override void Update(GameTime gameTime)
@@ -133,7 +133,14 @@ namespace Game
                 }
                 else
                 {
-                    Pan += (PanGoal - Pan) / 10;
+                    if (PanGoal < Pan)
+                    {
+                        Pan += Math.Min((PanGoal - Pan) / 10, -5);
+                    }
+                    else
+                    {
+                        Pan += Math.Max((PanGoal - Pan) / 10, 5);
+                    }
                 }
 
                 foreach (SSprite sprite in Program.Sprites)
@@ -146,30 +153,30 @@ namespace Game
         // Options button
         public void OptionsClick(object sender, EventArgs e)
         {
-            PanGoal = -(int)Program.Window.Size.X;
+            PanGoal = -(int)Program.Texture.Size.X;
             LoadOptions();
         }
         public void OptionsEnter(object sender, EventArgs e)
         {
-            MenuOptions.SetScale(Program.Scale * 1.2f, SSprite.Pin.Middle);
+            MenuOptions.SetScale(1.2f, SSprite.Pin.Middle);
         }
         public void OptionsLeave(object sender, EventArgs e)
         {
-            MenuOptions.SetScale(Program.Scale * 1f, SSprite.Pin.Middle);
+            MenuOptions.SetScale(1f, SSprite.Pin.Middle);
         }
 
         // Gallery button
         public void GalleryClick(object sender, EventArgs e)
         {
-            PanGoal = (int)Program.Window.Size.X;
+            PanGoal = (int)Program.Texture.Size.X;
         }
         public void GalleryEnter(object sender, EventArgs e)
         {
-            MenuGallery.SetScale(Program.Scale * 1.2f, SSprite.Pin.Middle);
+            MenuGallery.SetScale(1.2f, SSprite.Pin.Middle);
         }
         public void GalleryLeave(object sender, EventArgs e)
         {
-            MenuGallery.SetScale(Program.Scale * 1f, SSprite.Pin.Middle);
+            MenuGallery.SetScale(1f, SSprite.Pin.Middle);
         }
 
         // Pong button
@@ -179,11 +186,11 @@ namespace Game
         }
         public void PongEnter(object sender, EventArgs e)
         {
-            MenuPong.SetScale(Program.Scale * 1.1f, SSprite.Pin.BottomMiddle);
+            MenuPong.SetScale(1.1f, SSprite.Pin.BottomMiddle);
         }
         public void PongLeave(object sender, EventArgs e)
         {
-            MenuPong.SetScale(Program.Scale * 1f, SSprite.Pin.BottomMiddle);
+            MenuPong.SetScale(1f, SSprite.Pin.BottomMiddle);
         }
 
         // Snake button
@@ -193,11 +200,11 @@ namespace Game
         }
         public void SnakeEnter(object sender, EventArgs e)
         {
-            MenuSnake.SetScale(Program.Scale* 1.1f, SSprite.Pin.BottomMiddle);
+            MenuSnake.SetScale(1.1f, SSprite.Pin.BottomMiddle);
         }
         public void SnakeLeave(object sender, EventArgs e)
         {
-            MenuSnake.SetScale(Program.Scale * 1f, SSprite.Pin.BottomMiddle);
+            MenuSnake.SetScale(1f, SSprite.Pin.BottomMiddle);
         }
 
         // Pacman button
@@ -207,11 +214,11 @@ namespace Game
         }
         public void PacmanEnter(object sender, EventArgs e)
         {
-            MenuPacman.SetScale(Program.Scale * 1.1f, SSprite.Pin.BottomMiddle);
+            MenuPacman.SetScale(1.1f, SSprite.Pin.BottomMiddle);
         }
         public void PacmanLeave(object sender, EventArgs e)
         {
-            MenuPacman.SetScale(Program.Scale * 1f, SSprite.Pin.BottomMiddle);
+            MenuPacman.SetScale(1f, SSprite.Pin.BottomMiddle);
         }
 
         // Breakout button
@@ -221,11 +228,11 @@ namespace Game
         }
         public void BreakoutEnter(object sender, EventArgs e)
         {
-            MenuBreakout.SetScale(Program.Scale * 1.1f, SSprite.Pin.BottomMiddle);
+            MenuBreakout.SetScale(1.1f, SSprite.Pin.BottomMiddle);
         }
         public void BreakoutLeave(object sender, EventArgs e)
         {
-            MenuBreakout.SetScale(Program.Scale * 1f, SSprite.Pin.BottomMiddle);
+            MenuBreakout.SetScale(1f, SSprite.Pin.BottomMiddle);
         }
 
         // Decrease Resolution button in Options
@@ -236,14 +243,14 @@ namespace Game
         {
             if (Pan == PanGoal)
             {
-                OptionResLeft.SetScale(Program.Scale * 1.1f, SSprite.Pin.MiddleRight);
+                OptionResLeft.SetScale(1.1f, SSprite.Pin.MiddleRight);
             }
         }
         public void OptionResLeftLeave(object sender, EventArgs e)
         {
             if (Pan == PanGoal)
             {
-                OptionResLeft.SetScale(Program.Scale * 1f, SSprite.Pin.MiddleRight);
+                OptionResLeft.SetScale(1f, SSprite.Pin.MiddleRight);
             }
         }
 
@@ -255,14 +262,14 @@ namespace Game
         {
             if (Pan == PanGoal)
             {
-                OptionResRight.SetScale(Program.Scale * 1.1f, SSprite.Pin.MiddleLeft);
+                OptionResRight.SetScale(1.1f, SSprite.Pin.MiddleLeft);
             }
         }
         public void OptionResRightLeave(object sender, EventArgs e)
         {
             if (Pan == PanGoal)
             {
-                OptionResRight.SetScale(Program.Scale * 1f, SSprite.Pin.MiddleLeft);
+                OptionResRight.SetScale(1f, SSprite.Pin.MiddleLeft);
             }
         }
     }

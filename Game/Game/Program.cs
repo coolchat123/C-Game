@@ -11,6 +11,7 @@ namespace Game
     {
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
+        public static float Scale = 3f;
         public static readonly Color WindowClearColour = Color.Blue;
 
         // "Sprites" is a list of sprites that should be drawn.
@@ -29,12 +30,7 @@ namespace Game
             Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color");
             Window.Closed += Window_Closed;
 
-            // Create an instance of the Menu class to occupy RunningGame.
-            RunningGame = new Menu();
-
-            // Load Menu's content and initialise it.
-            RunningGame.LoadContent();
-            RunningGame.Initialise();
+            LoadNewGame(new Menu());
 
             // Create an instance of the Clock class provided by SFML.
             Clock clock = new Clock();
@@ -65,15 +61,6 @@ namespace Game
 
                     // Run program update function.
                     Update(GameTime);
-
-                    // Check for mouse clicks.
-                    if (Mouse.IsButtonPressed(Mouse.Button.Left))
-                    {
-                        Click();
-                    }
-
-                    // Run GameLoop update function.
-                    RunningGame.Update(GameTime);
 
                     // Draw
                     Window.Clear(WindowClearColour);
@@ -110,10 +97,11 @@ namespace Game
 
         public static void Update(GameTime gameTime)
         {
+            // Run GameLoop update function.
             RunningGame.Update(gameTime);
 
+            // Check whether buttons are moused over.
             Vector2f mousePosition = Window.MapPixelToCoords(Mouse.GetPosition(Window));
-
             foreach (SSprite sprite in Sprites)
             {
                 Button button = sprite as Button;
@@ -136,13 +124,38 @@ namespace Game
                     }
                 }
             }
+
+            // Check for mouse clicks.
+            if (Mouse.IsButtonPressed(Mouse.Button.Left))
+            {
+                Click();
+            }
         }
 
         public static void Draw(GameTime gameTime)
         {
-            foreach (Sprite sprite in Sprites)
+            foreach (SSprite sprite in Sprites)
             {
                 Window.Draw(sprite);
+            }
+        }
+
+        public static void LoadNewGame(GameLoop gameLoop)
+        {
+            // Clear list of sprites.
+            Sprites.Clear();
+            
+            // Set our new GameLoop to run.
+            RunningGame = gameLoop;
+
+            // Load the GameLoop's content and initialise it.
+            RunningGame.LoadContent();
+            RunningGame.Initialise();
+
+            // Initialise SSprite.RealPosition.
+            foreach(SSprite sprite in Sprites)
+            {
+                sprite.RealPosition = sprite.Position;
             }
         }
     }

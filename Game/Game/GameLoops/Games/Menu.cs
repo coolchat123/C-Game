@@ -26,6 +26,7 @@ namespace Game
         static SSprite OptionResolution;
         static Button OptionResLeft;
         static Button OptionResRight;
+        static SText OptionResolutionText;
         public static int CurrentResolution = 0;
         public static List<Vector2i> Resolutions = new List<Vector2i>
         {
@@ -62,6 +63,8 @@ namespace Game
             OptionResRight.MouseEnter += OptionResRightEnter;
             OptionResRight.MouseLeave += OptionResRightLeave;
 
+            OptionResolutionText = new SText(Resolutions[CurrentResolution].X + ", " + Resolutions[CurrentResolution].Y, 11);
+
             InitialiseOptions();
         }
 
@@ -72,6 +75,7 @@ namespace Game
             OptionResolution.SetPosition(-Program.Texture.Size.X / 2 - OptionResolution.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
             OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
             OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
+            OptionResolutionText.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 16);
         }
 
         public override void LoadContent()
@@ -146,6 +150,10 @@ namespace Game
                 foreach (SSprite sprite in Program.Sprites)
                 {
                     sprite.Position = new Vector2f(sprite.RealPosition.X - Pan, sprite.Position.Y);
+                }
+                foreach (SText text in Program.Strings)
+                {
+                    text.Position = new Vector2f(text.RealPosition.X - Pan, text.Position.Y);
                 }
             }
         }

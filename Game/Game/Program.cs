@@ -28,11 +28,15 @@ namespace Game
         public static Vector2f TexturePosition;
         public static RenderWindow Window;
 
+        public static Font MyFont;
+
         public static GameName ChangeGame = GameName.None;
 
         // "Sprites" is a list of sprites that should be drawn.
         // It is updated by the GameLoop class and its child classes.
         public static List<Sprite> Sprites = new List<Sprite> { };
+
+        public static List<Text> Strings = new List<Text> { };
 
         // "RunningGame" is the GameLoop that is currently running.
         // GameLoop is an abstract class, so RunningGame can only ever be one of its child classes.
@@ -47,6 +51,8 @@ namespace Game
             Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color");
             TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);
             Window.Closed += Window_Closed;
+
+            MyFont = new Font("Content/arialbd.ttf");
 
             LoadNewGame(new Menu());
 
@@ -177,6 +183,11 @@ namespace Game
             foreach (SSprite sprite in Sprites)
             {
                 Texture.Draw(sprite);
+            }
+
+            foreach(Text text in Strings)
+            {
+                Texture.Draw(text);
             }
 
             Texture.Display();

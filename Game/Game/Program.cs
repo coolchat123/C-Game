@@ -21,7 +21,7 @@ namespace Game
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
         public static float Scale = 3f;
-        public static readonly Color TextureClearColour = Color.Blue;
+        public static readonly Color TextureClearColour = Color.Black;
         public static readonly Color WindowClearColour = Color.Black;
 
         public static RenderTexture Texture;
@@ -54,7 +54,7 @@ namespace Game
 
             MyFont = new Font("Content/arialbd.ttf");
 
-            LoadNewGame(new Menu());
+            LoadNewGame(new Snake());
 
             // Create an instance of the Clock class provided by SFML.
             Clock clock = new Clock();

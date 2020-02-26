@@ -29,12 +29,12 @@ namespace Game
         public static int CurrentResolution = 0;
         public static List<Vector2u> Resolutions = new List<Vector2u>
         {
-            new Vector2u(798, 600), // 3x
-            new Vector2u(1064, 800), // 4x
-            new Vector2u(1330, 1000), // 5x
-            new Vector2u(1596, 1200), // 6x
-            new Vector2u(1862, 1400), // 7x
-            new Vector2u(1920, 1600) // 8x
+            new Vector2u(804, 600), // 3x
+            new Vector2u(1072, 800), // 4x
+            new Vector2u(1340, 1000), // 5x
+            new Vector2u(1608, 1200), // 6x
+            new Vector2u(1876, 1400), // 7x
+            new Vector2u(2144, 1600) // 8x
         };
         public static float Scale = 3f;
 
@@ -59,8 +59,8 @@ namespace Game
         static void Main(string[] args)
         {
             // Initialise the RenderWindow and RenderTexture.
-            Texture = new RenderTexture(266, 200);
-            Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color", Styles.Close);
+            Texture = new RenderTexture(268, 200);
+            Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Close);
             ResizeWindow();
             Window.Closed += Window_Closed;
 
@@ -180,10 +180,13 @@ namespace Game
             }
 
             // Check for mouse clicks.
-            if (!LeftPressed && Mouse.IsButtonPressed(Mouse.Button.Left))
+            if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
-                LeftPressed = true;
-                Click();
+                if (!LeftPressed)
+                {
+                    LeftPressed = true;
+                    Click();
+                }
             }
             else
             {
@@ -241,7 +244,7 @@ namespace Game
         {
             Vector2u oldSize = Window.Size;
             Window.Size = Resolutions[CurrentResolution];
-            Window.Position = new Vector2i(Window.Position.X - ((int)Window.Size.X - (int)oldSize.X) / 2, Window.Position.Y - ((int)Window.Size.Y - (int)oldSize.Y) / 2);
+            Window.Position = new Vector2i(Math.Max(Window.Position.X - ((int)Window.Size.X - (int)oldSize.X) / 2, 0), Math.Max(Window.Position.Y - ((int)Window.Size.Y - (int)oldSize.Y) / 2, 0));
             Window.SetView(new View(new Vector2f(Window.Size.X / 2, Window.Size.Y / 2), new Vector2f(Window.Size.X, Window.Size.Y)));
             Scale = Math.Min((int)Window.Size.X / Texture.Size.X, (int)Window.Size.Y / Texture.Size.Y);
             TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);

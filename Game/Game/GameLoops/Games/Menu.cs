@@ -27,6 +27,7 @@ namespace Game
         static Button OptionResLeft;
         static Button OptionResRight;
         static SText OptionResolutionText;
+        static Button OptionReturn;
 
         public static List<int> SpriteScale = new List<int>
         {
@@ -38,33 +39,13 @@ namespace Game
 
         public Menu() : base() { }
 
-        // LoadOptions loads the Options menu.
-        // It is called when the screen pans left.
-        public void LoadOptions()
+        // UpdateResolutionText updates the text on the resolution option in the settings menu.
+        // It is called when the resolution is changed.
+        public void UpdateResolutionText()
         {
-            OptionResolution = new SSprite(new Texture("Content/Menu/OptionResolution.png"));
-            OptionResLeft = new Button(Program.Window, new Texture("Content/Menu/OptionLeft.png"));
-            OptionResLeft.Click += OptionResLeftClick;
-            OptionResLeft.MouseEnter += OptionResLeftEnter;
-            OptionResLeft.MouseLeave += OptionResLeftLeave;
-            OptionResRight = new Button(Program.Window, new Texture("Content/Menu/OptionRight.png"));
-            OptionResRight.Click += OptionResRightClick;
-            OptionResRight.MouseEnter += OptionResRightEnter;
-            OptionResRight.MouseLeave += OptionResRightLeave;
-
-            OptionResolutionText = new SText(Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y, 11);
-
-            InitialiseOptions();
-        }
-
-        // InitialiseOptions initialises the Options menu.
-        // It is called after LoadOptions.
-        public void InitialiseOptions()
-        {
-            OptionResolution.SetPosition(-Program.Texture.Size.X / 2 - OptionResolution.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
-            OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
-            OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
-            OptionResolutionText.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 16);
+            OptionResolutionText.DisplayedString = (Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y);
+            OptionResolutionText.Position = new Vector2f(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 16);
+            OptionResolutionText.RealPosition = new Vector2f(OptionResolutionText.Position.X + Pan, OptionResolutionText.Position.Y);
         }
 
         public override void LoadContent()
@@ -72,7 +53,7 @@ namespace Game
             Pan = 0;
             PanGoal = 0;
 
-            // Load all SSprites and add functions to events.
+            // Load all SSprites of the main menu and add functions to events.
             MenuTitle = new SSprite(new Texture("Content/Menu/Title.png"));
             MenuPong = new Button(Program.Window, new Texture("Content/Menu/Pong.png"));
             MenuPong.Click += PongClick;
@@ -98,6 +79,23 @@ namespace Game
             MenuGallery.Click += GalleryClick;
             MenuGallery.MouseEnter += GalleryEnter;
             MenuGallery.MouseLeave += GalleryLeave;
+
+            // Load all SSprites of the options menu and add functions to events.
+            OptionResolution = new SSprite(new Texture("Content/Menu/OptionResolution.png"));
+            OptionResLeft = new Button(Program.Window, new Texture("Content/Menu/OptionLeft.png"));
+            OptionResLeft.Click += OptionResLeftClick;
+            OptionResLeft.MouseEnter += OptionResLeftEnter;
+            OptionResLeft.MouseLeave += OptionResLeftLeave;
+            OptionResRight = new Button(Program.Window, new Texture("Content/Menu/OptionRight.png"));
+            OptionResRight.Click += OptionResRightClick;
+            OptionResRight.MouseEnter += OptionResRightEnter;
+            OptionResRight.MouseLeave += OptionResRightLeave;
+            OptionReturn = new Button(Program.Window, new Texture("Content/Menu/MenuRight.png"));
+            OptionReturn.Click += OptionReturnClick;
+            OptionReturn.MouseEnter += OptionReturnEnter;
+            OptionReturn.MouseLeave += OptionReturnLeave;
+
+            OptionResolutionText = new SText(Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y, 11);
         }
 
         public override void Initialise()
@@ -114,6 +112,13 @@ namespace Game
             MenuBreakout.SetPosition(gamePreviewExcess * 2.5f + buttonLargeSize * 3, Program.Texture.Size.Y / 2);
             MenuOptions.SetPosition(Program.Texture.Size.X / 6 - buttonSmallSize / 2, Program.Texture.Size.Y / 4 - MenuOptions.Texture.Size.Y / 2);
             MenuGallery.SetPosition(Program.Texture.Size.X / 6 * 5 - buttonSmallSize / 2, Program.Texture.Size.Y / 4 - MenuGallery.Texture.Size.Y / 2);
+
+            // Place all SSprites on the options menu.
+            OptionResolution.SetPosition(-Program.Texture.Size.X / 2 - OptionResolution.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+            OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
+            OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
+            OptionResolutionText.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 16);
+            OptionReturn.SetPosition(-OptionReturn.Texture.Size.X - 20, 20);
         }
 
         public override void Update(GameTime gameTime)
@@ -151,7 +156,6 @@ namespace Game
         public void OptionsClick(object sender, EventArgs e)
         {
             PanGoal = -(int)Program.Texture.Size.X;
-            LoadOptions();
         }
         public void OptionsEnter(object sender, EventArgs e)
         {
@@ -239,6 +243,7 @@ namespace Game
             {
                 Program.CurrentResolution -= 1;
                 Program.ResizeWindow();
+                UpdateResolutionText();
             }
         }
         public void OptionResLeftEnter(object sender, EventArgs e)
@@ -263,6 +268,7 @@ namespace Game
             {
                 Program.CurrentResolution += 1;
                 Program.ResizeWindow();
+                UpdateResolutionText();
             }
         }
         public void OptionResRightEnter(object sender, EventArgs e)
@@ -278,6 +284,20 @@ namespace Game
             {
                 OptionResRight.SetScale(1f, SSprite.Pin.MiddleLeft);
             }
+        }
+
+        // Options button
+        public void OptionReturnClick(object sender, EventArgs e)
+        {
+            PanGoal = 0;
+        }
+        public void OptionReturnEnter(object sender, EventArgs e)
+        {
+            OptionReturn.SetScale(1.2f, SSprite.Pin.Middle);
+        }
+        public void OptionReturnLeave(object sender, EventArgs e)
+        {
+            OptionReturn.SetScale(1f, SSprite.Pin.Middle);
         }
     }
 }

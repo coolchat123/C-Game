@@ -20,15 +20,27 @@ namespace Game
 
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
-        public static float Scale = 3f;
         public static readonly Color TextureClearColour = Color.Blue;
         public static readonly Color WindowClearColour = Color.Black;
 
         public static RenderTexture Texture;
         public static Vector2f TexturePosition;
         public static RenderWindow Window;
+        public static int CurrentResolution = 0;
+        public static List<Vector2u> Resolutions = new List<Vector2u>
+        {
+            new Vector2u(798, 600), // 3x
+            new Vector2u(1064, 800), // 4x
+            new Vector2u(1330, 1000), // 5x
+            new Vector2u(1596, 1200), // 6x
+            new Vector2u(1862, 1400), // 7x
+            new Vector2u(1920, 1600) // 8x
+        };
+        public static float Scale = 3f;
 
         public static Font MyFont;
+
+        public static bool LeftPressed = false;
 
         public static GameName ChangeGame = GameName.None;
 
@@ -47,9 +59,9 @@ namespace Game
         static void Main(string[] args)
         {
             // Initialise the RenderWindow and RenderTexture.
-            Texture = new RenderTexture(268, 200);
-            Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color");
-            TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);
+            Texture = new RenderTexture(266, 200);
+            Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color", Styles.Close);
+            ResizeWindow();
             Window.Closed += Window_Closed;
 
             MyFont = new Font("Content/arialbd.ttf");
@@ -168,9 +180,14 @@ namespace Game
             }
 
             // Check for mouse clicks.
-            if (Mouse.IsButtonPressed(Mouse.Button.Left))
+            if (!LeftPressed && Mouse.IsButtonPressed(Mouse.Button.Left))
             {
+                LeftPressed = true;
                 Click();
+            }
+            else
+            {
+                LeftPressed = false;
             }
         }
 
@@ -218,6 +235,20 @@ namespace Game
             {
                 sprite.RealPosition = sprite.Position;
             }
+        }
+
+        public static void ResizeWindow()
+        {
+            Vector2u oldSize = Window.Size;
+            Window.Size = Resolutions[CurrentResolution];
+            Window.Position = new Vector2i(Window.Position.X - ((int)Window.Size.X - (int)oldSize.X) / 2, Window.Position.Y - ((int)Window.Size.Y - (int)oldSize.Y) / 2);
+            Window.SetView(new View(new Vector2f(Window.Size.X / 2, Window.Size.Y / 2), new Vector2f(Window.Size.X, Window.Size.Y)));
+            Scale = Math.Min((int)Window.Size.X / Texture.Size.X, (int)Window.Size.Y / Texture.Size.Y);
+            TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);
+
+            Console.WriteLine("Window size: " + Window.Size);
+            Console.WriteLine("Texture size: " + Texture.Size);
+            Console.WriteLine("Scale: " + Scale);
         }
     }
 }

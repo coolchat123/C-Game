@@ -27,17 +27,6 @@ namespace Game
         static Button OptionResLeft;
         static Button OptionResRight;
         static SText OptionResolutionText;
-        public static int CurrentResolution = 0;
-        public static List<Vector2i> Resolutions = new List<Vector2i>
-        {
-            new Vector2i(800, 600), // 3x
-            new Vector2i(1024, 800), // 4x
-            new Vector2i(1280, 960), // 4x
-            new Vector2i(1400, 1050), // 5x
-            new Vector2i(1600, 1200), // 6x
-            new Vector2i(1920, 1440), // 7x
-            new Vector2i(2048, 1536) // 7x
-        };
 
         public static List<int> SpriteScale = new List<int>
         {
@@ -63,7 +52,7 @@ namespace Game
             OptionResRight.MouseEnter += OptionResRightEnter;
             OptionResRight.MouseLeave += OptionResRightLeave;
 
-            OptionResolutionText = new SText(Resolutions[CurrentResolution].X + ", " + Resolutions[CurrentResolution].Y, 11);
+            OptionResolutionText = new SText(Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y, 11);
 
             InitialiseOptions();
         }
@@ -246,6 +235,11 @@ namespace Game
         // Decrease Resolution button in Options
         public void OptionResLeftClick(object sender, EventArgs e)
         {
+            if(Program.CurrentResolution > 0)
+            {
+                Program.CurrentResolution -= 1;
+                Program.ResizeWindow();
+            }
         }
         public void OptionResLeftEnter(object sender, EventArgs e)
         {
@@ -265,6 +259,11 @@ namespace Game
         // Increase Resolution button in Options
         public void OptionResRightClick(object sender, EventArgs e)
         {
+            if(Program.CurrentResolution < Program.Resolutions.Count - 1)
+            {
+                Program.CurrentResolution += 1;
+                Program.ResizeWindow();
+            }
         }
         public void OptionResRightEnter(object sender, EventArgs e)
         {

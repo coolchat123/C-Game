@@ -32,6 +32,15 @@
     <None Update="Content\Menu\Gallery.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Menu\OptionLeft.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Menu\OptionResolution.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Menu\OptionRight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Menu\Snake.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

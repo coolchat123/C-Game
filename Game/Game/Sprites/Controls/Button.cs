@@ -18,12 +18,9 @@ namespace Game
             MouseOver = GetGlobalBounds().Contains(mousePosition.X, mousePosition.Y);
         }
 
-        public Button(RenderWindow window, Texture texture, float locationX, float locationY) : base(texture)
+        public Button(RenderWindow window, Texture texture, float locationX, float locationY) : this(window, texture)
         {
             Position = new Vector2f(locationX, locationY);
-
-            Vector2f mousePosition = window.MapPixelToCoords(Mouse.GetPosition(window));
-            MouseOver = GetGlobalBounds().Contains(mousePosition.X, mousePosition.Y);
         }
 
         public Button(RenderWindow window, Texture texture, Vector2f location) : this(window, texture, location.X, location.Y) { }

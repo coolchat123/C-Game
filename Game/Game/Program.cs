@@ -18,6 +18,7 @@ namespace Game
             Breakout = 4
         }
 
+        public static int Volume = 100;
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
         public static readonly Color TextureClearColour = Color.Blue;

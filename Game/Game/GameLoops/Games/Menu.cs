@@ -24,6 +24,7 @@ namespace Game
         static Button MenuGallery;
 
         static SSprite OptionResolution;
+        static SSprite OptionVolume;
         static Button OptionResLeft;
         static Button OptionResRight;
         static SText OptionResolutionText;
@@ -43,6 +44,9 @@ namespace Game
         public void LoadOptions()
         {
             OptionResolution = new SSprite(new Texture("Content/Menu/OptionResolution.png"));
+            OptionVolume = new SSprite(new Texture("Content/Menu/OptionVolume.png"));
+
+
             OptionResLeft = new Button(Program.Window, new Texture("Content/Menu/OptionLeft.png"));
             OptionResLeft.Click += OptionResLeftClick;
             OptionResLeft.MouseEnter += OptionResLeftEnter;
@@ -61,6 +65,8 @@ namespace Game
         // It is called after LoadOptions.
         public void InitialiseOptions()
         {
+            //OptionText.SetPosition(-Program.Texture.Size.X / 2 - OptionVolume.Texture.Size.X / 2, 0);
+            OptionVolume.SetPosition(-Program.Texture.Size.X / 2 - OptionVolume.Texture.Size.X / 2, 50);
             OptionResolution.SetPosition(-Program.Texture.Size.X / 2 - OptionResolution.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
             OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
             OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);

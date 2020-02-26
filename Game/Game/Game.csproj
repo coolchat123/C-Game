@@ -56,6 +56,9 @@
     <None Update="Content\Menu\OptionRight.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Menu\OptionVolume.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Menu\Snake.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -125,7 +128,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\"/>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

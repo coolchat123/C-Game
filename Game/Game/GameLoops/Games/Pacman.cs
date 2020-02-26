@@ -14,7 +14,7 @@ namespace Game
         int Life = 2;
         int Score = 0;
         static SSprite Map;
-        static SSprite Bscreen;
+        static SSprite BGscreen;
         static PacmCharacter Character;
         static Image CollisionMap;
         static Image PointMap;
@@ -27,7 +27,7 @@ namespace Game
         public override void LoadContent()
         {
             Map = new SSprite(new Texture("Content/Pacman/Map.png"));
-            //Bscreen = new SSprite(new Texture("Content/Pacman/BGScreenpm.png"));
+            Map.Position = new Vector2f(65, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
             Character = new PacmCharacter(new Texture("Content/Pacman/pactest.png"));
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
             PointMap = new Image("Content/Pacman/pointmap.png");
@@ -44,9 +44,11 @@ namespace Game
         public void BeginScreen()
         {
             bool bgscreen = false;
-            if (bgscreen = false)
+            if (bgscreen == false)
             {
                 PlaySound(beginpcS);
+                BGscreen = new SSprite(new Texture("Content/Pacman/BGScreenpm.png"));
+                BGscreen.Position = new Vector2f(65, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
             }
 
             
@@ -54,9 +56,7 @@ namespace Game
 
         public override void Initialise()
         {
-            PlaySound(beginpcS);
             //Window.KeyPressed += Window_Keypressed;
-            Map.Position = new Vector2f(65, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
             Character.Position = new Vector2f(300, 332);
         }
 
@@ -66,24 +66,28 @@ namespace Game
             {
                 Character.Position = new Vector2f(Character.Position.X - 4, Character.Position.Y);
                 Console.WriteLine(Character.Position - Map.Position);
-                CheckCollision(Character.Position.X - 4, Character.Position.Y, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
+                //CheckCollision(Character.Position.X - 4, Character.Position.Y, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
             }
             if (Character.GetDirection() == 2)
             {
                 Character.Position = new Vector2f(Character.Position.X + 4, Character.Position.Y);
                 Console.WriteLine(Character.Position);
-                CheckCollision(Character.Position.X + 4, Character.Position.Y, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
+                //CheckCollision(Character.Position.X + 4, Character.Position.Y, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
             }
             if (Character.GetDirection() == 3)
             {
                 Character.Position = new Vector2f(Character.Position.X, Character.Position.Y - 4);
                 Console.WriteLine(Map.Position);
-                CheckCollision(Character.Position.X, Character.Position.Y - 4, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
+                //CheckCollision(Character.Position.X, Character.Position.Y - 4, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
             }
             if (Character.GetDirection() == 4)
             {
                 Character.Position = new Vector2f(Character.Position.X, Character.Position.Y + 4);
-                CheckCollision(Character.Position.X, Character.Position.Y + 4, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
+                //CheckCollision(Character.Position.X, Character.Position.Y + 4, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
+            }
+            if (Character.GetDirection() == 5)
+            {
+                Console.WriteLine("hello");
             }
         }
 

@@ -146,22 +146,22 @@ namespace Game
                     if(key == Keyboard.Key.W)
                     {
                         pacmCharacter.ChangeDirection(3);
-                        Console.WriteLine("test3");
                     }
                     if (key == Keyboard.Key.A)
                     {
                         pacmCharacter.ChangeDirection(1);
-                        Console.WriteLine("test1");
                     }
                     if (key == Keyboard.Key.S)
                     {
                         pacmCharacter.ChangeDirection(4);
-                        Console.WriteLine("test4");
                     }
                     if (key == Keyboard.Key.D)
                     {
                         pacmCharacter.ChangeDirection(2);
-                        Console.WriteLine("test2");
+                    }
+                    if (key == Keyboard.Key.Return)
+                    {
+                        pacmCharacter.ChangeDirection(5);
                     }
 
                 }
@@ -220,6 +220,10 @@ namespace Game
             if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
                 WASD(Keyboard.Key.S);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Return))
+            {
+                WASD(Keyboard.Key.Return);
             }
         }
 

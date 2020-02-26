@@ -21,13 +21,22 @@ namespace Game
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
         public static float Scale = 3f;
+        public static readonly Color TextureClearColour = Color.Blue;
         public static readonly Color WindowClearColour = Color.Black;
+
+        public static RenderTexture Texture;
+        public static Vector2f TexturePosition;
+        public static RenderWindow Window;
+
+        public static Font MyFont;
 
         public static GameName ChangeGame = GameName.None;
 
         // "Sprites" is a list of sprites that should be drawn.
         // It is updated by the GameLoop class and its child classes.
         public static List<Sprite> Sprites = new List<Sprite> { };
+
+        public static List<Text> Strings = new List<Text> { };
 
         // "RunningGame" is the GameLoop that is currently running.
         // GameLoop is an abstract class, so RunningGame can only ever be one of its child classes.
@@ -37,8 +46,10 @@ namespace Game
 
         static void Main(string[] args)
         {
-            // Initialise the RenderWindow.
+            // Initialise the RenderWindow and RenderTexture.
+            Texture = new RenderTexture(268, 200);
             Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color");
+            TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);
             Window.Closed += Window_Closed;
             
             // Create an instance of the Menu class to occupy RunningGame.
@@ -48,7 +59,9 @@ namespace Game
             RunningGame.LoadContent();
             RunningGame.Initialise();
 
-            LoadNewGame(new Pacman());
+            MyFont = new Font("Content/arialbd.ttf");
+
+            LoadNewGame(new Menu());
 
             // Create an instance of the Clock class provided by SFML.
             Clock clock = new Clock();
@@ -102,14 +115,10 @@ namespace Game
                     Update(GameTime);
 
                     // Draw
-                    Window.Clear(WindowClearColour);
                     Draw(GameTime);
-                    Window.Display();
                 }
             }
         }
-
-        public static RenderWindow Window;
 
         private static void Window_Closed(object sender, EventArgs a)
         {
@@ -175,14 +184,14 @@ namespace Game
             RunningGame.Update(gameTime);
 
             // Check whether buttons are moused over.
-            Vector2f mousePosition = Window.MapPixelToCoords(Mouse.GetPosition(Window));
+            Vector2f mousePosition = Texture.MapPixelToCoords(Mouse.GetPosition(Window));
             foreach (SSprite sprite in Sprites)
             {
                 Button button = sprite as Button;
                 
                 if(button != null)
                 {
-                    bool mouseOver = button.GetGlobalBounds().Contains(mousePosition.X, mousePosition.Y);
+                    bool mouseOver = button.GetGlobalBounds().Contains((mousePosition.X - TexturePosition.X) / Scale, (mousePosition.Y - TexturePosition.Y) / Scale);
 
                     if (mouseOver != button.MouseOver)
                     {
@@ -225,10 +234,29 @@ namespace Game
 
         public static void Draw(GameTime gameTime)
         {
+            Texture.Clear(TextureClearColour);
+
+            Window.Clear(WindowClearColour);
+
             foreach (SSprite sprite in Sprites)
             {
-                Window.Draw(sprite);
+                Texture.Draw(sprite);
             }
+
+            foreach(Text text in Strings)
+            {
+                Texture.Draw(text);
+            }
+
+            Texture.Display();
+
+            Sprite textureSprite = new Sprite(Texture.Texture);
+            textureSprite.Scale = new Vector2f(Scale, Scale);
+            textureSprite.Position = new Vector2f(TexturePosition.X, TexturePosition.Y);
+
+            Window.Draw(textureSprite);
+
+            Window.Display();
         }
 
         public static void LoadNewGame(GameLoop gameLoop)

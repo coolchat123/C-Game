@@ -151,9 +151,6 @@ namespace Game
 
         public static void Update(GameTime gameTime)
         {
-            // Run GameLoop update function.
-            RunningGame.Update(gameTime);
-
             // Check whether buttons are moused over.
             Vector2f mousePosition = Texture.MapPixelToCoords(Mouse.GetPosition(Window));
             foreach (SSprite sprite in Sprites)
@@ -162,7 +159,12 @@ namespace Game
                 
                 if(button != null)
                 {
-                    bool mouseOver = button.GetGlobalBounds().Contains((mousePosition.X - TexturePosition.X) / Scale, (mousePosition.Y - TexturePosition.Y) / Scale);
+                    if(button.JustClicked > 0)
+                    {
+                        button.JustClicked -= 1;
+                    }
+
+                    bool mouseOver = (button.GetGlobalBounds().Contains((mousePosition.X - TexturePosition.X) / Scale, (mousePosition.Y - TexturePosition.Y) / Scale) && button.JustClicked == 0);
 
                     if (mouseOver != button.MouseOver)
                     {
@@ -178,6 +180,9 @@ namespace Game
                     }
                 }
             }
+
+            // Run GameLoop update function.
+            RunningGame.Update(gameTime);
 
             // Check for mouse clicks.
             if (Mouse.IsButtonPressed(Mouse.Button.Left))

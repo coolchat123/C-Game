@@ -118,7 +118,7 @@ namespace Game
             OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
             OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
             OptionResolutionText.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 16);
-            OptionReturn.SetPosition(-OptionReturn.Texture.Size.X - 20, 20);
+            OptionReturn.SetPosition(MenuGallery.Position.X - Program.Texture.Size.X, MenuGallery.Position.Y);
         }
 
         public override void Update(GameTime gameTime)
@@ -140,15 +140,15 @@ namespace Game
                         Pan += Math.Max((PanGoal - Pan) / 10, 5);
                     }
                 }
+            }
 
-                foreach (SSprite sprite in Program.Sprites)
-                {
-                    sprite.Position = new Vector2f(sprite.RealPosition.X - Pan, sprite.Position.Y);
-                }
-                foreach (SText text in Program.Strings)
-                {
-                    text.Position = new Vector2f(text.RealPosition.X - Pan, text.Position.Y);
-                }
+            foreach (SSprite sprite in Program.Sprites)
+            {
+                sprite.Position = new Vector2f(sprite.RealPosition.X - Pan, sprite.Position.Y);
+            }
+            foreach (SText text in Program.Strings)
+            {
+                text.Position = new Vector2f(text.RealPosition.X - Pan, text.Position.Y);
             }
         }
 
@@ -248,17 +248,11 @@ namespace Game
         }
         public void OptionResLeftEnter(object sender, EventArgs e)
         {
-            if (Pan == PanGoal)
-            {
-                OptionResLeft.SetScale(1.1f, SSprite.Pin.MiddleRight);
-            }
+            OptionResLeft.SetScale(1.1f, SSprite.Pin.MiddleRight);
         }
         public void OptionResLeftLeave(object sender, EventArgs e)
         {
-            if (Pan == PanGoal)
-            {
-                OptionResLeft.SetScale(1f, SSprite.Pin.MiddleRight);
-            }
+            OptionResLeft.SetScale(1f, SSprite.Pin.MiddleRight);
         }
 
         // Increase Resolution button in Options
@@ -273,17 +267,11 @@ namespace Game
         }
         public void OptionResRightEnter(object sender, EventArgs e)
         {
-            if (Pan == PanGoal)
-            {
-                OptionResRight.SetScale(1.1f, SSprite.Pin.MiddleLeft);
-            }
+            OptionResRight.SetScale(1.1f, SSprite.Pin.MiddleLeft);
         }
         public void OptionResRightLeave(object sender, EventArgs e)
         {
-            if (Pan == PanGoal)
-            {
-                OptionResRight.SetScale(1f, SSprite.Pin.MiddleLeft);
-            }
+            OptionResRight.SetScale(1f, SSprite.Pin.MiddleLeft);
         }
 
         // Options button

@@ -49,20 +49,24 @@ namespace Game
         {
             if((int)pin % 3 == 1)
             {
-                Position = new Vector2f(Position.X + (Scale.X - scale) * Texture.Size.X / 2, Position.Y);
+                //    RealPosition = new Vector2f(RealPosition.X + (Scale.X - scale) * Texture.Size.X / 2, RealPosition.Y);
+                SetPosition(new Vector2f(RealPosition.X + (Scale.X - scale) * Texture.Size.X / 2, RealPosition.Y));
             }
             else if((int)pin % 3 == 2)
             {
-                Position = new Vector2f(Position.X + (Scale.X - scale) * Texture.Size.X, Position.Y);
+            //    RealPosition = new Vector2f(RealPosition.X + (Scale.X - scale) * Texture.Size.X, RealPosition.Y);
+                SetPosition(new Vector2f(RealPosition.X + (Scale.X - scale) * Texture.Size.X, RealPosition.Y));
             }
 
             if((int)pin >= 3 && (int)pin <= 5)
             {
-                Position = new Vector2f(Position.X, Position.Y + (Scale.Y - scale) * Texture.Size.Y / 2);
+                //    RealPosition = new Vector2f(RealPosition.X, RealPosition.Y + (Scale.Y - scale) * Texture.Size.Y / 2);
+                SetPosition(new Vector2f(RealPosition.X, RealPosition.Y + (Scale.Y - scale) * Texture.Size.Y / 2));
             }
             else if((int)pin >= 6 && (int)pin <= 8)
             {
-                Position = new Vector2f(Position.X, Position.Y + (Scale.Y - scale) * Texture.Size.Y);
+                //    RealPosition = new Vector2f(RealPosition.X, RealPosition.Y + (Scale.Y - scale) * Texture.Size.Y);
+                SetPosition(RealPosition = new Vector2f(RealPosition.X, RealPosition.Y + (Scale.Y - scale) * Texture.Size.Y));
             }
 
             Scale = new Vector2f(scale, scale);

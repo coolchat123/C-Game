@@ -253,10 +253,6 @@ namespace Game
             Window.SetView(new View(new Vector2f(Window.Size.X / 2, Window.Size.Y / 2), new Vector2f(Window.Size.X, Window.Size.Y)));
             Scale = Math.Min((int)Window.Size.X / Texture.Size.X, (int)Window.Size.Y / Texture.Size.Y);
             TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);
-
-            Console.WriteLine("Window size: " + Window.Size);
-            Console.WriteLine("Texture size: " + Texture.Size);
-            Console.WriteLine("Scale: " + Scale);
         }
     }
 }

@@ -23,11 +23,14 @@ namespace Game
         static Button MenuOptions;
         static Button MenuGallery;
 
+        static SSprite OptionTitle;
         static SSprite OptionResolution;
         static Button OptionResLeft;
         static Button OptionResRight;
         static SText OptionResolutionText;
         static Button OptionReturn;
+
+        static Button GalleryReturn;
 
         public static List<int> SpriteScale = new List<int>
         {
@@ -81,6 +84,7 @@ namespace Game
             MenuGallery.MouseLeave += GalleryLeave;
 
             // Load all SSprites of the options menu and add functions to events.
+            OptionTitle = new SSprite(new Texture("Content/Menu/OptionTitle.png"));
             OptionResolution = new SSprite(new Texture("Content/Menu/OptionResolution.png"));
             OptionResLeft = new Button(Program.Window, new Texture("Content/Menu/OptionLeft.png"));
             OptionResLeft.Click += OptionResLeftClick;
@@ -94,8 +98,13 @@ namespace Game
             OptionReturn.Click += OptionReturnClick;
             OptionReturn.MouseEnter += OptionReturnEnter;
             OptionReturn.MouseLeave += OptionReturnLeave;
-
             OptionResolutionText = new SText(Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y, 11);
+
+            // Load all SSprites of the gallery menu and add functions to events.
+            GalleryReturn = new Button(Program.Window, new Texture("Content/Menu/MenuLeft.png"));
+            GalleryReturn.Click += GalleryReturnClick;
+            GalleryReturn.MouseEnter += GalleryReturnEnter;
+            GalleryReturn.MouseLeave += GalleryReturnLeave;
         }
 
         public override void Initialise()
@@ -114,11 +123,15 @@ namespace Game
             MenuGallery.SetPosition(Program.Texture.Size.X / 6 * 5 - buttonSmallSize / 2, Program.Texture.Size.Y / 4 - MenuGallery.Texture.Size.Y / 2);
 
             // Place all SSprites on the options menu.
+            OptionTitle.SetPosition(-Program.Texture.Size.X / 2 - OptionTitle.Texture.Size.X / 2, Program.Texture.Size.Y / 4 - OptionTitle.Texture.Size.Y / 2);
             OptionResolution.SetPosition(-Program.Texture.Size.X / 2 - OptionResolution.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
             OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
             OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
             OptionResolutionText.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 16);
             OptionReturn.SetPosition(MenuGallery.Position.X - Program.Texture.Size.X, MenuGallery.Position.Y);
+
+            // Place all SSprites on the gallery menu.
+            GalleryReturn.SetPosition(MenuOptions.Position.X + Program.Texture.Size.X, MenuOptions.Position.Y);
         }
 
         public override void Update(GameTime gameTime)
@@ -274,7 +287,7 @@ namespace Game
             OptionResRight.SetScale(1f, SSprite.Pin.MiddleLeft);
         }
 
-        // Options button
+        // Return button in options menu
         public void OptionReturnClick(object sender, EventArgs e)
         {
             PanGoal = 0;
@@ -286,6 +299,20 @@ namespace Game
         public void OptionReturnLeave(object sender, EventArgs e)
         {
             OptionReturn.SetScale(1f, SSprite.Pin.Middle);
+        }
+
+        // Return button in gallery menu
+        public void GalleryReturnClick(object sender, EventArgs e)
+        {
+            PanGoal = 0;
+        }
+        public void GalleryReturnEnter(object sender, EventArgs e)
+        {
+            GalleryReturn.SetScale(1.2f, SSprite.Pin.Middle);
+        }
+        public void GalleryReturnLeave(object sender, EventArgs e)
+        {
+            GalleryReturn.SetScale(1f, SSprite.Pin.Middle);
         }
     }
 }

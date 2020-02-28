@@ -25,17 +25,17 @@ namespace Game
 
         static SSprite OptionTitle;
         static SSprite OptionResolution;
-        static Button OptionResLeft;
-        static Button OptionResRight;
+        static Button OptionResolutionDown;
+        static Button OptionResolutionUp;
+        static Button OptionResolutionCheck;
         static SText OptionResolutionText;
+        static Button OptionFullscreen;
+        static Button OptionWindow;
         static Button OptionReturn;
 
         static Button GalleryReturn;
 
-        public static List<int> SpriteScale = new List<int>
-        {
-            1, 2, 3, 4, 5, 6, 7
-        };
+        public static int UnconfirmedResolution = 0;
 
         int Pan;
         int PanGoal;
@@ -46,8 +46,8 @@ namespace Game
         // It is called when the resolution is changed.
         public void UpdateResolutionText()
         {
-            OptionResolutionText.DisplayedString = (Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y);
-            OptionResolutionText.Position = new Vector2f(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 16);
+            OptionResolutionText.DisplayedString = (Program.Resolutions[UnconfirmedResolution].X + ", " + Program.Resolutions[UnconfirmedResolution].Y);
+            OptionResolutionText.Position = new Vector2f(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolutionText.Position.Y);
             OptionResolutionText.RealPosition = new Vector2f(OptionResolutionText.Position.X + Pan, OptionResolutionText.Position.Y);
         }
 
@@ -86,19 +86,31 @@ namespace Game
             // Load all SSprites of the options menu and add functions to events.
             OptionTitle = new SSprite(new Texture("Content/Menu/OptionTitle.png"));
             OptionResolution = new SSprite(new Texture("Content/Menu/OptionResolution.png"));
-            OptionResLeft = new Button(Program.Window, new Texture("Content/Menu/OptionLeft.png"));
-            OptionResLeft.Click += OptionResLeftClick;
-            OptionResLeft.MouseEnter += OptionResLeftEnter;
-            OptionResLeft.MouseLeave += OptionResLeftLeave;
-            OptionResRight = new Button(Program.Window, new Texture("Content/Menu/OptionRight.png"));
-            OptionResRight.Click += OptionResRightClick;
-            OptionResRight.MouseEnter += OptionResRightEnter;
-            OptionResRight.MouseLeave += OptionResRightLeave;
+            OptionResolutionDown = new Button(Program.Window, new Texture("Content/Menu/OptionDown.png"));
+            OptionResolutionDown.Click += OptionResolutionDownClick;
+            OptionResolutionDown.MouseEnter += OptionResolutionDownEnter;
+            OptionResolutionDown.MouseLeave += OptionResolutionDownLeave;
+            OptionResolutionUp = new Button(Program.Window, new Texture("Content/Menu/OptionUp.png"));
+            OptionResolutionUp.Click += OptionResolutionUpClick;
+            OptionResolutionUp.MouseEnter += OptionResolutionUpEnter;
+            OptionResolutionUp.MouseLeave += OptionResolutionUpLeave;
             OptionReturn = new Button(Program.Window, new Texture("Content/Menu/MenuRight.png"));
             OptionReturn.Click += OptionReturnClick;
             OptionReturn.MouseEnter += OptionReturnEnter;
             OptionReturn.MouseLeave += OptionReturnLeave;
             OptionResolutionText = new SText(Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y, 11);
+            OptionResolutionCheck = new Button(Program.Window, new Texture("Content/Menu/OptionCheck.png"));
+            OptionResolutionCheck.Click += OptionResolutionCheckClick;
+            OptionResolutionCheck.MouseEnter += OptionResolutionCheckEnter;
+            OptionResolutionCheck.MouseLeave += OptionResolutionCheckLeave;
+            OptionFullscreen = new Button(Program.Window, new Texture("Content/Menu/OptionFullscreen.png"));
+            OptionFullscreen.Click += OptionFullscreenClick;
+            OptionFullscreen.MouseEnter += OptionFullscreenEnter;
+            OptionFullscreen.MouseLeave += OptionFullscreenLeave;
+            OptionWindow = new Button(Program.Window, new Texture("Content/Menu/OptionWindow.png"));
+            OptionWindow.Click += OptionWindowClick;
+            OptionWindow.MouseEnter += OptionWindowEnter;
+            OptionWindow.MouseLeave += OptionWindowLeave;
 
             // Load all SSprites of the gallery menu and add functions to events.
             GalleryReturn = new Button(Program.Window, new Texture("Content/Menu/MenuLeft.png"));
@@ -125,10 +137,13 @@ namespace Game
             // Place all SSprites on the options menu.
             OptionTitle.SetPosition(-Program.Texture.Size.X / 2 - OptionTitle.Texture.Size.X / 2, Program.Texture.Size.Y / 4 - OptionTitle.Texture.Size.Y / 2);
             OptionResolution.SetPosition(-Program.Texture.Size.X / 2 - OptionResolution.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
-            OptionResLeft.SetPosition(OptionResolution.Position.X - OptionResLeft.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
-            OptionResRight.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
-            OptionResolutionText.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 16);
+            OptionResolutionDown.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y + OptionResolution.Texture.Size.Y / 2);
+            OptionResolutionUp.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X, OptionResolution.Position.Y);
+            OptionResolutionCheck.SetPosition(OptionResolution.Position.X - OptionResolutionCheck.Texture.Size.X, OptionResolution.Position.Y);
+            OptionResolutionText.SetPosition(OptionResolution.Position.X + OptionResolution.Texture.Size.X / 2 - OptionResolutionText.GetGlobalBounds().Width / 2, OptionResolution.Position.Y + 8);
             OptionReturn.SetPosition(MenuGallery.Position.X - Program.Texture.Size.X, MenuGallery.Position.Y);
+            OptionFullscreen.SetPosition(-Program.Texture.Size.X / 2 - OptionFullscreen.Texture.Size.X - 2, OptionResolution.Position.Y - OptionFullscreen.Texture.Size.Y - 4); ;
+            OptionWindow.SetPosition(-Program.Texture.Size.X / 2 + 2, OptionFullscreen.Position.Y);
 
             // Place all SSprites on the gallery menu.
             GalleryReturn.SetPosition(MenuOptions.Position.X + Program.Texture.Size.X, MenuOptions.Position.Y);
@@ -162,6 +177,16 @@ namespace Game
             foreach (SText text in Program.Strings)
             {
                 text.Position = new Vector2f(text.RealPosition.X - Pan, text.Position.Y);
+            }
+
+            // The "confirm resolution"-button shouldn't be visible if the resolution hasn't been changed.
+            if(UnconfirmedResolution == Program.CurrentResolution)
+            {
+                OptionResolutionCheck.Position = new Vector2f(OptionResolutionCheck.Position.X, Program.Window.Size.Y);
+            }
+            else
+            {
+                OptionResolutionCheck.Position = new Vector2f(OptionResolutionCheck.Position.X, OptionResolution.Position.Y);
             }
         }
 
@@ -250,41 +275,60 @@ namespace Game
         }
 
         // Decrease Resolution button in Options
-        public void OptionResLeftClick(object sender, EventArgs e)
+        public void OptionResolutionDownClick(object sender, EventArgs e)
         {
-            if(Program.CurrentResolution > 0)
+            if(UnconfirmedResolution > 0 && !Program.Fullscreen)
             {
-                Program.CurrentResolution -= 1;
+                UnconfirmedResolution -= 1;
                 Program.ResizeWindow();
                 UpdateResolutionText();
             }
         }
-        public void OptionResLeftEnter(object sender, EventArgs e)
+        public void OptionResolutionDownEnter(object sender, EventArgs e)
         {
-            OptionResLeft.SetScale(1.1f, SSprite.Pin.MiddleRight);
+            OptionResolutionDown.SetScale(1.1f, SSprite.Pin.TopLeft);
         }
-        public void OptionResLeftLeave(object sender, EventArgs e)
+        public void OptionResolutionDownLeave(object sender, EventArgs e)
         {
-            OptionResLeft.SetScale(1f, SSprite.Pin.MiddleRight);
+            OptionResolutionDown.SetScale(1f, SSprite.Pin.TopLeft);
         }
 
         // Increase Resolution button in Options
-        public void OptionResRightClick(object sender, EventArgs e)
+        public void OptionResolutionUpClick(object sender, EventArgs e)
         {
-            if(Program.CurrentResolution < Program.Resolutions.Count - 1)
+            if(UnconfirmedResolution < Program.Resolutions.Count - 1 && !Program.Fullscreen)
             {
-                Program.CurrentResolution += 1;
+                UnconfirmedResolution += 1;
                 Program.ResizeWindow();
                 UpdateResolutionText();
             }
         }
-        public void OptionResRightEnter(object sender, EventArgs e)
+        public void OptionResolutionUpEnter(object sender, EventArgs e)
         {
-            OptionResRight.SetScale(1.1f, SSprite.Pin.MiddleLeft);
+            OptionResolutionUp.SetScale(1.1f, SSprite.Pin.BottomLeft);
         }
-        public void OptionResRightLeave(object sender, EventArgs e)
+        public void OptionResolutionUpLeave(object sender, EventArgs e)
         {
-            OptionResRight.SetScale(1f, SSprite.Pin.MiddleLeft);
+            OptionResolutionUp.SetScale(1f, SSprite.Pin.BottomLeft);
+        }
+
+        // Confirm Resolution button in Options
+        public void OptionResolutionCheckClick(object sender, EventArgs e)
+        {
+            if (!Program.Fullscreen)
+            {
+                Program.CurrentResolution = UnconfirmedResolution;
+                Program.ResizeWindow();
+                UpdateResolutionText();
+            }
+        }
+        public void OptionResolutionCheckEnter(object sender, EventArgs e)
+        {
+            OptionResolutionCheck.SetScale(1.1f, SSprite.Pin.MiddleLeft);
+        }
+        public void OptionResolutionCheckLeave(object sender, EventArgs e)
+        {
+            OptionResolutionCheck.SetScale(1f, SSprite.Pin.MiddleLeft);
         }
 
         // Return button in options menu
@@ -313,6 +357,42 @@ namespace Game
         public void GalleryReturnLeave(object sender, EventArgs e)
         {
             GalleryReturn.SetScale(1f, SSprite.Pin.Middle);
+        }
+
+        // Fullscreen button in Options
+        public void OptionFullscreenClick(object sender, EventArgs e)
+        {
+            if (!Program.Fullscreen)
+            {
+                Program.ResizeWindow(true);
+                UpdateResolutionText();
+            }
+        }
+        public void OptionFullscreenEnter(object sender, EventArgs e)
+        {
+            OptionFullscreen.SetScale(1.1f, SSprite.Pin.MiddleLeft);
+        }
+        public void OptionFullscreenLeave(object sender, EventArgs e)
+        {
+            OptionFullscreen.SetScale(1f, SSprite.Pin.MiddleLeft);
+        }
+
+        // Windowed button in Options
+        public void OptionWindowClick(object sender, EventArgs e)
+        {
+            if (Program.Fullscreen)
+            {
+                Program.ResizeWindow();
+                UpdateResolutionText();
+            }
+        }
+        public void OptionWindowEnter(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1.1f, SSprite.Pin.MiddleLeft);
+        }
+        public void OptionWindowLeave(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1f, SSprite.Pin.MiddleLeft);
         }
     }
 }

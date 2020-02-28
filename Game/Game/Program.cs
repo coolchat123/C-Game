@@ -37,6 +37,7 @@ namespace Game
             new Vector2u(2144, 1600) // 8x
         };
         public static float Scale = 3f;
+        public static bool Fullscreen;
 
         public static Font MyFont;
 
@@ -245,11 +246,33 @@ namespace Game
             }
         }
 
-        public static void ResizeWindow()
+        public static void ResizeWindow(bool fullscreen = false)
         {
             Vector2u oldSize = Window.Size;
-            Window.Size = Resolutions[CurrentResolution];
-            Window.Position = new Vector2i(Math.Max(Window.Position.X - ((int)Window.Size.X - (int)oldSize.X) / 2, 0), Math.Max(Window.Position.Y - ((int)Window.Size.Y - (int)oldSize.Y) / 2, 0));
+
+            if (fullscreen)
+            {
+                Window.Close();
+                Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Fullscreen);
+                Window.Closed += Window_Closed;
+
+                Fullscreen = true;
+            }
+            else
+            {
+                if(Fullscreen)
+                {
+                    Window.Close();
+                    Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Close);
+                    Window.Closed += Window_Closed;
+
+                    Fullscreen = false;
+                }
+
+                Window.Size = Resolutions[CurrentResolution];
+            }
+
+            Window.Position = new Vector2i(Math.Max((int)VideoMode.DesktopMode.Width / 2 - (int)Window.Size.X / 2, 0), Math.Max((int)VideoMode.DesktopMode.Height / 2 - (int)Window.Size.Y / 2, 0));
             Window.SetView(new View(new Vector2f(Window.Size.X / 2, Window.Size.Y / 2), new Vector2f(Window.Size.X, Window.Size.Y)));
             Scale = Math.Min((int)Window.Size.X / Texture.Size.X, (int)Window.Size.Y / Texture.Size.Y);
             TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);

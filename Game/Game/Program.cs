@@ -133,6 +133,7 @@ namespace Game
 
         public static GameTime GameTime;
 
+        // Click is called by Update every time LMB is pressed.
         public static void Click()
         {
             foreach (SSprite sprite in Sprites)
@@ -150,6 +151,7 @@ namespace Game
             }
         }
 
+        // Update is called once every tick from the game loop.
         public static void Update(GameTime gameTime)
         {
             // Check whether buttons are moused over.
@@ -198,8 +200,55 @@ namespace Game
             {
                 LeftPressed = false;
             }
+
+            // Check for keyboard input.
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+            {
+                RunningGame.KeyInput(Keyboard.Key.A);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.W))
+            {
+                RunningGame.KeyInput(Keyboard.Key.W);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.D))
+            {
+                RunningGame.KeyInput(Keyboard.Key.D);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.S))
+            {
+                RunningGame.KeyInput(Keyboard.Key.S);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Return))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Return);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Space);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Tab))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Tab);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Up);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Down);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Left);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Right);
+            }
         }
 
+        // Draw is called once every tick by the game loop.
         public static void Draw(GameTime gameTime)
         {
             Texture.Clear(TextureClearColour);

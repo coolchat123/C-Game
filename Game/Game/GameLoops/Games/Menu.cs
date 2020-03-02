@@ -190,6 +190,10 @@ namespace Game
             }
         }
 
+        public override void KeyInput(Keyboard.Key key)
+        {
+        }
+
         // Options button
         public void OptionsClick(object sender, EventArgs e)
         {

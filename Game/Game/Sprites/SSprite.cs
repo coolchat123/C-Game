@@ -13,6 +13,8 @@ namespace Game
     // Al onze Controls en Entities zullen child classes zijn van SSprite.
     public class SSprite : Sprite
     {
+        public string[] Groups = new string[2];
+
         public enum Pin : int
         {
             TopLeft = 0,
@@ -30,18 +32,20 @@ namespace Game
 
         public SSprite() : base() { }
 
-        public SSprite(Texture texture) : base(texture)
+        public SSprite(Texture texture, string group1 = null, string group2 = null) : base(texture)
         {
             Program.Sprites.Add(this);
             RealPosition = Position;
+            Groups[0] = group1;
+            Groups[1] = group2;
         }
 
-        public SSprite(Texture texture, float locationX, float locationY) : this(texture)
+        public SSprite(Texture texture, float locationX, float locationY, string group1 = null, string group2 = null) : this(texture, group1, group2)
         {
             Position = new Vector2f(locationX, locationY);
         }
 
-        public SSprite(Texture texture, Vector2f location) : this(texture, location.X, location.Y) { }
+        public SSprite(Texture texture, Vector2f location, string group1 = null, string group2 = null) : this(texture, location.X, location.Y, group1, group2) { }
 
         // SetScale changes the size of the sprite by a set percentage.
         // An enumerator is provided to define where the sprite will center at.
@@ -66,7 +70,7 @@ namespace Game
             else if((int)pin >= 6 && (int)pin <= 8)
             {
                 //    RealPosition = new Vector2f(RealPosition.X, RealPosition.Y + (Scale.Y - scale) * Texture.Size.Y);
-                SetPosition(RealPosition = new Vector2f(RealPosition.X, RealPosition.Y + (Scale.Y - scale) * Texture.Size.Y));
+                SetPosition(new Vector2f(RealPosition.X, RealPosition.Y + (Scale.Y - scale) * Texture.Size.Y));
             }
 
             Scale = new Vector2f(scale, scale);

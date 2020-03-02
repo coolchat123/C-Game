@@ -57,63 +57,63 @@ namespace Game
             PanGoal = 0;
 
             // Load all SSprites of the main menu and add functions to events.
-            MenuTitle = new SSprite(new Texture("Content/Menu/Title.png"));
-            MenuPong = new Button(Program.Window, new Texture("Content/Menu/Pong.png"));
+            MenuTitle = new SSprite(new Texture("Content/Menu/Title.png"), "menu");
+            MenuPong = new Button(new Texture("Content/Menu/Pong.png"), "menu");
             MenuPong.Click += PongClick;
             MenuPong.MouseEnter += PongEnter;
             MenuPong.MouseLeave += PongLeave;
-            MenuSnake = new Button(Program.Window, new Texture("Content/Menu/Snake.png"));
+            MenuSnake = new Button(new Texture("Content/Menu/Snake.png"), "menu");
             MenuSnake.Click += SnakeClick;
             MenuSnake.MouseEnter += SnakeEnter;
             MenuSnake.MouseLeave += SnakeLeave;
-            MenuPacman = new Button(Program.Window, new Texture("Content/Menu/Pacman.png"));
+            MenuPacman = new Button(new Texture("Content/Menu/Pacman.png"), "menu");
             MenuPacman.Click += PacmanClick;
             MenuPacman.MouseEnter += PacmanEnter;
             MenuPacman.MouseLeave += PacmanLeave;
-            MenuBreakout = new Button(Program.Window, new Texture("Content/Menu/Breakout.png"));
+            MenuBreakout = new Button(new Texture("Content/Menu/Breakout.png"), "menu");
             MenuBreakout.Click += BreakoutClick;
             MenuBreakout.MouseEnter += BreakoutEnter;
             MenuBreakout.MouseLeave += BreakoutLeave;
-            MenuOptions = new Button(Program.Window, new Texture("Content/Menu/Options.png"));
+            MenuOptions = new Button(new Texture("Content/Menu/Options.png"), "menu");
             MenuOptions.Click += OptionsClick;
             MenuOptions.MouseEnter += OptionsEnter;
             MenuOptions.MouseLeave += OptionsLeave;
-            MenuGallery = new Button(Program.Window, new Texture("Content/Menu/Gallery.png"));
+            MenuGallery = new Button(new Texture("Content/Menu/Gallery.png"), "menu");
             MenuGallery.Click += GalleryClick;
             MenuGallery.MouseEnter += GalleryEnter;
             MenuGallery.MouseLeave += GalleryLeave;
 
             // Load all SSprites of the options menu and add functions to events.
-            OptionTitle = new SSprite(new Texture("Content/Menu/OptionTitle.png"));
-            OptionResolution = new SSprite(new Texture("Content/Menu/OptionResolution.png"));
-            OptionResolutionDown = new Button(Program.Window, new Texture("Content/Menu/OptionDown.png"));
+            OptionTitle = new SSprite(new Texture("Content/Menu/OptionTitle.png"), "options");
+            OptionResolution = new SSprite(new Texture("Content/Menu/OptionResolution.png"), "options");
+            OptionResolutionDown = new Button(new Texture("Content/Menu/OptionDown.png"), "options");
             OptionResolutionDown.Click += OptionResolutionDownClick;
             OptionResolutionDown.MouseEnter += OptionResolutionDownEnter;
             OptionResolutionDown.MouseLeave += OptionResolutionDownLeave;
-            OptionResolutionUp = new Button(Program.Window, new Texture("Content/Menu/OptionUp.png"));
+            OptionResolutionUp = new Button(new Texture("Content/Menu/OptionUp.png"), "options");
             OptionResolutionUp.Click += OptionResolutionUpClick;
             OptionResolutionUp.MouseEnter += OptionResolutionUpEnter;
             OptionResolutionUp.MouseLeave += OptionResolutionUpLeave;
-            OptionReturn = new Button(Program.Window, new Texture("Content/Menu/MenuRight.png"));
+            OptionReturn = new Button(new Texture("Content/Menu/MenuRight.png"), "options");
             OptionReturn.Click += OptionReturnClick;
             OptionReturn.MouseEnter += OptionReturnEnter;
             OptionReturn.MouseLeave += OptionReturnLeave;
-            OptionResolutionText = new SText(Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y, 11);
-            OptionResolutionCheck = new Button(Program.Window, new Texture("Content/Menu/OptionCheck.png"));
+            OptionResolutionText = new SText(Program.Resolutions[Program.CurrentResolution].X + ", " + Program.Resolutions[Program.CurrentResolution].Y, 11, "options");
+            OptionResolutionCheck = new Button(new Texture("Content/Menu/OptionCheck.png"), "options");
             OptionResolutionCheck.Click += OptionResolutionCheckClick;
             OptionResolutionCheck.MouseEnter += OptionResolutionCheckEnter;
             OptionResolutionCheck.MouseLeave += OptionResolutionCheckLeave;
-            OptionFullscreen = new Button(Program.Window, new Texture("Content/Menu/OptionFullscreen.png"));
+            OptionFullscreen = new Button(new Texture("Content/Menu/OptionFullscreen.png"), "options");
             OptionFullscreen.Click += OptionFullscreenClick;
             OptionFullscreen.MouseEnter += OptionFullscreenEnter;
             OptionFullscreen.MouseLeave += OptionFullscreenLeave;
-            OptionWindow = new Button(Program.Window, new Texture("Content/Menu/OptionWindow.png"));
+            OptionWindow = new Button(new Texture("Content/Menu/OptionWindow.png"), "options");
             OptionWindow.Click += OptionWindowClick;
             OptionWindow.MouseEnter += OptionWindowEnter;
             OptionWindow.MouseLeave += OptionWindowLeave;
 
             // Load all SSprites of the gallery menu and add functions to events.
-            GalleryReturn = new Button(Program.Window, new Texture("Content/Menu/MenuLeft.png"));
+            GalleryReturn = new Button(new Texture("Content/Menu/MenuLeft.png"), "options");
             GalleryReturn.Click += GalleryReturnClick;
             GalleryReturn.MouseEnter += GalleryReturnEnter;
             GalleryReturn.MouseLeave += GalleryReturnLeave;
@@ -280,7 +280,6 @@ namespace Game
             if(UnconfirmedResolution > 0 && !Program.Fullscreen)
             {
                 UnconfirmedResolution -= 1;
-                Program.ResizeWindow();
                 UpdateResolutionText();
             }
         }
@@ -299,7 +298,6 @@ namespace Game
             if(UnconfirmedResolution < Program.Resolutions.Count - 1 && !Program.Fullscreen)
             {
                 UnconfirmedResolution += 1;
-                Program.ResizeWindow();
                 UpdateResolutionText();
             }
         }

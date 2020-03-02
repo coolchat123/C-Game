@@ -16,18 +16,18 @@ namespace Game
 
         public SText() : base() { }
 
-        public SText(string text, uint size) : base(text, Program.MyFont, size)
+        public SText(string text, uint size, string group1 = null, string group2 = null) : base(text, Program.MyFont, size)
         {
             Program.Strings.Add(this);
             RealPosition = Position;
         }
 
-        public SText(string text, float locationX, float locationY, uint size) : this(text, size)
+        public SText(string text, float locationX, float locationY, uint size, string group1 = null, string group2 = null) : this(text, size)
         {
             Position = new Vector2f(locationX, locationY);
         }
 
-        public SText(string text, Vector2f location, uint size) : this(text, location.X, location.Y, size) { }
+        public SText(string text, Vector2f location, uint size, string group1 = null, string group2 = null) : this(text, location.X, location.Y, size) { }
 
         // SetPosition changes the position of a sprite and also updates the RealPosition field.
         public void SetPosition(Vector2f position)

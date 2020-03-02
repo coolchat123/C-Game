@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.Window;
@@ -26,13 +28,15 @@ namespace Game
 
         public override void LoadContent()
         {
-            Map = new SSprite(new Texture("Content/Pacman/Map.png"));
-            Map.Position = new Vector2f(65, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
+            BGscreen = new SSprite(new Texture("Content/Pacman/BGScreenpm.png"));
+            BGscreen.Position = new Vector2f(65, Program.Window.Size.Y / 2 - BGscreen.Texture.Size.Y * Program.Scale / 2);
+            Console.WriteLine("bgscreen load");
+            //Map = new SSprite(new Texture("Content/Pacman/Map.png"));
+            //Map.Position = new Vector2f(65, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
             Character = new PacmCharacter(new Texture("Content/Pacman/pactest.png"));
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
             PointMap = new Image("Content/Pacman/pointmap.png");
             PointMap = new Image("Content/Pacman/Superpmapp.png");
-
         }
         public static void PlaySound(string filename)
         {
@@ -57,7 +61,7 @@ namespace Game
         public override void Initialise()
         {
             //Window.KeyPressed += Window_Keypressed;
-            Character.Position = new Vector2f(300, 332);
+            //Character.Position = new Vector2f(300, 332);
         }
 
         public override void Update(GameTime gameTime)

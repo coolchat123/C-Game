@@ -19,7 +19,8 @@ namespace Game
         static SSprite BGscreen;
         static PacmCharacter Character;
         static Image CollisionMap;
-        static Image PointMap;
+        static Image CollisionP;
+        static Image CollisionSP;
         static Sound PacMan;
         string beginpcS = "Content/Pacman/beginpcS.wav";
         string eatpcS = "Content/Pacman/eatpcS.wav";
@@ -28,15 +29,12 @@ namespace Game
 
         public override void LoadContent()
         {
-            BGscreen = new SSprite(new Texture("Content/Pacman/BGScreenpm.png"));
-            BGscreen.Position = new Vector2f(65, Program.Window.Size.Y / 2 - BGscreen.Texture.Size.Y * Program.Scale / 2);
-            Console.WriteLine("bgscreen load");
-            //Map = new SSprite(new Texture("Content/Pacman/Map.png"));
-            //Map.Position = new Vector2f(65, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
-            Character = new PacmCharacter(new Texture("Content/Pacman/pactest.png"));
+            Map = new SSprite(new Texture("Content/Pacman/Map.png"));
+            Map.Position = new Vector2f(65, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
+            Character = new PacmCharacter(new Texture("Content/Pacman/pacyellow.png"));
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
-            PointMap = new Image("Content/Pacman/pointmap.png");
-            PointMap = new Image("Content/Pacman/Superpmapp.png");
+            CollisionP = new Image("Content/Pacman/pointmap.png");
+            CollisionSP = new Image("Content/Pacman/Superpmapp.png");
         }
         public static void PlaySound(string filename)
         {
@@ -52,16 +50,16 @@ namespace Game
             {
                 PlaySound(beginpcS);
                 BGscreen = new SSprite(new Texture("Content/Pacman/BGScreenpm.png"));
-                BGscreen.Position = new Vector2f(65, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
+                BGscreen.Position = new Vector2f(65, Program.Window.Size.Y / 2 - BGscreen.Texture.Size.Y * Program.Scale / 2);
             }
 
-            
+
         }
 
         public override void Initialise()
         {
             //Window.KeyPressed += Window_Keypressed;
-            //Character.Position = new Vector2f(300, 332);
+            Character.Position = new Vector2f(300, 332);
         }
 
         public override void Update(GameTime gameTime)
@@ -89,10 +87,6 @@ namespace Game
                 Character.Position = new Vector2f(Character.Position.X, Character.Position.Y + 4);
                 //CheckCollision(Character.Position.X, Character.Position.Y + 4, Character.Position.X, Character.Position.Y + Character.Texture.Size.Y);
             }
-            if (Character.GetDirection() == 5)
-            {
-                Console.WriteLine("hello");
-            }
         }
 
         public bool CheckCollision(float x, float y, float x2, float y2)
@@ -110,6 +104,21 @@ namespace Game
                     }
                 }
             }
+            return false;
+        }
+            bool CheckP(float b, float c, float b2, float c2)
+            {
+                for (float bCheck = b; bCheck < b2; bCheck++)
+                {
+                    for (float cCheck = c; cCheck < c2; cCheck++)
+                    {
+                        Console.WriteLine("hello");
+                        if (CollisionP.GetPixel((uint)bCheck, (uint)cCheck) == Color.Red)
+                        {
+                            Score += 20;
+                        }
+                    }
+                }
 
                 /* if(!canmove)
                  *      kijken hoever ik wel kan bewegen
@@ -120,12 +129,7 @@ namespace Game
                 return false;
             }
         }
+    }
 
-        /* if(!canmove)
-         *      kijken hoever ik wel kan bewegen
-         * 
-         * 
-         */
-}
 
 

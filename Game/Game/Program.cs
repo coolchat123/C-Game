@@ -183,7 +183,7 @@ namespace Game
                 if(button != null)
                 {
                     bool mouseOver = button.GetGlobalBounds().Contains(mousePosition.X, mousePosition.Y);
-
+                    //pacmancharacter.texture.GetGlobalBounds().Intersects(balletje)
                     if (mouseOver != button.MouseOver)
                     {
                         if (mouseOver)

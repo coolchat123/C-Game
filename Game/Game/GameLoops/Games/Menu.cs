@@ -51,6 +51,8 @@ namespace Game
             OptionResolutionText.RealPosition = new Vector2f(OptionResolutionText.Position.X + Pan, OptionResolutionText.Position.Y);
         }
 
+        // LoadContent loads the textures of all our SSprites.
+        // It is called when an instance of this class is created.
         public override void LoadContent()
         {
             Pan = 0;
@@ -119,6 +121,8 @@ namespace Game
             GalleryReturn.MouseLeave += GalleryReturnLeave;
         }
 
+        // Initialise puts all the SSprites in their right place.
+        // It is called when an instance of this class is created.
         public override void Initialise()
         {
             // Place all SSprites on the menu.
@@ -126,6 +130,7 @@ namespace Game
             float buttonLargeSize = MenuPong.Texture.Size.X;
             float gamePreviewExcess = (Program.Texture.Size.X - buttonLargeSize * 4) / 3.5f;
 
+            // Place all SSprites on the main menu.
             MenuTitle.SetPosition(Program.Texture.Size.X / 2 - MenuTitle.Texture.Size.X / 2, Program.Texture.Size.Y / 4 - MenuTitle.Texture.Size.Y / 2);
             MenuPong.SetPosition(gamePreviewExcess, Program.Texture.Size.Y / 2);
             MenuSnake.SetPosition(gamePreviewExcess * 1.5f + buttonLargeSize, Program.Texture.Size.Y / 2);
@@ -149,6 +154,7 @@ namespace Game
             GalleryReturn.SetPosition(MenuOptions.Position.X + Program.Texture.Size.X, MenuOptions.Position.Y);
         }
 
+        // Update is called by Program every tick.
         public override void Update(GameTime gameTime)
         {
             if(Pan != PanGoal)
@@ -190,6 +196,7 @@ namespace Game
             }
         }
 
+        // KeyInput is called by Program every tick, once for every possibly relevant key that is being pressed by the player.
         public override void KeyInput(Keyboard.Key key)
         {
         }

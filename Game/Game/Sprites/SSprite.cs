@@ -57,6 +57,25 @@ namespace Game
 
         public SSprite() : base() { }
 
+        public SSprite(Color color, uint sizeX, uint sizeY, string group1 = null, string group2 = null) : base()
+        {
+            Program.Sprites.Add(this);
+            Groups[0] = group1;
+            Groups[1] = group2;
+
+            Image image = new Image(sizeX, sizeY);
+
+            for(uint i = 0; i < sizeX; i++)
+            {
+                for(uint j = 0; j < sizeY; j++)
+                {
+                    image.SetPixel(i, j, color);
+                }
+            }
+
+            this.Texture = new Texture(image);
+        }
+
         public SSprite(Texture texture, string group1 = null, string group2 = null) : base(texture)
         {
             Program.Sprites.Add(this);

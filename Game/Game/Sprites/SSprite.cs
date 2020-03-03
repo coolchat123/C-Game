@@ -14,6 +14,31 @@ namespace Game
     public class SSprite : Sprite
     {
         public string[] Groups = new string[2];
+        
+        public static Texture[] ParseSpritesheet(Image image, int amount, int width, int padding)
+        {
+            Texture[] result = new Texture[amount];
+
+            for(int i = 0; i < amount; i++)
+            {
+                result[i] = new Texture(image, new IntRect(i * (width + padding), 0, width, (int)image.Size.Y));
+            }
+
+            return result;
+        }
+
+        public static SSprite[] DrawSpritesheet(Texture[] spritesheet)
+        {
+            SSprite[] result = new SSprite[spritesheet.Length];
+
+            for(int i = 0; i < spritesheet.Length; i++)
+            {
+                result[i] = new SSprite(spritesheet[i]);
+                result[i].SetPosition(i * (5 + result[i].Texture.Size.X), 0);
+            }
+
+            return result;
+        }
 
         public enum Pin : int
         {

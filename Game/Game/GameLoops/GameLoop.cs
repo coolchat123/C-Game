@@ -19,5 +19,7 @@ namespace Game
         public abstract void Initialise();
 
         public abstract void Update(GameTime gameTime);
+
+        public abstract void KeyInput(Keyboard.Key key);
     }
 }

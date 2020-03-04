@@ -9,13 +9,27 @@ namespace Game
 {
     class Program
     {
+        public enum GameName
+        {
+            None = 0,
+            Pong = 1,
+            Snake = 2,
+            Pacman = 3,
+            Breakout = 4
+        }
+
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
-<<<<<<< Updated upstream
-=======
+        
         public static float Scale = 3f;
+        public static readonly Color TextureClearColour = Color.Blue;
         public static readonly Color WindowClearColour = Color.Black;
->>>>>>> Stashed changes
+
+        public static RenderTexture Texture;
+        public static Vector2f TexturePosition;
+        public static RenderWindow Window;
+
+        public static GameName ChangeGame = GameName.None;
 
         // "Sprites" is a list of sprites that should be drawn.
         // It is updated by the GameLoop class and its child classes.
@@ -29,21 +43,18 @@ namespace Game
 
         static void Main(string[] args)
         {
-            // Initialise the RenderWindow.
-            WindowClearColour = Color.Blue;
+            // Initialise the RenderWindow and RenderTexture.
+            Texture = new RenderTexture(268, 200);
             Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color");
+            TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);
             Window.Closed += Window_Closed;
-
-<<<<<<< Updated upstream
+            
             // Create an instance of the Menu class to occupy RunningGame.
             RunningGame = new Menu();
 
             // Load Menu's content and initialise it.
             RunningGame.LoadContent();
             RunningGame.Initialise();
-=======
-            LoadNewGame(new Pacman());
->>>>>>> Stashed changes
 
             // Create an instance of the Clock class provided by SFML.
             Clock clock = new Clock();
@@ -68,6 +79,27 @@ namespace Game
 
                 if (totalTimeBeforeUpdate >= TIME_UNTIL_UPDATE)
                 {
+                    if(ChangeGame != GameName.None)
+                    {
+                        switch (ChangeGame)
+                        {
+                            case GameName.Pong:
+                                LoadNewGame(new Pong());
+                                break;
+                            case GameName.Pacman:
+                                LoadNewGame(new Pacman());
+                                break;
+                            case GameName.Snake:
+                                LoadNewGame(new Snake());
+                                break;
+                            case GameName.Breakout:
+                                LoadNewGame(new Breakout());
+                                break;
+                        }
+
+                        ChangeGame = GameName.None;
+                    }
+
                     // Update game time
                     GameTime.Update(totalTimeBeforeUpdate, clock.ElapsedTime.AsSeconds());
                     totalTimeBeforeUpdate = 0f;
@@ -75,24 +107,11 @@ namespace Game
                     // Run program update function.
                     Update(GameTime);
 
-                    // Check for mouse clicks.
-                    if (Mouse.IsButtonPressed(Mouse.Button.Left))
-                    {
-                        Click();
-                    }
-
-                    // Run GameLoop update function.
-                    RunningGame.Update(GameTime);
-
                     // Draw
-                    Window.Clear(WindowClearColour);
                     Draw(GameTime);
-                    Window.Display();
                 }
             }
         }
-
-        public static RenderWindow Window;
 
         private static void Window_Closed(object sender, EventArgs a)
         {
@@ -100,8 +119,6 @@ namespace Game
         }
 
         public static GameTime GameTime;
-
-        public static Color WindowClearColour;
 
         public static void Click()
         {
@@ -114,6 +131,7 @@ namespace Game
                     if (button.MouseOver)
                     {
                         button.PerformClick();
+                        return;
                     }
                 }
             }
@@ -121,17 +139,18 @@ namespace Game
 
         public static void Update(GameTime gameTime)
         {
+            // Run GameLoop update function.
             RunningGame.Update(gameTime);
 
-            Vector2f mousePosition = Window.MapPixelToCoords(Mouse.GetPosition(Window));
-
+            // Check whether buttons are moused over.
+            Vector2f mousePosition = Texture.MapPixelToCoords(Mouse.GetPosition(Window));
             foreach (SSprite sprite in Sprites)
             {
                 Button button = sprite as Button;
                 
                 if(button != null)
                 {
-                    bool mouseOver = button.GetGlobalBounds().Contains(mousePosition.X, mousePosition.Y);
+                    bool mouseOver = button.GetGlobalBounds().Contains((mousePosition.X - TexturePosition.X) / Scale, (mousePosition.Y - TexturePosition.Y) / Scale);
 
                     if (mouseOver != button.MouseOver)
                     {
@@ -147,13 +166,52 @@ namespace Game
                     }
                 }
             }
+
+            // Check for mouse clicks.
+            if (Mouse.IsButtonPressed(Mouse.Button.Left))
+            {
+                Click();
+            }
         }
 
         public static void Draw(GameTime gameTime)
         {
-            foreach (Sprite sprite in Sprites)
+            Texture.Clear(TextureClearColour);
+
+            Window.Clear(WindowClearColour);
+
+            foreach (SSprite sprite in Sprites)
             {
-                Window.Draw(sprite);
+                Texture.Draw(sprite);
+            }
+
+            Texture.Display();
+
+            Sprite textureSprite = new Sprite(Texture.Texture);
+            textureSprite.Scale = new Vector2f(Scale, Scale);
+            textureSprite.Position = new Vector2f(TexturePosition.X, TexturePosition.Y);
+
+            Window.Draw(textureSprite);
+
+            Window.Display();
+        }
+
+        public static void LoadNewGame(GameLoop gameLoop)
+        {
+            // Clear list of sprites.
+            Sprites.Clear();
+            
+            // Set our new GameLoop to run.
+            RunningGame = gameLoop;
+
+            // Load the GameLoop's content and initialise it.
+            RunningGame.LoadContent();
+            RunningGame.Initialise();
+
+            // Initialise SSprite.RealPosition.
+            foreach(SSprite sprite in Sprites)
+            {
+                sprite.RealPosition = sprite.Position;
             }
         }
     }

@@ -114,7 +114,7 @@ namespace Game
             {
                 Ball.SetPosition(Ball.Position.X, Paddle.Position.Y - Ball.Texture.Size.Y);
                 int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (Paddle.Position.X + Paddle.Texture.Size.X / 2));
-                int newSpeed = 2 * distance / 14;
+                int newSpeed = 3 * distance / 14;
                 BallSpeed = new Vector2i(newSpeed, -BallSpeed.Y);
             }
 
@@ -138,7 +138,7 @@ namespace Game
                 if (!BallMoving)
                 {
                     BallMoving = true;
-                    BallSpeed = new Vector2i(0, -3);
+                    BallSpeed = new Vector2i(0, -2);
                 }
             } 
         }

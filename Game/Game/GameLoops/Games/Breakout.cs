@@ -8,13 +8,15 @@ namespace Game
 {
     public class Breakout : GameLoop
     {
-        public SSprite[,] Bricks;
+        static SSprite[,] Bricks;
 
-        public SSprite Paddle;
+        static SSprite Paddle;
 
-        public SSprite WallLeft;
-        public SSprite WallRight;
-        public SSprite WallTop;
+        static SSprite Ball;
+
+        static SSprite WallLeft;
+        static SSprite WallRight;
+        static SSprite WallTop;
 
         public Breakout() : base() { }
 

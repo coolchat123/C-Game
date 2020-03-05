@@ -15,7 +15,8 @@ namespace Game
             Pong = 1,
             Snake = 2,
             Pacman = 3,
-            Breakout = 4
+            Breakout = 4,
+            Menu = 5
         }
 
         public const int TARGET_FPS = 60;
@@ -107,6 +108,9 @@ namespace Game
                                 break;
                             case GameName.Breakout:
                                 LoadNewGame(new Breakout());
+                                break;
+                            case GameName.Menu:
+                                LoadNewGame(new Menu());
                                 break;
                         }
 

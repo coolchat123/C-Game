@@ -26,6 +26,8 @@ namespace Game
 
         static string NewDirection;
 
+        static Button Return;
+
         public Snake() : base() { }
 
         public override void LoadContent()
@@ -46,6 +48,11 @@ namespace Game
 
             ScoreText = new SText("score",11);
 
+            Return = new Button(new Texture("Content/Menu/MenuLeft.png"));
+            Return.Click += ReturnClick;
+            Return.MouseEnter += ReturnEnter;
+            Return.MouseLeave += ReturnLeave;
+
             SnakeHead = new SSprite(new Texture("content/snake/snakebox.png"));
             SnakeHead.Position = new SFML.System.Vector2f(210, 18);
 
@@ -65,6 +72,8 @@ namespace Game
 
             ScoreText.SetPosition(Scoreboard.Position.X + Scoreboard.Texture.Size.X / 2 - ScoreText.GetGlobalBounds().Width / 2,
                 ScoreNumber.Position.Y - ScoreText.GetGlobalBounds().Height - 5);
+
+            Return.SetPosition(Program.Texture.Size.X - Return.Texture.Size.X, 0);
         }
 
         public override void Update(GameTime gameTime)
@@ -84,22 +93,22 @@ namespace Game
         {
             SetScore();
 
-            if (key == Keyboard.Key.A && Direction != "right")
+            if ((key == Keyboard.Key.A || key == Keyboard.Key.Left) && Direction != "right")
             {
                 NewDirection = "left";
             }
 
-            if (key == Keyboard.Key.S && Direction != "up")
+            if ((key == Keyboard.Key.S || key == Keyboard.Key.Down) && Direction != "up")
             {
                 NewDirection = "down";
             }
 
-            if (key == Keyboard.Key.D && Direction != "left")
+            if ((key == Keyboard.Key.D || key == Keyboard.Key.Right) && Direction != "left")
             {
                 NewDirection = "right";
             }
 
-            if (key == Keyboard.Key.W && Direction != "down")
+            if ((key == Keyboard.Key.W || key == Keyboard.Key.Up) && Direction != "down")
             {
                 NewDirection = "up";
             }
@@ -136,6 +145,19 @@ namespace Game
                 SnakeHead.SetPosition(SnakeHead.Position.X, SnakeHead.Position.Y - 10);
             }
             Direction = NewDirection;
+        }
+
+        public void ReturnClick(object sender, EventArgs e)
+        {
+            Program.ChangeGame = Program.GameName.Menu;
+        }
+        public void ReturnEnter(object sender, EventArgs e)
+        {
+            Return.SetScale(1.1f, SSprite.Pin.Middle);
+        }
+        public void ReturnLeave(object sender, EventArgs e)
+        {
+            Return.SetScale(1f, SSprite.Pin.Middle);
         }
     }
 }

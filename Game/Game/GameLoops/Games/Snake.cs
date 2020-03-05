@@ -30,7 +30,7 @@ namespace Game
                 }
             }
             
-            Scoreboard = new SSprite(Color.Red,38,Program.Texture.Size.Y);
+            Scoreboard = new SSprite(Color.Green,38,Program.Texture.Size.Y);
 
             Score = 0;
 

@@ -10,6 +10,8 @@ namespace Game
     {
         public SSprite[,] Bricks;
 
+        public SSprite Paddle;
+
         public SSprite WallLeft;
         public SSprite WallRight;
         public SSprite WallTop;
@@ -18,6 +20,8 @@ namespace Game
 
         public override void LoadContent()
         {
+            Paddle = new SSprite(Color.White, 28, 6);
+
             Bricks = new SSprite[13, 8];
 
             for(int i = 0; i < 13; i++)
@@ -46,6 +50,8 @@ namespace Game
             WallLeft.SetPosition(2, 2);
             WallTop.SetPosition(WallLeft.Position.X + WallLeft.Texture.Size.X, WallLeft.Position.Y);
             WallRight.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X, WallTop.Position.Y);
+
+            Paddle.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X / 2 - Paddle.Texture.Size.X / 2, 176);
         }
 
         public override void Update(GameTime gameTime)
@@ -54,6 +60,24 @@ namespace Game
 
         public override void KeyInput(Keyboard.Key key)
         {
+            if (key == Keyboard.Key.A || key == Keyboard.Key.Left)
+            {
+                Paddle.SetPosition(Paddle.Position.X - 3, Paddle.Position.Y);
+
+                if (Paddle.GetGlobalBounds().Intersects(WallLeft.GetGlobalBounds()))
+                {
+                    Paddle.SetPosition(WallLeft.Position.X + WallLeft.Texture.Size.X, Paddle.Position.Y);
+                }
+            }
+            else if (key == Keyboard.Key.D || key == Keyboard.Key.Right)
+            {
+                Paddle.SetPosition(Paddle.Position.X + 3, Paddle.Position.Y);
+
+                if (Paddle.GetGlobalBounds().Intersects(WallRight.GetGlobalBounds()))
+                {
+                    Paddle.SetPosition(WallRight.Position.X - Paddle.Texture.Size.X, Paddle.Position.Y);
+                }
+            }
         }
     }
 }

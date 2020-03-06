@@ -54,7 +54,7 @@ namespace Game
             Return.MouseLeave += ReturnLeave;
 
             SnakeHead = new SSprite(new Texture("content/snake/snakebox.png"));
-            SnakeHead.Position = new SFML.System.Vector2f(210, 18);
+            SnakeHead.Position = new SFML.System.Vector2f(210, 20);
 
             Direction = "left";
 
@@ -128,21 +128,25 @@ namespace Game
             if (NewDirection == "left")
             {
                 SnakeHead.SetPosition(SnakeHead.Position.X-10, SnakeHead.Position.Y);
+                Console.WriteLine(SnakeHead.Position);
             }
 
             if (NewDirection == "down")
             {
                 SnakeHead.SetPosition(SnakeHead.Position.X, SnakeHead.Position.Y + 10);
+                Console.WriteLine(SnakeHead.Position);
             }
 
             if (NewDirection == "right")
             {
                 SnakeHead.SetPosition(SnakeHead.Position.X + 10, SnakeHead.Position.Y);
+                Console.WriteLine(SnakeHead.Position);
             }
 
             if (NewDirection == "up")
             {
                 SnakeHead.SetPosition(SnakeHead.Position.X, SnakeHead.Position.Y - 10);
+                Console.WriteLine(SnakeHead.Position);
             }
             Direction = NewDirection;
         }

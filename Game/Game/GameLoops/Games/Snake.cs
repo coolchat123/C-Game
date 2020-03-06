@@ -32,7 +32,7 @@ namespace Game
 
         public override void LoadContent()
         {
-            Grid = new bool[23,20]; 
+            Grid = new bool[23,20];
 
             for(int i = 0; i < 23; i++){
                 for(int j = 0; j < 20; j++){
@@ -87,6 +87,8 @@ namespace Game
             {
                 Timer -= 1;
             }
+
+
         }
 
         public override void KeyInput(Keyboard.Key key)
@@ -149,19 +151,47 @@ namespace Game
                 Console.WriteLine(SnakeHead.Position);
             }
             Direction = NewDirection;
+
+            GameOverCheck();
+
         }
 
         public void ReturnClick(object sender, EventArgs e)
         {
             Program.ChangeGame = Program.GameName.Menu;
         }
+
         public void ReturnEnter(object sender, EventArgs e)
         {
             Return.SetScale(1.1f, SSprite.Pin.Middle);
         }
+
         public void ReturnLeave(object sender, EventArgs e)
         {
             Return.SetScale(1f, SSprite.Pin.Middle);
         }
+
+        public bool GameOverCheck()
+        {
+            if (SnakeHead.Position.X <= -1 || SnakeHead.Position.Y <= -1 || SnakeHead.Position.X >=211 || SnakeHead.Position.Y >= 181)
+
+            {
+                Console.WriteLine("test");
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+
+
+        }
+
+        public void GameOver()
+        {
+            
+        }
+
     }
 }

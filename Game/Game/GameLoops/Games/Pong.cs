@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SFML.Window;
 using SFML.Graphics;
+using SFML.System;
 
 namespace Game
 {
@@ -19,6 +20,14 @@ namespace Game
         static SSprite BottomLine;
 
         static SSprite[] MiddleLine;
+
+        static int RightPaddlespeed;
+
+        static int LeftPaddlespeed;
+
+        static bool BallMoving;
+
+        static Vector2i Ballspeed;
 
         public Pong() : base() { }
 
@@ -52,10 +61,43 @@ namespace Game
 
         public override void Update(GameTime gameTime)
         {
+            RightPaddle.SetPosition(RightPaddle.Position.X, RightPaddle.Position.Y + RightPaddlespeed);
+
+            RightPaddlespeed = 0;
+
+            LeftPaddle.SetPosition(LeftPaddle.Position.X, LeftPaddle.Position.Y + LeftPaddlespeed);
+
+            LeftPaddlespeed = 0;       
         }
 
         public override void KeyInput(Keyboard.Key key)
         {
+            if (key == Keyboard.Key.K)
+            {
+                RightPaddlespeed = -3;
+            }
+            else if (key == Keyboard.Key.M)
+            {
+                RightPaddlespeed = 3;
+            }
+
+            if (key == Keyboard.Key.A)
+            {
+                LeftPaddlespeed = -3;
+            }
+            else if (key == Keyboard.Key.Z)
+            {
+                LeftPaddlespeed = 3;
+            }
+            if (key == Keyboard.Key.Space)
+            {
+                if (!BallMoving)
+                {
+                    BallMoving = true;
+                   Ballspeed = new Vector2i(0, -2);
+                }
+            }
+
         }
     }
 }

@@ -246,6 +246,18 @@ namespace Game
             {
                 RunningGame.KeyInput(Keyboard.Key.Right);
             }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.K))
+            {
+                RunningGame.KeyInput(Keyboard.Key.K);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.M))
+            {
+                RunningGame.KeyInput(Keyboard.Key.M);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Z))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Z);
+            }
         }
 
         // Draw is called once every tick by the game loop.

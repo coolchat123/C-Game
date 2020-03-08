@@ -33,6 +33,8 @@ namespace Game
 
         public override void LoadContent()
         {
+
+            BallMoving = false;
             LeftPaddle = new SSprite(Color.White, 6, 30);
             RightPaddle = new SSprite(Color.White, 6, 30);
             Ball = new SSprite(Color.White, 7, 7);
@@ -67,7 +69,24 @@ namespace Game
 
             LeftPaddle.SetPosition(LeftPaddle.Position.X, LeftPaddle.Position.Y + LeftPaddlespeed);
 
-            LeftPaddlespeed = 0;       
+            LeftPaddlespeed = 0;
+
+            Ball.SetPosition(Ball.Position.X + Ballspeed.X, Ball.Position.Y + Ballspeed.Y);
+
+            if (Ball.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
+            {
+                Ball.SetPosition(Ball.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
+                Ballspeed = new Vector2i(Ballspeed.X, -Ballspeed.Y);
+            }
+            if (Ball.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
+            {
+                Ball.SetPosition(Ball.Position.X, BottomLine.Position.Y - Ball.Texture.Size.Y);
+                Ballspeed = new Vector2i(Ballspeed.X, -Ballspeed.Y);
+            }
+            if (LeftPaddle.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
+            {
+                LeftPaddle.SetPosition(LeftPaddle.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
+            }
         }
 
         public override void KeyInput(Keyboard.Key key)

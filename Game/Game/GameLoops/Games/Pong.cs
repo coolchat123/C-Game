@@ -26,14 +26,14 @@ namespace Game
         {
             LeftPaddle = new SSprite(Color.White, 6, 30);
             RightPaddle = new SSprite(Color.White, 6, 30);
-            Ball = new SSprite(Color.White, 6, 6);
+            Ball = new SSprite(Color.White, 7, 7);
             UpperLine = new SSprite(Color.White, 268, 6);
             BottomLine = new SSprite(Color.White, 268, 6);
             MiddleLine = new SSprite[17];
 
             for (int i = 0; i < 17; i++)
             {
-                MiddleLine[i] = new SSprite(Color.White, 6, 6);
+                MiddleLine[i] = new SSprite(Color.White, 3, 3);
             }
         }
 

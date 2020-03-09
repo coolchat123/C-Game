@@ -4,6 +4,7 @@ using System.Text;
 using SFML.Window;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Audio;
 
 namespace Game
 {
@@ -14,16 +15,21 @@ namespace Game
         int Score = 0;
         static SSprite Map;
         static Image CollisionMap;
+        static SSprite PacMan;
+        string music = "Content/Pacman/eatpcS.wav";
         public Pacman() : base() { }
 
         public override void LoadContent()
         {
             Map = new SSprite(new Texture("Content/Pacman/Map.png"));
-            Map.Position = new Vector2f(10, Program.Window.Size.Y / 2 - Map.Texture.Size.Y * Program.Scale / 2);
+            PacMan = new SSprite(Color.Yellow, 16, 12);
+            Program.PlaySound(music);
         }
 
         public override void Initialise()
         {
+            Map.Position = new Vector2f(10, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
+            PacMan.Position = new Vector2f(100, Map.Position.Y + 100);
         }
 
         public override void Update(GameTime gameTime)
@@ -34,8 +40,19 @@ namespace Game
         {
             if (key == Keyboard.Key.W)
             {
-                Console.WriteLine("test");
-                
+                PacMan.SetPosition(PacMan.Position.X ,PacMan.Position.Y - 4);
+            }
+            if (key == Keyboard.Key.A)
+            {
+                PacMan.SetPosition(PacMan.Position.X - 4, PacMan.Position.Y);
+            }
+            if (key == Keyboard.Key.S)
+            {
+                PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y + 4);
+            }
+            if (key == Keyboard.Key.D)
+            {
+                PacMan.SetPosition(PacMan.Position.X + 4, PacMan.Position.Y);
             }
         }
 

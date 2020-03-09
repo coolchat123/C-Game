@@ -4,6 +4,7 @@ using SFML;
 using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
+using SFML.Audio;
 
 namespace Game
 {
@@ -293,6 +294,15 @@ namespace Game
             {
                 sprite.RealPosition = sprite.Position;
             }
+        }
+
+        //to play a sound.
+        public static void PlaySound(string filename)
+        {
+            var sound = new Sound(new SoundBuffer(filename));
+            sound.Loop = true;
+            sound.Volume = 50;
+            sound.Play();
         }
 
         public static void ResizeWindow(bool fullscreen = false)

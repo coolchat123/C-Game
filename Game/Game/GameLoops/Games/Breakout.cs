@@ -14,6 +14,14 @@ namespace Game
         static int SpeedModifier;
         static int BricksBroken;
 
+        static SText ScoreInfoText;
+        static SText ScoreText;
+        static int Score;
+
+        static SText LivesInfoText;
+        static SText LivesText;
+        static int Lives;
+
         static SSprite Paddle;
         static int PaddleSpeed;
 
@@ -34,6 +42,14 @@ namespace Game
 
             SpeedModifier = 0;
             BricksBroken = 0;
+
+            Score = 0;
+            ScoreInfoText = new SText("Score", 11);
+            ScoreText = new SText("0", 11);
+
+            Lives = 2;
+            LivesInfoText = new SText("Lives", 11);
+            LivesText = new SText("0", 11);
 
             Ball = new SSprite(Color.White, 3, 3);
             BallSpeed = new Vector2i(0, 0);
@@ -73,6 +89,14 @@ namespace Game
 
             Ball.SetPosition(Paddle.Position.X + Paddle.Texture.Size.X / 2 - Ball.Texture.Size.X / 2,
                 Paddle.Position.Y - Ball.Texture.Size.Y);
+
+            int scoreboardLeft = (int)WallRight.Position.X + (int)WallRight.Texture.Size.X + 2;
+            int scoreboardWidth = (int)Program.Texture.Size.X - scoreboardLeft;
+            ScoreInfoText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - ScoreInfoText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2);
+            ScoreText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - ScoreText.GetGlobalBounds().Width / 2, ScoreInfoText.Position.Y + ScoreInfoText.GetGlobalBounds().Height + 3);
+
+            LivesInfoText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesInfoText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 4 * 3);
+            LivesText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesText.GetGlobalBounds().Width / 2, LivesInfoText.Position.Y + LivesInfoText.GetGlobalBounds().Height + 3);
         }
 
         public override void Update(GameTime gameTime)
@@ -132,7 +156,19 @@ namespace Game
 
                 // Set ball X speed to 0-3 depending on distance to paddle middle.
                 int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (Paddle.Position.X + Paddle.Texture.Size.X / 2));
-                int newSpeed = 3 * distance / 14;
+                int newSpeed;
+                if (distance < -9 || distance > 9)
+                {
+                    newSpeed = distance / Math.Abs(distance) * 2;
+                }
+                else if (distance < -4 || distance > 4)
+                {
+                    newSpeed = distance / Math.Abs(distance) * 1;
+                }
+                else
+                {
+                    newSpeed = BallSpeed.X;
+                }
                 BallSpeed = new Vector2i(newSpeed, -BallSpeed.Y);
             }
 
@@ -140,12 +176,15 @@ namespace Game
             if (Ball.Position.Y > Program.Texture.Size.Y)
             {
                 BallMoving = false;
+                SetLives(Lives - 1);
             }
 
             foreach (SSprite brick in Bricks)
             {
+                // If ball collides with a brick
                 if (Ball.GetGlobalBounds().Intersects(brick.GetGlobalBounds()))
                 {
+                    // Get rid of brick
                     Program.Sprites.Remove(brick);
                     Bricks.Remove(brick);
 
@@ -154,6 +193,8 @@ namespace Game
                         BricksBroken = 0;
                         SpeedModifier += 1;
                     }
+
+                    SetScore(Score + 1);
 
                     Console.WriteLine(BricksBroken + ", " + SpeedModifier);
 
@@ -196,9 +237,21 @@ namespace Game
                 if (!BallMoving)
                 {
                     BallMoving = true;
-                    BallSpeed = new Vector2i(0, -2);
+                    BallSpeed = new Vector2i(1, -2);
                 }
             } 
+        }
+
+        public void SetScore(int newScore)
+        {
+            Score = newScore;
+            ScoreText.DisplayedString = newScore.ToString();
+        }
+
+        public void SetLives(int newLives)
+        {
+            Lives = newLives;
+            LivesText.DisplayedString = newLives.ToString();
         }
     }
 }

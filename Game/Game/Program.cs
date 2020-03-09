@@ -20,36 +20,14 @@ namespace Game
 
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
-        public static readonly Color TextureClearColour = Color.Black;
-        public static readonly Color WindowClearColour = Color.Black;
-
-        public static RenderTexture Texture;
-        public static Vector2f TexturePosition;
-        public static RenderWindow Window;
-        public static int CurrentResolution = 0;
-        public static List<Vector2u> Resolutions = new List<Vector2u>
-        {
-            new Vector2u(804, 600), // 3x
-            new Vector2u(1072, 800), // 4x
-            new Vector2u(1340, 1000), // 5x
-            new Vector2u(1608, 1200), // 6x
-            new Vector2u(1876, 1400), // 7x
-            new Vector2u(2144, 1600) // 8x
-        };
         public static float Scale = 3f;
-        public static bool Fullscreen;
-
-        public static Font MyFont;
-
-        public static bool LeftPressed = false;
+        public static readonly Color WindowClearColour = Color.Black;
 
         public static GameName ChangeGame = GameName.None;
 
         // "Sprites" is a list of sprites that should be drawn.
         // It is updated by the GameLoop class and its child classes.
         public static List<Sprite> Sprites = new List<Sprite> { };
-
-        public static List<Text> Strings = new List<Text> { };
 
         // "RunningGame" is the GameLoop that is currently running.
         // GameLoop is an abstract class, so RunningGame can only ever be one of its child classes.
@@ -59,16 +37,16 @@ namespace Game
 
         static void Main(string[] args)
         {
-            // Initialise the RenderWindow and RenderTexture.
-            Texture = new RenderTexture(268, 200);
-            Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Close);
-            ResizeWindow();
+            // Initialise the RenderWindow.
+            Window = new RenderWindow(new VideoMode(800, 600), "Steenboy Color");
             Window.Closed += Window_Closed;
             
             // Create an instance of the Menu class to occupy RunningGame.
             RunningGame = new Menu();
 
-            MyFont = new Font("Content/arialbd.ttf");
+            // Load Menu's content and initialise it.
+            RunningGame.LoadContent();
+            RunningGame.Initialise();
 
             LoadNewGame(new Pacman());
 
@@ -124,10 +102,14 @@ namespace Game
                     Update(GameTime);
 
                     // Draw
+                    Window.Clear(WindowClearColour);
                     Draw(GameTime);
+                    Window.Display();
                 }
             }
         }
+
+        public static RenderWindow Window;
 
         private static void Window_Closed(object sender, EventArgs a)
         {
@@ -136,7 +118,6 @@ namespace Game
 
         public static GameTime GameTime;
 
-        // Click is called by Update every time LMB is pressed.
         public static void Click()
         {
             foreach (SSprite sprite in Sprites)
@@ -154,24 +135,55 @@ namespace Game
             }
         }
 
-        // Update is called once every tick from the game loop.
+        public static void WASD(Keyboard.Key key)
+        {
+            foreach (SSprite sprite in Sprites)
+            {
+                PacmCharacter pacmCharacter = sprite as PacmCharacter;
+
+                if (pacmCharacter != null)
+                {
+                    if(key == Keyboard.Key.W)
+                    {
+                        pacmCharacter.ChangeDirection(3);
+                    }
+                    if (key == Keyboard.Key.A)
+                    {
+                        pacmCharacter.ChangeDirection(1);
+                    }
+                    if (key == Keyboard.Key.S)
+                    {
+                        pacmCharacter.ChangeDirection(4);
+                    }
+                    if (key == Keyboard.Key.D)
+                    {
+                        pacmCharacter.ChangeDirection(2);
+                    }
+                    if (key == Keyboard.Key.Return)
+                    {
+                        pacmCharacter.ChangeDirection(5);
+                    }
+
+                }
+            }
+        }
+
+
         public static void Update(GameTime gameTime)
         {
+            // Run GameLoop update function.
+            RunningGame.Update(gameTime);
+
             // Check whether buttons are moused over.
-            Vector2f mousePosition = Texture.MapPixelToCoords(Mouse.GetPosition(Window));
+            Vector2f mousePosition = Window.MapPixelToCoords(Mouse.GetPosition(Window));
             foreach (SSprite sprite in Sprites)
             {
                 Button button = sprite as Button;
                 
                 if(button != null)
                 {
-                    if(button.JustClicked > 0)
-                    {
-                        button.JustClicked -= 1;
-                    }
-
-                    bool mouseOver = (button.GetGlobalBounds().Contains((mousePosition.X - TexturePosition.X) / Scale, (mousePosition.Y - TexturePosition.Y) / Scale) && button.JustClicked == 0);
-
+                    bool mouseOver = button.GetGlobalBounds().Contains(mousePosition.X, mousePosition.Y);
+                    //pacmancharacter.texture.GetGlobalBounds().Intersects(balletje)
                     if (mouseOver != button.MouseOver)
                     {
                         if (mouseOver)
@@ -187,96 +199,40 @@ namespace Game
                 }
             }
 
-            // Run GameLoop update function.
-            RunningGame.Update(gameTime);
-
             // Check for mouse clicks.
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
-                if (!LeftPressed)
-                {
-                    LeftPressed = true;
-                    Click();
-                }
-            }
-            else
-            {
-                LeftPressed = false;
+                Click();
             }
 
-            // Check for keyboard input.
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
-            {
-                RunningGame.KeyInput(Keyboard.Key.A);
-            }
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
-                RunningGame.KeyInput(Keyboard.Key.W);
+                WASD(Keyboard.Key.W);
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
-                RunningGame.KeyInput(Keyboard.Key.D);
+                WASD(Keyboard.Key.D);
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+            {
+                WASD(Keyboard.Key.A);
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
-                RunningGame.KeyInput(Keyboard.Key.S);
+                WASD(Keyboard.Key.S);
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.Return))
             {
-                RunningGame.KeyInput(Keyboard.Key.Return);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
-            {
-                RunningGame.KeyInput(Keyboard.Key.Space);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Tab))
-            {
-                RunningGame.KeyInput(Keyboard.Key.Tab);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
-            {
-                RunningGame.KeyInput(Keyboard.Key.Up);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
-            {
-                RunningGame.KeyInput(Keyboard.Key.Down);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
-            {
-                RunningGame.KeyInput(Keyboard.Key.Left);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
-            {
-                RunningGame.KeyInput(Keyboard.Key.Right);
+                WASD(Keyboard.Key.Return);
             }
         }
 
-        // Draw is called once every tick by the game loop.
         public static void Draw(GameTime gameTime)
         {
-            Texture.Clear(TextureClearColour);
-
-            Window.Clear(WindowClearColour);
-
             foreach (SSprite sprite in Sprites)
             {
-                Texture.Draw(sprite);
+                Window.Draw(sprite);
             }
-
-            foreach(Text text in Strings)
-            {
-                Texture.Draw(text);
-            }
-
-            Texture.Display();
-
-            Sprite textureSprite = new Sprite(Texture.Texture);
-            textureSprite.Scale = new Vector2f(Scale, Scale);
-            textureSprite.Position = new Vector2f(TexturePosition.X, TexturePosition.Y);
-
-            Window.Draw(textureSprite);
-
-            Window.Display();
         }
 
         public static void LoadNewGame(GameLoop gameLoop)
@@ -296,38 +252,6 @@ namespace Game
             {
                 sprite.RealPosition = sprite.Position;
             }
-        }
-
-        public static void ResizeWindow(bool fullscreen = false)
-        {
-            Vector2u oldSize = Window.Size;
-
-            if (fullscreen)
-            {
-                Window.Close();
-                Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Fullscreen);
-                Window.Closed += Window_Closed;
-
-                Fullscreen = true;
-            }
-            else
-            {
-                if(Fullscreen)
-                {
-                    Window.Close();
-                    Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Close);
-                    Window.Closed += Window_Closed;
-
-                    Fullscreen = false;
-                }
-
-                Window.Size = Resolutions[CurrentResolution];
-            }
-
-            Window.Position = new Vector2i(Math.Max((int)VideoMode.DesktopMode.Width / 2 - (int)Window.Size.X / 2, 0), Math.Max((int)VideoMode.DesktopMode.Height / 2 - (int)Window.Size.Y / 2, 0));
-            Window.SetView(new View(new Vector2f(Window.Size.X / 2, Window.Size.Y / 2), new Vector2f(Window.Size.X, Window.Size.Y)));
-            Scale = Math.Min((int)Window.Size.X / Texture.Size.X, (int)Window.Size.Y / Texture.Size.Y);
-            TexturePosition = new Vector2f(Window.Size.X / 2 - Texture.Size.X * Scale / 2, Window.Size.Y / 2 - Texture.Size.Y * Scale / 2);
         }
     }
 }

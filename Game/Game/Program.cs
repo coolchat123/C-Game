@@ -284,6 +284,7 @@ namespace Game
         {
             // Clear list of sprites.
             Sprites.Clear();
+            Strings.Clear();
             
             // Set our new GameLoop to run.
             RunningGame = gameLoop;
@@ -296,6 +297,10 @@ namespace Game
             foreach(SSprite sprite in Sprites)
             {
                 sprite.RealPosition = sprite.Position;
+            }
+            foreach(SText text in Strings)
+            {
+                text.RealPosition = text.Position;
             }
         }
 

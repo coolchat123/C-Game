@@ -12,34 +12,35 @@ namespace Game
     {
         public Button() { }
 
-        public Button(RenderWindow window, Texture texture) : base(texture)
+        public Button(Texture texture, string group1 = null, string group2 = null) : base(texture, group1, group2)
         {
-            Vector2f mousePosition = window.MapPixelToCoords(Mouse.GetPosition(window));
-            MouseOver = GetGlobalBounds().Contains(mousePosition.X, mousePosition.Y);
+            MouseOver = false;
+            JustClicked = 0;
         }
 
-        public Button(RenderWindow window, Texture texture, float locationX, float locationY) : this(window, texture)
+        public Button(Texture texture, float locationX, float locationY, string group1 = null, string group2 = null) : this(texture, group1, group2)
         {
             Position = new Vector2f(locationX, locationY);
         }
 
-        public Button(RenderWindow window, Texture texture, Vector2f location) : this(window, texture, location.X, location.Y) { }
+        public Button(Texture texture, Vector2f location, string group1 = null, string group2 = null) : this(texture, location.X, location.Y, group1, group2) { }
 
-        // The "Click" event is called when this button is clicked.
+        // The "Click" event is called by Program when this button is clicked.
         public event EventHandler Click;
         public void PerformClick()
         {
             Click(this, EventArgs.Empty);
+            JustClicked = 10;
         }
 
-        // The "MouseEnter" event is called when the mouse enters this button's hitbox.
+        // The "MouseEnter" event is called by Program when the mouse enters this button's hitbox.
         public event EventHandler MouseEnter;
         public void PerformMouseEnter()
         {
             MouseEnter(this, EventArgs.Empty);
         }
 
-        // The "MouseLeave" event is called when the mouse leaves this button's hitbox.
+        // The "MouseLeave" event is called by Program when the mouse leaves this button's hitbox.
         public event EventHandler MouseLeave;
         public void PerformMouseLeave()
         {
@@ -47,5 +48,6 @@ namespace Game
         }
 
         public bool MouseOver;
+        public byte JustClicked;
     }
 }

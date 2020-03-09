@@ -9,6 +9,14 @@ namespace Game
 {
     public class Pong : GameLoop
     {
+        static int scoreLeft = 0;
+        static int scoreRight = 0;
+        static SText scoreLText = new SText(scoreLeft.ToString(),11);
+        static SText scoreRText = new SText(scoreRight.ToString(), 11);
+
+        
+        //int score = 100000;
+
         static SSprite LeftPaddle;
 
         static SSprite RightPaddle;
@@ -29,11 +37,12 @@ namespace Game
 
         static Vector2i Ballspeed;
 
+
         public Pong() : base() { }
 
         public override void LoadContent()
         {
-            
+            int score = 100000;
             BallMoving = false;
             LeftPaddle = new SSprite(Color.White, 6, 30);
             RightPaddle = new SSprite(Color.White, 6, 30);
@@ -46,6 +55,12 @@ namespace Game
             {
                 MiddleLine[i] = new SSprite(Color.White, 3, 3);
             }
+            //scoreLText.DisplayedString = score.ToString();
+            scoreLText.Position = new Vector2f(67,50);
+            scoreLText.Color = Color.White;
+
+            scoreRText.Position = new Vector2f(197, 50);
+            scoreRText.Color = Color.White;
         }
 
         public override void Initialise()
@@ -105,7 +120,7 @@ namespace Game
             {
                 Ball.SetPosition(RightPaddle.Position.X - Ball.Texture.Size.X, Ball.Position.Y);
 
-                int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (RightPaddle.Position.X + RightPaddle.Texture.Size.X / 2));
+                int distance = (int)(Ball.Position.Y + Ball.Texture.Size.Y / 2 - (RightPaddle.Position.Y + RightPaddle.Texture.Size.Y / 2));
                 int newSpeed = 3 * distance / 14;
                 Ballspeed = new Vector2i(-Ballspeed.X, newSpeed);
             }
@@ -113,11 +128,19 @@ namespace Game
             {
                 Ball.SetPosition(LeftPaddle.Position.X + LeftPaddle.Texture.Size.X, Ball.Position.Y);
 
-                int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (LeftPaddle.Position.X + LeftPaddle.Texture.Size.X / 2));
+                int distance = (int)(Ball.Position.Y + Ball.Texture.Size.Y / 2 - (LeftPaddle.Position.Y + LeftPaddle.Texture.Size.Y / 2));
                 int newSpeed = 3 * distance / 14;
                 Ballspeed = new Vector2i(-Ballspeed.X, newSpeed);
             }
-            if (Ball.Position.X > RightPaddle.Position.X || Ball.Position.X < LeftPaddle.Position.X) {
+            if (Ball.Position.X > RightPaddle.Position.X) {
+                scoreLeft += 1;
+                scoreLText.DisplayedString = scoreLeft.ToString();
+                Ball.SetPosition(134, 100);
+            }
+            
+            if( Ball.Position.X < LeftPaddle.Position.X) {
+                scoreRight += 1;
+                scoreRText.DisplayedString = scoreRight.ToString();
                 Ball.SetPosition(134, 100);
             }
 

@@ -136,6 +136,12 @@ namespace Game
                 BallSpeed = new Vector2i(newSpeed, -BallSpeed.Y);
             }
 
+            // If ball goes below screen, reset ball and remove life.
+            if (Ball.Position.Y > Program.Texture.Size.Y)
+            {
+                BallMoving = false;
+            }
+
             foreach (SSprite brick in Bricks)
             {
                 if (Ball.GetGlobalBounds().Intersects(brick.GetGlobalBounds()))

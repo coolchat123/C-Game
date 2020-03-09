@@ -9,7 +9,10 @@ namespace Game
 {
     public class Breakout : GameLoop
     {
-        static SSprite[,] Bricks;
+        static List<SSprite> Bricks;
+
+        static int SpeedModifier;
+        static int BricksBroken;
 
         static SSprite Paddle;
         static int PaddleSpeed;
@@ -29,17 +32,20 @@ namespace Game
             Paddle = new SSprite(Color.White, 28, 6);
             PaddleSpeed = 0;
 
+            SpeedModifier = 0;
+            BricksBroken = 0;
+
             Ball = new SSprite(Color.White, 3, 3);
             BallSpeed = new Vector2i(0, 0);
             BallMoving = false;
 
-            Bricks = new SSprite[13, 8];
+            Bricks = new List<SSprite>();
 
             for(int i = 0; i < 13; i++)
             {
                 for(int j = 0; j < 8; j++)
                 {
-                    Bricks[i, j] = new SSprite(Color.White, 14, 6);
+                    Bricks.Add(new SSprite(Color.White, 14, 6));
                 }
             }
 
@@ -50,12 +56,13 @@ namespace Game
 
         public override void Initialise()
         {
-            for(int i = 0; i < 13; i++)
+            int brickAmount = 0;
+            foreach (SSprite brick in Bricks)
             {
-                for(int j = 0; j < 8; j++)
-                {
-                    Bricks[i, j].SetPosition(10 + i * 16, 18 + j * 8);
-                }
+                int i = brickAmount / 13;
+                int j = brickAmount - i * 13;
+                brick.SetPosition(10 + j * 16, 18 + i * 8);
+                brickAmount += 1;
             }
 
             WallLeft.SetPosition(2, 2);
@@ -127,6 +134,37 @@ namespace Game
                 int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (Paddle.Position.X + Paddle.Texture.Size.X / 2));
                 int newSpeed = 3 * distance / 14;
                 BallSpeed = new Vector2i(newSpeed, -BallSpeed.Y);
+            }
+
+            foreach (SSprite brick in Bricks)
+            {
+                if (Ball.GetGlobalBounds().Intersects(brick.GetGlobalBounds()))
+                {
+                    Program.Sprites.Remove(brick);
+                    Bricks.Remove(brick);
+
+                    if(++BricksBroken > 20)
+                    {
+                        BricksBroken = 0;
+                        SpeedModifier += 1;
+                    }
+
+                    Console.WriteLine(BricksBroken + ", " + SpeedModifier);
+
+                    if((Ball.Position.X + Ball.Texture.Size.X - brick.Position.X > 0 && Ball.Position.X + Ball.Texture.Size.X - brick.Position.X < BallSpeed.X)
+                        || (Ball.Position.X - (brick.Position.X + brick.Texture.Size.X) < 0 && Ball.Position.X - (brick.Position.X + brick.Texture.Size.X) > BallSpeed.X))
+                    {
+                        BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
+                    }
+
+                    if ((Ball.Position.Y + Ball.Texture.Size.Y - brick.Position.Y > 0 && Ball.Position.Y + Ball.Texture.Size.Y - brick.Position.Y < BallSpeed.Y)
+                        || (Ball.Position.Y - (brick.Position.Y + brick.Texture.Size.Y) < 0 && Ball.Position.Y - (brick.Position.Y + brick.Texture.Size.Y) > BallSpeed.Y))
+                    {
+                        BallSpeed = new Vector2i(BallSpeed.X, -BallSpeed.Y);
+                    }
+
+                    break;
+                }
             }
 
             // Reset paddle speed to 0.

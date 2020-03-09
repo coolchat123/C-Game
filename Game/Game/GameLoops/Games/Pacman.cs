@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using SFML.Window;
+using SFML.Graphics;
+using SFML.System;
 
 namespace Game
 {
@@ -11,6 +13,7 @@ namespace Game
         int Life = 2;
         int Score = 0;
         static SSprite Map;
+        static Image CollisionMap;
         public Pacman() : base() { }
 
         public override void LoadContent()

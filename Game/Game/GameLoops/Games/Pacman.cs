@@ -37,7 +37,7 @@ namespace Game
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
             CollisionP = new Image("Content/Pacman/pointmap.png");
             CollisionSP = new Image("Content/Pacman/Superpmapp.png");
-            
+
             PacManLife = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
             PacManLife.Position = new Vector2f(730, Program.Window.Size.Y / 2 - PacManLife.Texture.Size.Y * Program.Scale / 2);
             PacManLife = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
@@ -73,7 +73,7 @@ namespace Game
         {
             if (Character.GetDirection() == 1)
             {
-                if (CheckCollision((Character.Position.X - 4 ) / Program.Scale, Character.Position.Y / Program.Scale, Character.Position.X / Program.Scale, (Character.Position.Y + Character.Texture.Size.Y) / Program.Scale))
+                if (CheckCollision((Character.Position.X - 4) / Program.Scale, Character.Position.Y / Program.Scale, Character.Position.X / Program.Scale, (Character.Position.Y + Character.Texture.Size.Y) / Program.Scale))
                 {
                     Character.Position = new Vector2f(Character.Position.X - 4, Character.Position.Y);
                 }
@@ -117,29 +117,53 @@ namespace Game
             }
             return canMove;
         }
-            bool CheckP(float b, float c, float b2, float c2)
+        bool CheckP(float b, float c, float b2, float c2)
+        {
+            for (float bCheck = b; bCheck < b2; bCheck++)
             {
-                for (float bCheck = b; bCheck < b2; bCheck++)
+                for (float cCheck = c; cCheck < c2; cCheck++)
                 {
-                    for (float cCheck = c; cCheck < c2; cCheck++)
+                    if (CollisionP.GetPixel((uint)bCheck, (uint)cCheck) == Color.Red)
                     {
-                        if (CollisionP.GetPixel((uint)bCheck, (uint)cCheck) == Color.Red)
-                        {
-                            Score += 20;
-                        }
+                        Score += 20;
                     }
                 }
+            }
 
-                /* if(!canmove)
-                 *      kijken hoever ik wel kan bewegen
-                 * 
-                 * 
-                 */
+            /* if(!canmove)
+                *      kijken hoever ik wel kan bewegen
+                * 
+                * 
+                */
 
-                return false;
+            return false;
+        }
+
+        public override void KeyInput(Keyboard.Key key)
+        {
+            if (key == Keyboard.Key.W)
+            {
+                Character.ChangeDirection(3);
+            }
+            if (key == Keyboard.Key.A)
+            {
+                Character.ChangeDirection(1);
+            }
+            if (key == Keyboard.Key.S)
+            {
+                Character.ChangeDirection(4);
+            }
+            if (key == Keyboard.Key.D)
+            {
+                Character.ChangeDirection(2);
+            }
+            if (key == Keyboard.Key.Return)
+            {
+                Character.ChangeDirection(5);
             }
         }
     }
+}
 
 
 

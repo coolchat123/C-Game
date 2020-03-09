@@ -33,7 +33,7 @@ namespace Game
 
         public override void LoadContent()
         {
-
+            
             BallMoving = false;
             LeftPaddle = new SSprite(Color.White, 6, 30);
             RightPaddle = new SSprite(Color.White, 6, 30);
@@ -87,6 +87,42 @@ namespace Game
             {
                 LeftPaddle.SetPosition(LeftPaddle.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
             }
+            if (LeftPaddle.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
+            {
+                LeftPaddle.SetPosition(LeftPaddle.Position.X, BottomLine.Position.Y - LeftPaddle.Texture.Size.Y);
+            }
+
+            if (RightPaddle.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
+            {
+                RightPaddle.SetPosition(RightPaddle.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
+            }
+            if (RightPaddle.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
+            {
+                RightPaddle.SetPosition(RightPaddle.Position.X, BottomLine.Position.Y - RightPaddle.Texture.Size.Y);
+            }
+
+            if (Ball.GetGlobalBounds().Intersects(RightPaddle.GetGlobalBounds()))
+            {
+                Ball.SetPosition(RightPaddle.Position.X - Ball.Texture.Size.X, Ball.Position.Y);
+
+                int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (RightPaddle.Position.X + RightPaddle.Texture.Size.X / 2));
+                int newSpeed = 3 * distance / 14;
+                Ballspeed = new Vector2i(-Ballspeed.X, newSpeed);
+            }
+            if (Ball.GetGlobalBounds().Intersects(LeftPaddle.GetGlobalBounds()))
+            {
+                Ball.SetPosition(LeftPaddle.Position.X + LeftPaddle.Texture.Size.X, Ball.Position.Y);
+
+                int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (LeftPaddle.Position.X + LeftPaddle.Texture.Size.X / 2));
+                int newSpeed = 3 * distance / 14;
+                Ballspeed = new Vector2i(-Ballspeed.X, newSpeed);
+            }
+            if (Ball.Position.X > RightPaddle.Position.X || Ball.Position.X < LeftPaddle.Position.X) {
+                Ball.SetPosition(134, 100);
+            }
+
+
+
         }
 
         public override void KeyInput(Keyboard.Key key)
@@ -113,7 +149,7 @@ namespace Game
                 if (!BallMoving)
                 {
                     BallMoving = true;
-                   Ballspeed = new Vector2i(0, -2);
+                   Ballspeed = new Vector2i(2, -2);
                 }
             }
 

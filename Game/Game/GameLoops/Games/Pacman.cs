@@ -24,6 +24,7 @@ namespace Game
             Map = new SSprite(new Texture("Content/Pacman/Map.png"));
             PacMan = new SSprite(Color.Yellow, 16, 12);
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
+
             Program.PlaySound(music);
         }
 
@@ -41,15 +42,19 @@ namespace Game
         {
             if (key == Keyboard.Key.W)
             {
-                if (CheckCollision(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y, PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 4 - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
                 {
                     PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 4);
                 }
             }
             if (key == Keyboard.Key.A)
             {
-                Console.WriteLine(PacMan.Position);
-                PacMan.SetPosition(PacMan.Position.X - 4, PacMan.Position.Y);
+                if (CheckCollision(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                    PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                {
+                    PacMan.SetPosition(PacMan.Position.X - 4, PacMan.Position.Y);
+                }
             }
             if (key == Keyboard.Key.S)
             {
@@ -63,6 +68,8 @@ namespace Game
 
         public bool CheckCollision(float x, float y, float x2, float y2)
         {
+            Console.Write("ey");
+
             bool canMove = true;
             for (float xCheck = x; xCheck < x2; xCheck++)
             {
@@ -71,11 +78,9 @@ namespace Game
                     if (CollisionMap.GetPixel((uint)xCheck, (uint)yCheck) == Color.Blue)
                     {
                         canMove = false;
-                        Console.WriteLine("checker");
- 
                     }
                 }
-            } 
+            }
             return canMove;
         }
     }

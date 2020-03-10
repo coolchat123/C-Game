@@ -37,6 +37,14 @@ namespace Game
 
         static Vector2i Ballspeed;
 
+        static bool GameOver;
+
+        static SText GameOverText;
+
+        static SText ReturnText;
+
+        static SText RestartText;
+
 
         public Pong() : base() { }
 
@@ -50,6 +58,12 @@ namespace Game
             UpperLine = new SSprite(Color.White, 268, 6);
             BottomLine = new SSprite(Color.White, 268, 6);
             MiddleLine = new SSprite[17];
+            GameOver = false;
+            GameOverText = new SText("", 11);
+            RestartText = new SText("", 11);
+            ReturnText = new SText("", 11);
+            
+
 
             for (int i = 0; i < 17; i++)
             {
@@ -70,6 +84,10 @@ namespace Game
             Ball.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
             BottomLine.SetPosition(0, Program.Texture.Size.Y - 6);
 
+            GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+            RestartText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+            ReturnText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+
             for (int i = 0; i < 17; i++)
             {
                 MiddleLine[i].SetPosition(Program.Texture.Size.X / 2 - MiddleLine[i].Texture.Size.X / 2, i * 12);
@@ -78,74 +96,111 @@ namespace Game
 
         public override void Update(GameTime gameTime)
         {
-            RightPaddle.SetPosition(RightPaddle.Position.X, RightPaddle.Position.Y + RightPaddlespeed);
-
-            RightPaddlespeed = 0;
-
-            LeftPaddle.SetPosition(LeftPaddle.Position.X, LeftPaddle.Position.Y + LeftPaddlespeed);
-
-            LeftPaddlespeed = 0;
-
-            Ball.SetPosition(Ball.Position.X + Ballspeed.X, Ball.Position.Y + Ballspeed.Y);
-
-            if (Ball.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
+            if (!GameOver)
             {
-                Ball.SetPosition(Ball.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
-                Ballspeed = new Vector2i(Ballspeed.X, -Ballspeed.Y);
-            }
-            if (Ball.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
-            {
-                Ball.SetPosition(Ball.Position.X, BottomLine.Position.Y - Ball.Texture.Size.Y);
-                Ballspeed = new Vector2i(Ballspeed.X, -Ballspeed.Y);
-            }
-            if (LeftPaddle.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
-            {
-                LeftPaddle.SetPosition(LeftPaddle.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
-            }
-            if (LeftPaddle.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
-            {
-                LeftPaddle.SetPosition(LeftPaddle.Position.X, BottomLine.Position.Y - LeftPaddle.Texture.Size.Y);
-            }
+                GameOverText.DisplayedString = "";
+                ReturnText.DisplayedString = "";
+                RestartText.DisplayedString = "";
 
-            if (RightPaddle.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
+                RightPaddle.SetPosition(RightPaddle.Position.X, RightPaddle.Position.Y + RightPaddlespeed);
+
+                RightPaddlespeed = 0;
+
+                LeftPaddle.SetPosition(LeftPaddle.Position.X, LeftPaddle.Position.Y + LeftPaddlespeed);
+
+                LeftPaddlespeed = 0;
+
+                Ball.SetPosition(Ball.Position.X + Ballspeed.X, Ball.Position.Y + Ballspeed.Y);
+
+                if (Ball.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
+                {
+                    Ball.SetPosition(Ball.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
+                    Ballspeed = new Vector2i(Ballspeed.X, -Ballspeed.Y);
+                }
+                if (Ball.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
+                {
+                    Ball.SetPosition(Ball.Position.X, BottomLine.Position.Y - Ball.Texture.Size.Y);
+                    Ballspeed = new Vector2i(Ballspeed.X, -Ballspeed.Y);
+                }
+                if (LeftPaddle.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
+                {
+                    LeftPaddle.SetPosition(LeftPaddle.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
+                }
+                if (LeftPaddle.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
+                {
+                    LeftPaddle.SetPosition(LeftPaddle.Position.X, BottomLine.Position.Y - LeftPaddle.Texture.Size.Y);
+                }
+
+                if (RightPaddle.GetGlobalBounds().Intersects(UpperLine.GetGlobalBounds()))
+                {
+                    RightPaddle.SetPosition(RightPaddle.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
+                }
+                if (RightPaddle.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
+                {
+                    RightPaddle.SetPosition(RightPaddle.Position.X, BottomLine.Position.Y - RightPaddle.Texture.Size.Y);
+                }
+
+                if (Ball.GetGlobalBounds().Intersects(RightPaddle.GetGlobalBounds()))
+                {
+                    Ball.SetPosition(RightPaddle.Position.X - Ball.Texture.Size.X, Ball.Position.Y);
+
+                    int distance = (int)(Ball.Position.Y + Ball.Texture.Size.Y / 2 - (RightPaddle.Position.Y + RightPaddle.Texture.Size.Y / 2));
+                    int newSpeed = 3 * distance / 14;
+                    Ballspeed = new Vector2i(-Ballspeed.X, newSpeed);
+                }
+                if (Ball.GetGlobalBounds().Intersects(LeftPaddle.GetGlobalBounds()))
+                {
+                    Ball.SetPosition(LeftPaddle.Position.X + LeftPaddle.Texture.Size.X, Ball.Position.Y);
+
+                    int distance = (int)(Ball.Position.Y + Ball.Texture.Size.Y / 2 - (LeftPaddle.Position.Y + LeftPaddle.Texture.Size.Y / 2));
+                    int newSpeed = 3 * distance / 14;
+                    Ballspeed = new Vector2i(-Ballspeed.X, newSpeed);
+                }
+                if (Ball.Position.X > RightPaddle.Position.X)
+                {
+                    scoreLeft += 1;
+                    scoreLText.DisplayedString = scoreLeft.ToString();
+                    Ball.SetPosition(134, 100);
+                    if (scoreLeft == 10)
+                    {
+                        GameOver = true;
+                    }
+                }
+
+                if (Ball.Position.X < LeftPaddle.Position.X)
+                {
+                    scoreRight += 1;
+                    scoreRText.DisplayedString = scoreRight.ToString();
+                    Ball.SetPosition(134, 100);
+
+                    if (scoreRight == 10)
+                    {
+                        GameOver = true;
+
+                    }
+
+                }
+            }
+            else
             {
-                RightPaddle.SetPosition(RightPaddle.Position.X, UpperLine.Position.Y + UpperLine.Texture.Size.Y);
-            }
-            if (RightPaddle.GetGlobalBounds().Intersects(BottomLine.GetGlobalBounds()))
-            {
-                RightPaddle.SetPosition(RightPaddle.Position.X, BottomLine.Position.Y - RightPaddle.Texture.Size.Y);
-            }
+                GameOverText.DisplayedString = "You Won";
+                RestartText.DisplayedString = "press space to restart";
+                ReturnText.DisplayedString = "press esc to return";
+                if (scoreLeft == 10)
+                {
+                    GameOverText.SetPosition(Program.Texture.Size.X / 4 - GameOverText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - GameOverText.GetGlobalBounds().Height / 2);
 
-            if (Ball.GetGlobalBounds().Intersects(RightPaddle.GetGlobalBounds()))
-            {
-                Ball.SetPosition(RightPaddle.Position.X - Ball.Texture.Size.X, Ball.Position.Y);
+                    RestartText.SetPosition(Program.Texture.Size.X / 4 - RestartText.GetGlobalBounds().Width / 2, GameOverText.Position.Y  + GameOverText.GetGlobalBounds().Height);
+                    ReturnText.SetPosition(Program.Texture.Size.X / 4 - ReturnText.GetGlobalBounds().Width / 2, RestartText.Position.Y + RestartText.GetGlobalBounds().Height);
+                }
+                else 
+                {
+                    GameOverText.SetPosition(Program.Texture.Size.X / 4 * 3 - GameOverText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - GameOverText.GetGlobalBounds().Height / 2);
 
-                int distance = (int)(Ball.Position.Y + Ball.Texture.Size.Y / 2 - (RightPaddle.Position.Y + RightPaddle.Texture.Size.Y / 2));
-                int newSpeed = 3 * distance / 14;
-                Ballspeed = new Vector2i(-Ballspeed.X, newSpeed);
+                    RestartText.SetPosition(Program.Texture.Size.X / 4 * 3 - RestartText.GetGlobalBounds().Width / 2, GameOverText.Position.Y + GameOverText.GetGlobalBounds().Height);
+                    ReturnText.SetPosition(Program.Texture.Size.X / 4 * 3 - ReturnText.GetGlobalBounds().Width / 2, RestartText.Position.Y + RestartText.GetGlobalBounds().Height);
+                }
             }
-            if (Ball.GetGlobalBounds().Intersects(LeftPaddle.GetGlobalBounds()))
-            {
-                Ball.SetPosition(LeftPaddle.Position.X + LeftPaddle.Texture.Size.X, Ball.Position.Y);
-
-                int distance = (int)(Ball.Position.Y + Ball.Texture.Size.Y / 2 - (LeftPaddle.Position.Y + LeftPaddle.Texture.Size.Y / 2));
-                int newSpeed = 3 * distance / 14;
-                Ballspeed = new Vector2i(-Ballspeed.X, newSpeed);
-            }
-            if (Ball.Position.X > RightPaddle.Position.X) {
-                scoreLeft += 1;
-                scoreLText.DisplayedString = scoreLeft.ToString();
-                Ball.SetPosition(134, 100);
-            }
-            
-            if( Ball.Position.X < LeftPaddle.Position.X) {
-                scoreRight += 1;
-                scoreRText.DisplayedString = scoreRight.ToString();
-                Ball.SetPosition(134, 100);
-            }
-
-
-
         }
 
         public override void KeyInput(Keyboard.Key key)
@@ -169,13 +224,29 @@ namespace Game
             }
             if (key == Keyboard.Key.Space)
             {
-                if (!BallMoving)
+                if (GameOver)
+                {
+                    Restart();
+                }
+                else if (!BallMoving)
                 {
                     BallMoving = true;
-                   Ballspeed = new Vector2i(2, -2);
+                   Ballspeed = new Vector2i(4, -2);
                 }
             }
 
+        }
+
+        public void Restart()
+        {
+            GameOver = false;
+            LeftPaddle.SetPosition(6, Program.Texture.Size.Y / 2 - LeftPaddle.Texture.Size.Y / 2);
+            RightPaddle.SetPosition(Program.Texture.Size.X - RightPaddle.Texture.Size.X - 6, Program.Texture.Size.Y / 2 - RightPaddle.Texture.Size.Y / 2);
+            Ball.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+            BallMoving = false;
+            scoreLeft = 0;
+            scoreRight = 0;
+            Ballspeed = new Vector2i();
         }
     }
 }

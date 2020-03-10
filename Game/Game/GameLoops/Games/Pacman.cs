@@ -16,6 +16,10 @@ namespace Game
         static SSprite Map;
         public static Image CollisionMap;
         static SSprite PacMan;
+        static SSprite GhostPink;
+        static SSprite GhostBlue;
+        static SSprite GhostOrange;
+        static SSprite GhostRed;
         string music = "Content/Pacman/eatpcS.wav";
         public Pacman() : base() { }
 
@@ -23,8 +27,11 @@ namespace Game
         {
             Map = new SSprite(new Texture("Content/Pacman/Map.png"));
             PacMan = new SSprite(Color.Yellow, 16, 12);
+            GhostRed = new SSprite(Color.Red, 16, 12);
+            GhostBlue = new SSprite(Color.Blue, 16, 12);
+            GhostPink = new SSprite(Color.Yellow, 16, 12);
+            GhostOrange = new SSprite(Color.Green, 16, 12);
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
-
             Program.PlaySound(music);
         }
 
@@ -32,6 +39,11 @@ namespace Game
         {
             Map.Position = new Vector2f(10, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
             PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
+            GhostBlue.Position = new Vector2f(90, Map.Position.Y + 100);
+            GhostOrange.Position = new Vector2f(200, Map.Position.Y + 100);
+            GhostPink.Position = new Vector2f(90, Map.Position.Y + 100);
+            GhostBlue.Position = new Vector2f(90, Map.Position.Y + 100);
+            GhostRed.Position = new Vector2f(90, Map.Position.Y + 100);
         }
 
         public override void Update(GameTime gameTime)
@@ -42,6 +54,14 @@ namespace Game
         {
             if (key == Keyboard.Key.W)
             {
+                Console.WriteLine(PacMan.Position.X + "-" + Map.Position.X + ", " + PacMan.Position.Y + " - 4 - " + Map.Position.Y + ", " +
+                    PacMan.Position.X + " + " + PacMan.Texture.Size.X + " - " + Map.Position.X + ", " + PacMan.Position.Y + " - " + Map.Position.Y);
+
+
+
+
+
+
                 if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 4 - Map.Position.Y,
                     PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
                 {
@@ -68,7 +88,7 @@ namespace Game
 
         public bool CheckCollision(float x, float y, float x2, float y2)
         {
-            Console.Write("ey");
+            Console.Write(x + ", " + y + ", " + x2 + ", " + y2);
 
             bool canMove = true;
             for (float xCheck = x; xCheck < x2; xCheck++)

@@ -14,8 +14,12 @@ namespace Game
         int Life = 2;
         int Score = 0;
         static SSprite Map;
-        public static Image CollisionMap;
+        public static SSprite CollisionMap;
         static SSprite PacMan;
+        static SSprite GhostPink;
+        static SSprite GhostBlue;
+        static SSprite GhostOrange;
+        static SSprite GhostRed;
         string music = "Content/Pacman/eatpcS.wav";
         public Pacman() : base() { }
 
@@ -23,14 +27,22 @@ namespace Game
         {
             Map = new SSprite(new Texture("Content/Pacman/Map.png"));
             PacMan = new SSprite(Color.Yellow, 16, 12);
-            CollisionMap = new Image("Content/Pacman/CollisionMap.png");
+            GhostRed = new SSprite(Color.Red, 16, 12);
+            GhostBlue = new SSprite(Color.Blue, 16, 12);
+            GhostPink = new SSprite(Color.Yellow, 16, 12);
+            GhostOrange = new SSprite(Color.Green, 16, 12);
+            CollisionMap = new SSprite(new Texture("Content/Pacman/CollisionMap.png"));
             Program.PlaySound(music);
         }
 
         public override void Initialise()
         {
             Map.Position = new Vector2f(10, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
-            PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
+            GhostBlue.Position = new Vector2f(90, Map.Position.Y + 100);
+            GhostOrange.Position = new Vector2f(200, Map.Position.Y + 100);
+            GhostPink.Position = new Vector2f(90, Map.Position.Y + 100);
+            GhostBlue.Position = new Vector2f(90, Map.Position.Y + 100);
+            GhostRed.Position = new Vector2f(90, Map.Position.Y + 100);
         }
 
         public override void Update(GameTime gameTime)
@@ -41,10 +53,10 @@ namespace Game
         {
             if (key == Keyboard.Key.W)
             {
-                if (CheckCollision(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y, PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
-                {
+                //if (CheckCollision(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y, PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                //{
                     PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 4);
-                }
+                //}
             }
             if (key == Keyboard.Key.A)
             {

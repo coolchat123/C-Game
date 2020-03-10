@@ -54,14 +54,6 @@ namespace Game
         {
             if (key == Keyboard.Key.W)
             {
-                Console.WriteLine(PacMan.Position.X + "-" + Map.Position.X + ", " + PacMan.Position.Y + " - 4 - " + Map.Position.Y + ", " +
-                    PacMan.Position.X + " + " + PacMan.Texture.Size.X + " - " + Map.Position.X + ", " + PacMan.Position.Y + " - " + Map.Position.Y);
-
-
-
-
-
-
                 if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 4 - Map.Position.Y,
                     PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
                 {
@@ -78,18 +70,20 @@ namespace Game
             }
             if (key == Keyboard.Key.S)
             {
+                if(CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 4 - Map.Position.Y))
                 PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y + 4);
             }
             if (key == Keyboard.Key.D)
             {
+                if (CheckCollision(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X + 4 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
                 PacMan.SetPosition(PacMan.Position.X + 4, PacMan.Position.Y);
             }
         }
 
         public bool CheckCollision(float x, float y, float x2, float y2)
         {
-            Console.Write(x + ", " + y + ", " + x2 + ", " + y2);
-
             bool canMove = true;
             for (float xCheck = x; xCheck < x2; xCheck++)
             {

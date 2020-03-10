@@ -327,6 +327,10 @@ namespace Game
 
         public void GenerateLevel()
         {
+            List<Color> brickColors = new List<Color> { new Color(151, 27, 147), new Color(81, 35, 205), new Color(0, 48, 255), new Color(0, 147, 147),
+                new Color(0, 249, 0), new Color(203, 250, 0), new Color(255, 251, 0), new Color(255, 200, 0), new Color(255, 148, 0), new Color(255, 79, 0),
+                new Color(255, 33, 0), new Color(217, 28, 82) };
+
             for (int i = 0; i < 13; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -341,6 +345,7 @@ namespace Game
                 int i = brickAmount / 13;
                 int j = brickAmount - i * 13;
                 brick.SetPosition(10 + j * 16, 18 + i * 8);
+                brick.Color = brickColors[i];
                 brickAmount += 1;
             }
         }

@@ -11,8 +11,10 @@ namespace Game
     {
         static List<SSprite> Bricks;
 
-        static int SpeedModifier;
         static int BricksBroken;
+
+        static Button Restart;
+        static Button Return;
 
         static SText ScoreInfoText;
         static SText ScoreText;
@@ -28,6 +30,11 @@ namespace Game
         static SSprite Ball;
         static Vector2i BallSpeed;
         static bool BallMoving;
+        static bool LevelOver;
+
+        static SText GameOverText;
+        static SText GameOverText2;
+        static bool GameOver;
 
         static SSprite WallLeft;
         static SSprite WallRight;
@@ -40,8 +47,16 @@ namespace Game
             Paddle = new SSprite(Color.White, 28, 6);
             PaddleSpeed = 0;
 
-            SpeedModifier = 0;
             BricksBroken = 0;
+
+            Restart = new Button(new Texture("Content/Menu/MenuLeft.png"));
+            Restart.Click += RestartClick;
+            Restart.MouseEnter += RestartEnter;
+            Restart.MouseLeave += RestartLeave;
+            Return = new Button(new Texture("Content/Menu/MenuRight.png"));
+            Return.Click += ReturnClick;
+            Return.MouseEnter += ReturnEnter;
+            Return.MouseLeave += ReturnLeave;
 
             Score = 0;
             ScoreInfoText = new SText("Score", 11);
@@ -49,21 +64,20 @@ namespace Game
 
             Lives = 2;
             LivesInfoText = new SText("Lives", 11);
-            LivesText = new SText("0", 11);
+            LivesText = new SText("2", 11);
 
             Ball = new SSprite(Color.White, 3, 3);
             BallSpeed = new Vector2i(0, 0);
             BallMoving = false;
+            LevelOver = false;
+            GameOver = false;
 
             Bricks = new List<SSprite>();
 
-            for(int i = 0; i < 13; i++)
-            {
-                for(int j = 0; j < 8; j++)
-                {
-                    Bricks.Add(new SSprite(Color.White, 14, 6));
-                }
-            }
+            GenerateLevel();
+
+            GameOverText = new SText("Game Over!", 12);
+            GameOverText2 = new SText("press SPACE to restart", 11);
 
             WallLeft = new SSprite(Color.White, 6, 198);
             WallRight = new SSprite(Color.White, 6, 198);
@@ -72,20 +86,14 @@ namespace Game
 
         public override void Initialise()
         {
-            int brickAmount = 0;
-            foreach (SSprite brick in Bricks)
-            {
-                int i = brickAmount / 13;
-                int j = brickAmount - i * 13;
-                brick.SetPosition(10 + j * 16, 18 + i * 8);
-                brickAmount += 1;
-            }
-
             WallLeft.SetPosition(2, 2);
             WallTop.SetPosition(WallLeft.Position.X + WallLeft.Texture.Size.X, WallLeft.Position.Y);
             WallRight.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X, WallTop.Position.Y);
 
             Paddle.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X / 2 - Paddle.Texture.Size.X / 2, 176);
+
+            Restart.SetPosition(Program.Texture.Size.X - 2 - Restart.Texture.Size.X, Program.Texture.Size.Y - 2 - Restart.Texture.Size.Y);
+            Return.SetPosition(Restart.Position.X, 2);
 
             Ball.SetPosition(Paddle.Position.X + Paddle.Texture.Size.X / 2 - Ball.Texture.Size.X / 2,
                 Paddle.Position.Y - Ball.Texture.Size.Y);
@@ -97,120 +105,165 @@ namespace Game
 
             LivesInfoText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesInfoText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 4 * 3);
             LivesText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesText.GetGlobalBounds().Width / 2, LivesInfoText.Position.Y + LivesInfoText.GetGlobalBounds().Height + 3);
+
+            GameOverText.SetPosition((WallRight.Position.X + WallRight.Texture.Size.X) / 2 - GameOverText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y);
+            GameOverText2.SetPosition((WallRight.Position.X + WallRight.Texture.Size.X) / 2 - GameOverText2.GetGlobalBounds().Width / 2, GameOverText.Position.Y + GameOverText.GetGlobalBounds().Height + 1);
         }
 
         public override void Update(GameTime gameTime)
         {
-            // Set the paddle to its new position, using PaddleSpeed variable.
-            Paddle.SetPosition(Paddle.Position.X + PaddleSpeed, Paddle.Position.Y);
-
-            // If paddle intersects with left wall, set paddle to furthest left possible.
-            if (Paddle.GetGlobalBounds().Intersects(WallLeft.GetGlobalBounds()))
+            if (GameOver)
             {
-                Paddle.SetPosition(WallLeft.Position.X + WallLeft.Texture.Size.X, Paddle.Position.Y);
-            }
-            // If paddle intersects with right wall, set paddle to furthest right possible.
-            else if (Paddle.GetGlobalBounds().Intersects(WallRight.GetGlobalBounds()))
-            {
-                Paddle.SetPosition(WallRight.Position.X - Paddle.Texture.Size.X, Paddle.Position.Y);
-            }
-
-            // If ball isn't moving, set ball position to be on the paddle.
-            if (!BallMoving)
-            {
-                BallSpeed = new Vector2i(0, 0);
-
-                Ball.SetPosition(Paddle.Position.X + Paddle.Texture.Size.X / 2 - Ball.Texture.Size.X / 2,
-                    Paddle.Position.Y - Ball.Texture.Size.Y);
-            }
-            // If ball isn't moving set ball to new position using BallSpeed vector.
-            else
-            {
-                Ball.SetPosition(Ball.Position.X + BallSpeed.X, Ball.Position.Y + BallSpeed.Y);
-            }
-
-            // If ball intersects with left wall, set ball to furthest left possible and reverse X direction.
-            if (Ball.GetGlobalBounds().Intersects(WallLeft.GetGlobalBounds()))
-            {
-                Ball.SetPosition(WallLeft.Position.X + WallLeft.Texture.Size.X, Ball.Position.Y);
-                BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
-            }
-            // If ball intersects with right wall, set ball to furthest right possible and reverse X direction.
-            else if (Ball.GetGlobalBounds().Intersects(WallRight.GetGlobalBounds()))
-            {
-                Ball.SetPosition(WallRight.Position.X - Ball.Texture.Size.X, Ball.Position.Y);
-                BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
-            }
-
-            // If ball intersects with top wall, set ball to furthest up possible and reverse Y direction.
-            if (Ball.GetGlobalBounds().Intersects(WallTop.GetGlobalBounds()))
-            {
-                Ball.SetPosition(Ball.Position.X, WallTop.Position.Y + WallTop.Texture.Size.Y);
-                BallSpeed = new Vector2i(BallSpeed.X, -BallSpeed.Y);
-            }
-
-            // If ball intersects with paddle, set ball to furthest down possible and reverse Y direction.
-            if (Ball.GetGlobalBounds().Intersects(Paddle.GetGlobalBounds()))
-            {
-                Ball.SetPosition(Ball.Position.X, Paddle.Position.Y - Ball.Texture.Size.Y);
-
-                // Set ball X speed to 0-3 depending on distance to paddle middle.
-                int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (Paddle.Position.X + Paddle.Texture.Size.X / 2));
-                int newSpeed;
-                if (distance < -9 || distance > 9)
+                if(GameOverText.Position.Y > Program.Texture.Size.Y / 2 + 5)
                 {
-                    newSpeed = distance / Math.Abs(distance) * 2;
-                }
-                else if (distance < -4 || distance > 4)
-                {
-                    newSpeed = distance / Math.Abs(distance) * 1;
+                    GameOverText.SetPosition(GameOverText.Position.X, GameOverText.Position.Y - (GameOverText.Position.Y - Program.Texture.Size.Y / 2) / 3);
                 }
                 else
                 {
-                    newSpeed = BallSpeed.X;
+                    GameOverText.SetPosition(GameOverText.Position.X, Program.Texture.Size.Y / 2);
                 }
-                BallSpeed = new Vector2i(newSpeed, -BallSpeed.Y);
-            }
 
-            // If ball goes below screen, reset ball and remove life.
-            if (Ball.Position.Y > Program.Texture.Size.Y)
-            {
-                BallMoving = false;
-                SetLives(Lives - 1);
+                GameOverText2.SetPosition(GameOverText2.Position.X, GameOverText.Position.Y + GameOverText.GetGlobalBounds().Height);
             }
-
-            foreach (SSprite brick in Bricks)
+            else
             {
-                // If ball collides with a brick
-                if (Ball.GetGlobalBounds().Intersects(brick.GetGlobalBounds()))
+                if (GameOverText.Position.Y < Program.Texture.Size.Y - 5)
                 {
-                    // Get rid of brick
-                    Program.Sprites.Remove(brick);
-                    Bricks.Remove(brick);
+                    GameOverText.SetPosition(GameOverText.Position.X, GameOverText.Position.Y - (GameOverText.Position.Y - Program.Texture.Size.Y) / 3);
+                }
+                else
+                {
+                    GameOverText.SetPosition(GameOverText.Position.X, Program.Texture.Size.Y);
+                }
 
-                    if(++BricksBroken > 20)
+                GameOverText2.SetPosition(GameOverText2.Position.X, GameOverText.Position.Y + GameOverText.GetGlobalBounds().Height + 1);
+
+                // Set the paddle to its new position, using PaddleSpeed variable.
+                Paddle.SetPosition(Paddle.Position.X + PaddleSpeed, Paddle.Position.Y);
+
+                // If paddle intersects with left wall, set paddle to furthest left possible.
+                if (Paddle.GetGlobalBounds().Intersects(WallLeft.GetGlobalBounds()))
+                {
+                    Paddle.SetPosition(WallLeft.Position.X + WallLeft.Texture.Size.X, Paddle.Position.Y);
+                }
+                // If paddle intersects with right wall, set paddle to furthest right possible.
+                else if (Paddle.GetGlobalBounds().Intersects(WallRight.GetGlobalBounds()))
+                {
+                    Paddle.SetPosition(WallRight.Position.X - Paddle.Texture.Size.X, Paddle.Position.Y);
+                }
+
+                // If ball isn't moving, set ball position to be on the paddle.
+                if (!BallMoving)
+                {
+                    BallSpeed = new Vector2i(0, 0);
+
+                    Ball.SetPosition(Paddle.Position.X + Paddle.Texture.Size.X / 2 - Ball.Texture.Size.X / 2,
+                        Paddle.Position.Y - Ball.Texture.Size.Y);
+                }
+                // If ball isn't moving set ball to new position using BallSpeed vector.
+                else
+                {
+                    Ball.SetPosition(Ball.Position.X + BallSpeed.X, Ball.Position.Y + BallSpeed.Y);
+                }
+
+                // If ball intersects with left wall, set ball to furthest left possible and reverse X direction.
+                if (Ball.GetGlobalBounds().Intersects(WallLeft.GetGlobalBounds()))
+                {
+                    Ball.SetPosition(WallLeft.Position.X + WallLeft.Texture.Size.X, Ball.Position.Y);
+                    BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
+                }
+                // If ball intersects with right wall, set ball to furthest right possible and reverse X direction.
+                else if (Ball.GetGlobalBounds().Intersects(WallRight.GetGlobalBounds()))
+                {
+                    Ball.SetPosition(WallRight.Position.X - Ball.Texture.Size.X, Ball.Position.Y);
+                    BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
+                }
+
+                // If ball intersects with top wall, set ball to furthest up possible and reverse Y direction.
+                if (Ball.GetGlobalBounds().Intersects(WallTop.GetGlobalBounds()))
+                {
+                    Ball.SetPosition(Ball.Position.X, WallTop.Position.Y + WallTop.Texture.Size.Y);
+                    BallSpeed = new Vector2i(BallSpeed.X, -BallSpeed.Y);
+                }
+
+                // If ball intersects with paddle, set ball to furthest down possible and reverse Y direction.
+                if (Ball.GetGlobalBounds().Intersects(Paddle.GetGlobalBounds()))
+                {
+                    if (LevelOver)
                     {
-                        BricksBroken = 0;
-                        SpeedModifier += 1;
+                        BallMoving = false;
+                        GenerateLevel();
+                        LevelOver = false;
                     }
-
-                    SetScore(Score + 1);
-
-                    Console.WriteLine(BricksBroken + ", " + SpeedModifier);
-
-                    if((Ball.Position.X + Ball.Texture.Size.X - brick.Position.X > 0 && Ball.Position.X + Ball.Texture.Size.X - brick.Position.X < BallSpeed.X)
-                        || (Ball.Position.X - (brick.Position.X + brick.Texture.Size.X) < 0 && Ball.Position.X - (brick.Position.X + brick.Texture.Size.X) > BallSpeed.X))
+                    else
                     {
-                        BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
-                    }
+                        Ball.SetPosition(Ball.Position.X, Paddle.Position.Y - Ball.Texture.Size.Y);
 
-                    if ((Ball.Position.Y + Ball.Texture.Size.Y - brick.Position.Y > 0 && Ball.Position.Y + Ball.Texture.Size.Y - brick.Position.Y < BallSpeed.Y)
-                        || (Ball.Position.Y - (brick.Position.Y + brick.Texture.Size.Y) < 0 && Ball.Position.Y - (brick.Position.Y + brick.Texture.Size.Y) > BallSpeed.Y))
+                        // Set ball X speed to 0-3 depending on distance to paddle middle.
+                        int distance = (int)(Ball.Position.X + Ball.Texture.Size.X / 2 - (Paddle.Position.X + Paddle.Texture.Size.X / 2));
+                        int newSpeed;
+                        if (distance < -9 || distance > 9)
+                        {
+                            newSpeed = distance / Math.Abs(distance) * 2;
+                        }
+                        else if (distance < -4 || distance > 4)
+                        {
+                            newSpeed = distance / Math.Abs(distance) * 1;
+                        }
+                        else
+                        {
+                            newSpeed = BallSpeed.X;
+                        }
+                        BallSpeed = new Vector2i(newSpeed, -BallSpeed.Y);
+                    }
+                }
+
+                // If ball goes below screen, reset ball and remove life.
+                if (Ball.Position.Y > Program.Texture.Size.Y)
+                {
+                    BallMoving = false;
+
+                    if (Lives == 0)
                     {
-                        BallSpeed = new Vector2i(BallSpeed.X, -BallSpeed.Y);
+                        GameOver = true;
                     }
+                    else
+                    {
+                        SetLives(Lives - 1);
+                    }
+                }
 
-                    break;
+                foreach (SSprite brick in Bricks)
+                {
+                    // If ball collides with a brick
+                    if (Ball.GetGlobalBounds().Intersects(brick.GetGlobalBounds()))
+                    {
+                        // Get rid of brick
+                        Program.Sprites.Remove(brick);
+                        Bricks.Remove(brick);
+
+                        if (++BricksBroken == 104)
+                        {
+                            BricksBroken = 0;
+                            LevelOver = true;
+                        }
+
+                        SetScore(Score + 1);
+
+                        if ((Ball.Position.X + Ball.Texture.Size.X - brick.Position.X > 0 && Ball.Position.X + Ball.Texture.Size.X - brick.Position.X < BallSpeed.X)
+                            || (Ball.Position.X - (brick.Position.X + brick.Texture.Size.X) < 0 && Ball.Position.X - (brick.Position.X + brick.Texture.Size.X) > BallSpeed.X))
+                        {
+                            BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
+                        }
+
+                        if ((Ball.Position.Y + Ball.Texture.Size.Y - brick.Position.Y > 0 && Ball.Position.Y + Ball.Texture.Size.Y - brick.Position.Y < BallSpeed.Y)
+                            || (Ball.Position.Y - (brick.Position.Y + brick.Texture.Size.Y) < 0 && Ball.Position.Y - (brick.Position.Y + brick.Texture.Size.Y) > BallSpeed.Y))
+                        {
+                            BallSpeed = new Vector2i(BallSpeed.X, -BallSpeed.Y);
+                        }
+
+                        break;
+                    }
                 }
             }
 
@@ -221,37 +274,118 @@ namespace Game
 
         public override void KeyInput(Keyboard.Key key)
         {
-            // If signal is left key, set speed to negative
-            if (key == Keyboard.Key.A || key == Keyboard.Key.Left)
+            if (GameOver)
             {
-                PaddleSpeed = -3;
-            }
-            // If signal is right key, set speed to positive
-            else if (key == Keyboard.Key.D || key == Keyboard.Key.Right)
-            {
-                PaddleSpeed = 3;
-            }
-            // If signal is space, and ball is not yet moving, set ball to moving
-            else if (key == Keyboard.Key.Space)
-            {
-                if (!BallMoving)
+                // If we're game over and the signal is space, then restart.
+                if(key == Keyboard.Key.Space)
                 {
-                    BallMoving = true;
-                    BallSpeed = new Vector2i(1, -2);
+                    Restart.PerformClick();
                 }
-            } 
+            }
+            // If we're not game over
+            else
+            {
+                // If signal is left key, set speed to negative
+                if (key == Keyboard.Key.A || key == Keyboard.Key.Left)
+                {
+                    PaddleSpeed = -3;
+                }
+                // If signal is right key, set speed to positive
+                else if (key == Keyboard.Key.D || key == Keyboard.Key.Right)
+                {
+                    PaddleSpeed = 3;
+                }
+                // If signal is space, and ball is not yet moving, set ball to moving
+                else if (key == Keyboard.Key.Space)
+                {
+                    if (!BallMoving)
+                    {
+                        BallMoving = true;
+                        BallSpeed = new Vector2i(1, -2);
+                    }
+                }
+            }
         }
 
         public void SetScore(int newScore)
         {
+            int scoreboardLeft = (int)WallRight.Position.X + (int)WallRight.Texture.Size.X + 2;
+            int scoreboardWidth = (int)Program.Texture.Size.X - scoreboardLeft;
             Score = newScore;
             ScoreText.DisplayedString = newScore.ToString();
+            ScoreText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - ScoreText.GetGlobalBounds().Width / 2, ScoreInfoText.Position.Y + ScoreInfoText.GetGlobalBounds().Height + 3);
         }
 
         public void SetLives(int newLives)
         {
+            int scoreboardLeft = (int)WallRight.Position.X + (int)WallRight.Texture.Size.X + 2;
+            int scoreboardWidth = (int)Program.Texture.Size.X - scoreboardLeft;
             Lives = newLives;
             LivesText.DisplayedString = newLives.ToString();
+            LivesText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesText.GetGlobalBounds().Width / 2, LivesInfoText.Position.Y + LivesInfoText.GetGlobalBounds().Height + 3);
+        }
+
+        public void GenerateLevel()
+        {
+            for (int i = 0; i < 13; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    Bricks.Add(new SSprite(Color.White, 14, 6));
+                }
+            }
+
+            int brickAmount = 0;
+            foreach (SSprite brick in Bricks)
+            {
+                int i = brickAmount / 13;
+                int j = brickAmount - i * 13;
+                brick.SetPosition(10 + j * 16, 18 + i * 8);
+                brickAmount += 1;
+            }
+        }
+
+        // Restart button
+        public void RestartClick(object sender, EventArgs e)
+        {
+            foreach (SSprite brick in Bricks)
+            {
+                Program.Sprites.Remove(brick);
+            }
+            Bricks.Clear();
+
+            GenerateLevel();
+
+            SetLives(2);
+            SetScore(0);
+
+            BallMoving = false;
+            BricksBroken = 0;
+
+            Paddle.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X / 2 - Paddle.Texture.Size.X / 2, 176);
+
+            GameOver = false;
+        }
+        public void RestartEnter(object sender, EventArgs e)
+        {
+            Restart.SetScale(1.1f, SSprite.Pin.Middle);
+        }
+        public void RestartLeave(object sender, EventArgs e)
+        {
+            Restart.SetScale(1f, SSprite.Pin.Middle);
+        }
+
+        // Return button
+        public void ReturnClick(object sender, EventArgs e)
+        {
+        }
+        public void ReturnEnter(object sender, EventArgs e)
+        {
+            Return.SetScale(1.1f, SSprite.Pin.Middle);
+        }
+        public void ReturnLeave(object sender, EventArgs e)
+        {
+            Return.SetScale(1f, SSprite.Pin.Middle);
         }
     }
 }

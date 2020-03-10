@@ -331,22 +331,21 @@ namespace Game
                 new Color(0, 249, 0), new Color(203, 250, 0), new Color(255, 251, 0), new Color(255, 200, 0), new Color(255, 148, 0), new Color(255, 79, 0),
                 new Color(255, 33, 0), new Color(217, 28, 82) };
 
+            bool[,] brickMap = RandomLevel();
+
             for (int i = 0; i < 13; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < 12; j++)
                 {
-                    Bricks.Add(new SSprite(Color.White, 14, 6));
-                }
-            }
+                    if (brickMap[i, j])
+                    {
+                        SSprite brick = new SSprite(brickColors[j], 14, 6);
+                        Bricks.Add(brick);
 
-            int brickAmount = 0;
-            foreach (SSprite brick in Bricks)
-            {
-                int i = brickAmount / 13;
-                int j = brickAmount - i * 13;
-                brick.SetPosition(10 + j * 16, 18 + i * 8);
-                brick.Color = brickColors[i];
-                brickAmount += 1;
+                        brick.SetPosition(10 + i * 16, 18 + j * 8);
+                        brick.Color = brickColors[j];
+                    }
+                }
             }
         }
 
@@ -391,6 +390,48 @@ namespace Game
         public void ReturnLeave(object sender, EventArgs e)
         {
             Return.SetScale(1f, SSprite.Pin.Middle);
+        }
+
+        bool[,] RandomLevel()
+        {
+            Random random = new Random();
+            string returnString = "";
+            bool[,] result = new bool[13, 12];
+
+            int rand = random.Next() % 1;
+
+            switch (rand)
+            {
+                case 0:
+                    returnString =
+                    "             " +
+                    "#############" +
+                    "#############" +
+                    "#############" +
+                    "#############" +
+                    "             " +
+                    "#############" +
+                    "#############" +
+                    "#############" +
+                    "#############" +
+                    "             " +
+                    "#############";
+                    break;
+            }
+
+            int characterAmount = 0;
+
+            for(int i = 0; i < result.GetLength(0); i++)
+            {
+                for(int j = 0; j < result.GetLength(1); j++)
+                {
+                    result[i, j] = returnString[i + j * 13] == '#';
+
+                    characterAmount += 1;
+                }
+            }
+
+            return result;
         }
     }
 }

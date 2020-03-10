@@ -265,7 +265,9 @@ namespace Game
             {
                 Texture.Draw(text);
             }
-
+            //if (RunningGame as Pacman != null) {
+            //    Texture.Draw(new Sprite(new Texture(Pacman.CollisionMap)));
+            //}
             Texture.Display();
 
             Sprite textureSprite = new Sprite(Texture.Texture);

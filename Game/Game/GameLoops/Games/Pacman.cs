@@ -14,7 +14,7 @@ namespace Game
         int Life = 2;
         int Score = 0;
         static SSprite Map;
-        static Image CollisionMap;
+        public static Image CollisionMap;
         static SSprite PacMan;
         string music = "Content/Pacman/eatpcS.wav";
         public Pacman() : base() { }
@@ -23,13 +23,14 @@ namespace Game
         {
             Map = new SSprite(new Texture("Content/Pacman/Map.png"));
             PacMan = new SSprite(Color.Yellow, 16, 12);
+            CollisionMap = new Image("Content/Pacman/CollisionMap.png");
             Program.PlaySound(music);
         }
 
         public override void Initialise()
         {
             Map.Position = new Vector2f(10, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
-            PacMan.Position = new Vector2f(100, Map.Position.Y + 100);
+            PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
         }
 
         public override void Update(GameTime gameTime)
@@ -40,10 +41,14 @@ namespace Game
         {
             if (key == Keyboard.Key.W)
             {
-                PacMan.SetPosition(PacMan.Position.X ,PacMan.Position.Y - 4);
+                if (CheckCollision(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y, PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                {
+                    PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 4);
+                }
             }
             if (key == Keyboard.Key.A)
             {
+                Console.WriteLine(PacMan.Position);
                 PacMan.SetPosition(PacMan.Position.X - 4, PacMan.Position.Y);
             }
             if (key == Keyboard.Key.S)
@@ -66,10 +71,11 @@ namespace Game
                     if (CollisionMap.GetPixel((uint)xCheck, (uint)yCheck) == Color.Blue)
                     {
                         canMove = false;
-                        Console.WriteLine("worksss");
+                        Console.WriteLine("checker");
+ 
                     }
                 }
-            }
+            } 
             return canMove;
         }
     }

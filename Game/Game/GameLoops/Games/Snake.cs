@@ -68,7 +68,7 @@ namespace Game
 
             Direction = "left";
 
-            Timer = 12;
+            Timer = 8;
 
             NewDirection = "left";
 
@@ -125,8 +125,13 @@ namespace Game
                 x = x_positions[rnd.Next(0, 22)];
                 y = y_positions[rnd.Next(0, 19)];
 
-                if (SnakeList[0].Position.X == x && SnakeList[0].Position.Y == y)
-                    goto scoreFunction;
+                for(int i = 0; i < SnakeList.Count; i++)
+                {
+                    if(SnakeList[i].Position.X == x && SnakeList[i].Position.Y == y)
+                    {
+                        goto scoreFunction;
+                    }
+                }
 
                 Apple.Position = new SFML.System.Vector2f(x, y);
                 SetScore();
@@ -245,7 +250,6 @@ namespace Game
 
         public void GameOver()
         {
-            Console.WriteLine(SnakeList.Count);
             if(SnakeList[0].Position.X <= -1 || SnakeList[0].Position.Y <= -1 || SnakeList[0].Position.X >= 221 || SnakeList[0].Position.Y >= 191)
             {
                 GameOverText = new SText("Game over!", 11);

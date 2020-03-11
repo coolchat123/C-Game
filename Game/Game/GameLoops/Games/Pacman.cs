@@ -5,6 +5,9 @@ using SFML.Window;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Audio;
+using System.Threading;
+
+
 
 namespace Game
 {
@@ -41,7 +44,6 @@ namespace Game
             GhostPink = new SSprite(Color.Yellow, 16, 12);
             GhostOrange = new SSprite(Color.Green, 16, 12);
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
-            Program.PlaySound(music);
         }
 
         public override void Initialise()
@@ -62,9 +64,7 @@ namespace Game
         {
             if (PacMan.Position == new Vector2f(10, 86))
             {
-                PacMan.Position = new Vector2f(214, 86);
-                ScoreP += 200;
-                ScoreText.DisplayedString = ScoreP.ToString();
+                PacMan.Position = new Vector2f(214, 86);    
             }
             if (PacMan.Position == new Vector2f(218, 86))
             {
@@ -80,8 +80,11 @@ namespace Game
                 if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 4 - Map.Position.Y,
                     PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
                 {
+                    Direction = 0;
                     PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 4);
                 }
+                CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y);
             }
             if (key == Keyboard.Key.A)
             {
@@ -90,16 +93,24 @@ namespace Game
                 if (CheckCollision(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
                     PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
                 {
+                    Direction = 1;
                     PacMan.SetPosition(PacMan.Position.X - 4, PacMan.Position.Y);
                 }
+                CheckPoints(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                    PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y);
             }
             if (key == Keyboard.Key.S)
             {
                 WantedDirection = 2;
-
+                Direction = 0;
                 if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
                     PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 4 - Map.Position.Y))
-                PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y + 4);
+                { 
+                        PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y + 4);
+                }
+                CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 2 - Map.Position.Y);
+
             }
             if (key == Keyboard.Key.D)
             {
@@ -108,7 +119,10 @@ namespace Game
                 if (CheckCollision(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
                     PacMan.Position.X + PacMan.Texture.Size.X + 4 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
                 PacMan.SetPosition(PacMan.Position.X + 4, PacMan.Position.Y);
+                Direction = 3;
             }
+            CheckPoints(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X + 4 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y);
         }
         public bool CheckCollision(float x, float y, float x2, float y2)
         {
@@ -136,6 +150,7 @@ namespace Game
                     {
                         getp = true;
                         Score += 20;
+                        Console.WriteLine("point+");
                     }
                 }
             }

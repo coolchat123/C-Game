@@ -11,8 +11,6 @@ namespace Game
     {
         static List<SSprite> Bricks;
 
-        static int BricksBroken;
-
         static Button Restart;
         static Button Return;
 
@@ -46,8 +44,6 @@ namespace Game
         {
             Paddle = new SSprite(Color.White, 28, 6);
             PaddleSpeed = 0;
-
-            BricksBroken = 0;
 
             Restart = new Button(new Texture("Content/Menu/MenuLeft.png"));
             Restart.Click += RestartClick;
@@ -194,6 +190,7 @@ namespace Game
                         BallMoving = false;
                         GenerateLevel();
                         LevelOver = false;
+                        SetLives(Lives + 1);
                     }
                     else
                     {
@@ -242,9 +239,8 @@ namespace Game
                         Program.Sprites.Remove(brick);
                         Bricks.Remove(brick);
 
-                        if (++BricksBroken == 104)
+                        if (Bricks.Count == 0)
                         {
-                            BricksBroken = 0;
                             LevelOver = true;
                         }
 
@@ -288,12 +284,12 @@ namespace Game
                 // If signal is left key, set speed to negative
                 if (key == Keyboard.Key.A || key == Keyboard.Key.Left)
                 {
-                    PaddleSpeed = -3;
+                    PaddleSpeed = -4;
                 }
                 // If signal is right key, set speed to positive
                 else if (key == Keyboard.Key.D || key == Keyboard.Key.Right)
                 {
-                    PaddleSpeed = 3;
+                    PaddleSpeed = 4;
                 }
                 // If signal is space, and ball is not yet moving, set ball to moving
                 else if (key == Keyboard.Key.Space)
@@ -364,7 +360,6 @@ namespace Game
             SetScore(0);
 
             BallMoving = false;
-            BricksBroken = 0;
 
             Paddle.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X / 2 - Paddle.Texture.Size.X / 2, 176);
 
@@ -398,24 +393,144 @@ namespace Game
             string returnString = "";
             bool[,] result = new bool[13, 12];
 
-            int rand = random.Next() % 1;
+            int rand = random.Next() % 9;
 
             switch (rand)
             {
                 case 0:
                     returnString =
-                    "             " +
-                    "#############" +
-                    "#############" +
-                    "#############" +
-                    "#############" +
-                    "             " +
-                    "#############" +
-                    "#############" +
-                    "#############" +
-                    "#############" +
-                    "             " +
-                    "#############";
+                        "             " +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "             " +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "             " +
+                        "#############";
+                    break;
+                case 1:
+                    returnString =
+                        "             " +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "             " +
+                        "             " +
+                        "             ";
+                    break;
+                case 2:
+                    returnString =
+                        " # # # # # # " +
+                        "# # # # # # #" +
+                        " # # # # # # " +
+                        "# # # # # # #" +
+                        " # # # # # # " +
+                        "# # # # # # #" +
+                        " # # # # # # " +
+                        "# # # # # # #" +
+                        " # # # # # # " +
+                        "# # # # # # #" +
+                        " # # # # # # " +
+                        "             ";
+                    break;
+                case 3:
+                    returnString =
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############";
+                    break;
+                case 4:
+                    returnString =
+                        "             " +
+                        "    #####    " +
+                        "  #########  " +
+                        " ########### " +
+                        "####     ####" +
+                        "###       ###" +
+                        "###       ###" +
+                        "###       ###" +
+                        "###       ###" +
+                        "             " +
+                        "             " +
+                        "             ";
+                    break;
+                case 5:
+                    returnString =
+                        "             " +
+                        "             " +
+                        "   ##   ##   " +
+                        "   ##   ##   " +
+                        "   ##   ##   " +
+                        "             " +
+                        "  #########  " +
+                        "  #########  " +
+                        "   #######   " +
+                        "             " +
+                        "             " +
+                        "             ";
+                    break;
+                case 6:
+                    returnString =
+                        "             " +
+                        "  #########  " +
+                        " ########### " +
+                        "###  ###  ###" +
+                        "###  ###  ###" +
+                        "###  ###  ###" +
+                        "##### #######" +
+                        "  # # # # #  " +
+                        "  ## # # ##  " +
+                        "   #######   " +
+                        "             " +
+                        "             ";
+                    break;
+                case 7:
+                    returnString =
+                        "###       ###" +
+                        "####     ####" +
+                        "#####   #####" +
+                        "###### ######" +
+                        "### ##### ###" +
+                        "###  ###  ###" +
+                        "###   #   ###" +
+                        "###       ###" +
+                        "###       ###" +
+                        "###       ###" +
+                        "             " +
+                        "             ";
+                    break;
+                case 8:
+                    returnString =
+                        "       #     " +
+                        " ###     ##  " +
+                        "#####    ##  " +
+                        "#####        " +
+                        "#####   ###  " +
+                        " ###    ###  " +
+                        "     #  ###  " +
+                        "             " +
+                        "   ###  #    " +
+                        "   ###    #  " +
+                        "   ###       " +
+                        "             ";
                     break;
             }
 

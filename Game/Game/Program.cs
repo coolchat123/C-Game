@@ -21,7 +21,7 @@ namespace Game
 
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
-        public static readonly Color TextureClearColour = Color.White;
+        public static readonly Color TextureClearColour = Color.Black;
         public static readonly Color WindowClearColour = Color.White;
 
         public static RenderTexture Texture;

@@ -30,6 +30,10 @@ namespace Game
 
         static SSprite Apple;
 
+        static SText GameOverText;
+
+        static bool bGame;
+
         public Snake() : base() { }
 
         public override void LoadContent()
@@ -49,15 +53,14 @@ namespace Game
             ScoreNumber = new SText(Score.ToString(), 11);
 
             ScoreText = new SText("score",11);
-
+            
             Return = new Button(new Texture("Content/Menu/MenuLeft.png"));
             Return.Click += ReturnClick;
             Return.MouseEnter += ReturnEnter;
             Return.MouseLeave += ReturnLeave;
 
             SnakeHead = new SSprite(new Texture("content/snake/snakeHead.png"));
-            SnakeHead.Position = new SFML.System.Vector2f(210, 20);
-
+            SnakeHead.Position = new SFML.System.Vector2f(110, 90);
             Apple = new SSprite(new Texture("content/snake/apple.png"));
             Apple.Position = new SFML.System.Vector2f(50,80);
 
@@ -66,6 +69,8 @@ namespace Game
             Timer = 12;
 
             NewDirection = "left";
+
+            bGame = true;
 
         }
 
@@ -83,6 +88,11 @@ namespace Game
 
         public override void Update(GameTime gameTime)
         {
+            if (!bGame)
+                return;
+
+            GameOver();
+
             if (Timer == 0) 
             {
                 SnakeMove();
@@ -101,7 +111,7 @@ namespace Game
                 float x = SnakeHead.Position.X;
                 float y = SnakeHead.Position.Y;
                 Random rnd = new Random();
-
+               
                 x = x_positions[rnd.Next(0, 22)];
                 y = y_positions[rnd.Next(0, 19)];
 
@@ -117,26 +127,37 @@ namespace Game
 
         public override void KeyInput(Keyboard.Key key)
         {
-
-            if ((key == Keyboard.Key.A || key == Keyboard.Key.Left) && Direction != "right")
+            if (bGame)
             {
-                NewDirection = "left";
-            }
+                if ((key == Keyboard.Key.A || key == Keyboard.Key.Left) && Direction != "right")
+                {
+                    NewDirection = "left";
+                }
 
-            if ((key == Keyboard.Key.S || key == Keyboard.Key.Down) && Direction != "up")
-            {
-                NewDirection = "down";
-            }
+                if ((key == Keyboard.Key.S || key == Keyboard.Key.Down) && Direction != "up")
+                {
+                    NewDirection = "down";
+                }
 
-            if ((key == Keyboard.Key.D || key == Keyboard.Key.Right) && Direction != "left")
-            {
-                NewDirection = "right";
-            }
+                if ((key == Keyboard.Key.D || key == Keyboard.Key.Right) && Direction != "left")
+                {
+                    NewDirection = "right";
+                }
 
-            if ((key == Keyboard.Key.W || key == Keyboard.Key.Up) && Direction != "down")
+                if ((key == Keyboard.Key.W || key == Keyboard.Key.Up) && Direction != "down")
+                {
+                    NewDirection = "up";
+                }
+            } else
             {
-                NewDirection = "up";
+                if(key == Keyboard.Key.Space)
+                {
+                    bGame = true;
+                    SnakeHead.Position = new SFML.System.Vector2f(110, 90);
+                    GameOverText.DisplayedString = "";
+                }
             }
+            
         }
 
         public void SetScore() 
@@ -150,6 +171,9 @@ namespace Game
         }
         public void SnakeMove()
         {
+            if (!bGame)
+                return;
+
             if (NewDirection == "left")
             {
                 SnakeHead.SetPosition(SnakeHead.Position.X-10, SnakeHead.Position.Y);
@@ -174,8 +198,8 @@ namespace Game
                 Console.WriteLine(SnakeHead.Position);
             }
             Direction = NewDirection;
-
             GameOverCheck();
+
 
         }
 
@@ -197,9 +221,7 @@ namespace Game
         public bool GameOverCheck()
         {
             if (SnakeHead.Position.X <= -1 || SnakeHead.Position.Y <= -1 || SnakeHead.Position.X >=221 || SnakeHead.Position.Y >= 191)
-
             {
-                Console.WriteLine("game over");
                 return true;
             }
 
@@ -215,7 +237,11 @@ namespace Game
         {
             if (GameOverCheck())
             {
-                
+                GameOverText = new SText("Game over!", 11);
+                bGame = false;
+                GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+                Color textColor = new Color(255, 255, 255);
+                GameOverText.Color = textColor;
             }
         }
 

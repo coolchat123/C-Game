@@ -167,7 +167,8 @@ namespace Game
                 {
                     NewDirection = "up";
                 }
-            } else
+            }             
+            else
             {
                 if(key == Keyboard.Key.Space)
                 {
@@ -295,6 +296,5 @@ namespace Game
                 }
             }
         }
-
     }
 }

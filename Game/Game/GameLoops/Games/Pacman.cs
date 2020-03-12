@@ -14,8 +14,8 @@ namespace Game
     public class Pacman : GameLoop
     {
         // 0 = W; 1 = A; 2 = S; 3 = D;
-        int WantedDirection;
-        int Direction;
+        int WantedDirection = 1;
+        int Direction = 1;
         int Life = 2;
         int Score = 0;
         static SSprite Map;
@@ -62,6 +62,7 @@ namespace Game
 
         public override void Update(GameTime gameTime)
         {
+            Console.WriteLine(PacMan.Position);
             if (PacMan.Position == new Vector2f(10, 86))
             {
                 PacMan.Position = new Vector2f(214, 86);    
@@ -70,6 +71,77 @@ namespace Game
             {
                 PacMan.Position = new Vector2f(10, 86);
             }
+           
+            if (WantedDirection == 0)
+            {
+                if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
+                {
+                    Direction = 0;
+                }
+            }
+
+            if (Direction == 0)
+            {
+                if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
+                {
+                    CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y);
+                    PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 2);
+                }
+            }
+
+            if (WantedDirection == 1)
+            {
+                if (CheckCollision(PacMan.Position.X - 2 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                   PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                {
+                    Direction = 1;
+                }
+            }
+            if (Direction == 1)
+            {
+                if (CheckCollision(PacMan.Position.X - 2 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                   PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                {
+                    PacMan.SetPosition(PacMan.Position.X - 2, PacMan.Position.Y);
+                }
+            }
+            if (WantedDirection == 2)
+            {
+                if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 2 - Map.Position.Y))
+                {
+                    Direction = 2;
+                }
+            }
+            if (Direction == 2)
+            {
+                if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
+                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 2 - Map.Position.Y))
+                {
+                    PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y + 2);
+                }
+            }
+
+            if (WantedDirection == 3)
+            {
+                if (CheckCollision(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                PacMan.Position.X + PacMan.Texture.Size.X + 2 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                {
+                    Direction = 3;
+                }
+            }
+            if (Direction == 3)
+            {
+                if (CheckCollision(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                 PacMan.Position.X + PacMan.Texture.Size.X + 2 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                {
+                    PacMan.SetPosition(PacMan.Position.X + 2, PacMan.Position.Y);
+                }
+            }
+
         }
         // 0 = W; 1 = A; 2 = S; 3 = D;
         public override void KeyInput(Keyboard.Key key)
@@ -77,37 +149,19 @@ namespace Game
             if (key == Keyboard.Key.W)
             {
                 WantedDirection = 0;
-                if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 4 - Map.Position.Y,
-                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
-                {
-                    Direction = 0;
-                    PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 4);
-                }
-                CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
-                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y);
+               // CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
+                 //   PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y);
             }
             if (key == Keyboard.Key.A)
             {
                 WantedDirection = 1;
-
-                if (CheckCollision(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
-                    PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
-                {
-                    Direction = 1;
-                    PacMan.SetPosition(PacMan.Position.X - 4, PacMan.Position.Y);
-                }
-                CheckPoints(PacMan.Position.X - 4 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                CheckPoints(PacMan.Position.X - 2 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
                     PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y);
             }
             if (key == Keyboard.Key.S)
             {
+
                 WantedDirection = 2;
-                Direction = 0;
-                if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
-                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 4 - Map.Position.Y))
-                { 
-                        PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y + 4);
-                }
                 CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
                     PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 2 - Map.Position.Y);
 
@@ -116,14 +170,10 @@ namespace Game
             {
                 WantedDirection = 3;
 
-                if (CheckCollision(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
-                    PacMan.Position.X + PacMan.Texture.Size.X + 4 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
-                PacMan.SetPosition(PacMan.Position.X + 4, PacMan.Position.Y);
-                Direction = 3;
+                CheckPoints(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                        PacMan.Position.X + PacMan.Texture.Size.X + 2 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y);
             }
-            CheckPoints(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
-                    PacMan.Position.X + PacMan.Texture.Size.X + 4 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y);
-        }
+            } 
         public bool CheckCollision(float x, float y, float x2, float y2)
         {
             bool canMove = true;
@@ -139,7 +189,7 @@ namespace Game
             }
             return canMove;
         }
-        public bool CheckPoints(float x, float y, float x2, float y2)
+        public int CheckPoints(float x, float y, float x2, float y2)
         {
             bool getp = false;
             for (float xCheck = x; xCheck < x2; xCheck++)
@@ -150,11 +200,11 @@ namespace Game
                     {
                         getp = true;
                         Score += 20;
-                        Console.WriteLine("point+");
+                        Console.WriteLine(Score);
                     }
                 }
             }
-            return getp;
+            return Score;
         }
     }
 }

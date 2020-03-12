@@ -18,6 +18,9 @@ namespace Game
         int Direction = 1;
         int Life = 2;
         int Score = 0;
+        static Color MapCol = new Color(252,188,176);
+        static List<SSprite> SuperPoints;
+        static List<SSprite> Points;
         static SSprite Map;
         public static Image CollisionMap;
         static SSprite PacMan;
@@ -26,18 +29,20 @@ namespace Game
         static SSprite GhostOrange;
         static SSprite GhostRed;
         static SText ScoreText;
-        static Image PointMap;
         static int ScoreP;
         string music = "Content/Pacman/eatpcS.wav";
+        
         public Pacman() : base() { }
 
         public override void LoadContent()
         {
             // 1 point = 20 points
             // eat ghost = 60 points
-            PointMap = new Image("Content/Pacman/pointmap.png");
+            SuperPoints = new List<SSprite>();
+            Points = new List<SSprite>();
             ScoreText = new SText(ScoreP.ToString(), 11);
             Map = new SSprite(new Texture("Content/Pacman/Map.png"));
+            
             PacMan = new SSprite(Color.Yellow, 16, 12);
             GhostRed = new SSprite(Color.Red, 16, 12);
             GhostBlue = new SSprite(Color.Blue, 16, 12);
@@ -48,9 +53,23 @@ namespace Game
 
         public override void Initialise()
         {
+            Texture SuperPoint = new Texture("Content/Pacman/SuperPoint.png");
+            SSprite SuperPoint1 = new SSprite(SuperPoint);
+            SSprite SuperPoint2 = new SSprite(SuperPoint);
+            SSprite SuperPoint3 = new SSprite(SuperPoint);
+            SSprite SuperPoint4 = new SSprite(SuperPoint);
+            SuperPoint1.Position = new Vector2f(19, 17);
+            SuperPoint2.Position = new Vector2f(Map.Texture.Size.X - 5, 17);
+            SuperPoint3.Position = new Vector2f(19, Map.Texture.Size.Y - 35);
+            SuperPoint4.Position = new Vector2f(Map.Texture.Size.X - 5 , Map.Texture.Size.Y - 35);
+            SuperPoints.Add(SuperPoint1);
+            SuperPoints.Add(SuperPoint2);
+            SuperPoints.Add(SuperPoint3);
+            SuperPoints.Add(SuperPoint4);
             ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 18, 10);
             ScoreText.Color = new Color(173,216,230);
             Map.Position = new Vector2f(10, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
+            Points = PointSet();
             PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
             GhostBlue.Position = new Vector2f(90, Map.Position.Y + 100);
             GhostOrange.Position = new Vector2f(200, Map.Position.Y + 100);
@@ -62,7 +81,34 @@ namespace Game
 
         public override void Update(GameTime gameTime)
         {
-            Console.WriteLine(PacMan.Position);
+            //Console.WriteLine(PacMan.Position);
+            ScoreText.DisplayedString = Score.ToString();
+            for (int i = 0; i < Points.Count; i++)
+            {
+                if (PacMan.GetGlobalBounds().Intersects(Points[i].GetGlobalBounds()))
+                {
+                    Program.Sprites.Remove(Points[i]);
+                    Points.RemoveAt(i);
+                    if (i > 0)
+                    {
+                        i -= 1;
+                    }
+                       
+                    Score += 20;
+                }
+            }
+            Console.WriteLine(Points.Count);
+                for (int i = 0; i < SuperPoints.Count; i++)
+            {
+                if (PacMan.GetGlobalBounds().Intersects(SuperPoints[i].GetGlobalBounds()))
+                {
+                    Console.WriteLine("test");
+                    Program.Sprites.Remove(SuperPoints[i]);
+                    SuperPoints.RemoveAt(i);
+                    SuperMode();
+
+                }
+            }
             if (PacMan.Position == new Vector2f(10, 86))
             {
                 PacMan.Position = new Vector2f(214, 86);    
@@ -86,8 +132,6 @@ namespace Game
                 if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
                     PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
                 {
-                    CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
-                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y);
                     PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 2);
                 }
             }
@@ -139,39 +183,58 @@ namespace Game
                  PacMan.Position.X + PacMan.Texture.Size.X + 2 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
                 {
                     PacMan.SetPosition(PacMan.Position.X + 2, PacMan.Position.Y);
+
                 }
             }
 
         }
+
+        public List<SSprite> PointSet()
+        {
+            List<SSprite> result = new List<SSprite>();
+            Image pointMap = new Image("Content/Pacman/pointmap.png");
+            for (uint i = 0; i < pointMap.Size.X; i++)
+            {
+                for(uint j = 0; j < pointMap.Size.Y; j++)
+                {
+                    if (pointMap.GetPixel(i, j) == Color.Red)
+                    {
+                        SSprite newpoint = new SSprite(new Color(252, 188, 176), 2, 2);
+                        newpoint.Position = new Vector2f(i + Map.Position.X , j + Map.Position.Y);
+                        result.Add(newpoint);
+                    }
+                }
+            }
+            return result;
+        }
+
+
+
         // 0 = W; 1 = A; 2 = S; 3 = D;
         public override void KeyInput(Keyboard.Key key)
         {
             if (key == Keyboard.Key.W)
             {
                 WantedDirection = 0;
-               // CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
-                 //   PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y);
+
             }
             if (key == Keyboard.Key.A)
             {
                 WantedDirection = 1;
-                CheckPoints(PacMan.Position.X - 2 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
-                    PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y);
+                
             }
             if (key == Keyboard.Key.S)
             {
 
                 WantedDirection = 2;
-                CheckPoints(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
-                    PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 2 - Map.Position.Y);
+               
 
             }
             if (key == Keyboard.Key.D)
             {
                 WantedDirection = 3;
 
-                CheckPoints(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
-                        PacMan.Position.X + PacMan.Texture.Size.X + 2 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y);
+                
             }
             } 
         public bool CheckCollision(float x, float y, float x2, float y2)
@@ -183,28 +246,43 @@ namespace Game
                 {
                     if (CollisionMap.GetPixel((uint)xCheck, (uint)yCheck) == Color.Blue)
                     {
+
                         canMove = false;
                     }
                 }
             }
             return canMove;
         }
-        public int CheckPoints(float x, float y, float x2, float y2)
+
+        // Point is 2px/2px color of a point is Color.Red;
+        public int CheckPoints()
         {
-            bool getp = false;
-            for (float xCheck = x; xCheck < x2; xCheck++)
+            Image MapImage = Map.Texture.CopyToImage();
+
+            for (float xCheck = PacMan.Position.X - Map.Position.X; xCheck < PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X; xCheck++)
             {
-                for (float yCheck = y; yCheck < y2; yCheck++)
+                for (float yCheck = PacMan.Position.Y - Map.Position.Y; yCheck < PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y; yCheck++)
                 {
-                    if (PointMap.GetPixel((uint)xCheck, (uint)yCheck) == Color.Red)
+                    if (MapImage.GetPixel((uint)xCheck, (uint)yCheck) == MapCol)
                     {
-                        getp = true;
+                        for (int i = -1; i <= 1; i++)
+                        {
+                            for (int j = -1; j <= 1; j++){
+                                MapImage.SetPixel((uint)(xCheck + i), (uint)(yCheck + j), Color.Black);
+                            }
+                        }
                         Score += 20;
-                        Console.WriteLine(Score);
                     }
+                    Map.Texture = new Texture(MapImage);
                 }
             }
             return Score;
+        }
+        public void SuperMode()
+        {
+            //if ghost = eaten Score += 200
+            bool GhostsEat = true;
+            Score += 50;
         }
     }
 }

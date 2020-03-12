@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SFML.Window;
 using SFML.Graphics;
+using SFML.Audio;
 
 namespace Game
 {
@@ -37,6 +38,8 @@ namespace Game
         static List<SSprite> SnakeList;
 
         static SText ScoreHeadsUp;
+
+        static Sound BackgroundMusic;
 
         public Snake() : base() { }
 
@@ -80,6 +83,12 @@ namespace Game
             SnakeBody.Position = new SFML.System.Vector2f(110, 90);
             SnakeList.Add(SnakeBody);
 
+            BackgroundMusic = new Sound(new SoundBuffer("content/snake/theme-music.wav"));
+            BackgroundMusic.Loop = true;
+            BackgroundMusic.Volume = Program.sound;
+            BackgroundMusic.Play();
+
+
         }
 
         public override void Initialise()
@@ -112,9 +121,16 @@ namespace Game
                 Timer -= 1;
             }
 
-          
             if (SnakeList[0].Position == Apple.Position)
             {
+                void playSound(string filePath)
+                {
+                    var sound = new Sound(new SoundBuffer(filePath));
+                    sound.Loop = false;
+                    sound.Volume = Program.sound;
+                    sound.Play();
+                }
+
                 scoreFunction:
                 float[] x_positions = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220 };
                 float[] y_positions = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190 };
@@ -135,10 +151,10 @@ namespace Game
 
                 Apple.Position = new SFML.System.Vector2f(x, y);
                 SetScore();
-
                 SSprite SnakeBody = new SSprite(new Texture("content/snake/snakeHead.png"));
                 SnakeBody.Position = new SFML.System.Vector2f(LastBodyPos.X, LastBodyPos.Y);
                 SnakeList.Add(SnakeBody);
+                playSound("content/snake/nom-ping-1.wav");
             }
 
             LastBodyPos = new SFML.System.Vector2f(SnakeList[SnakeList.Count - 1].Position.X, SnakeList[SnakeList.Count - 1].Position.Y);
@@ -178,6 +194,7 @@ namespace Game
                     bGame = true;
                     GameOverText.DisplayedString = "";
                     ScoreHeadsUp.DisplayedString = "";
+                    BackgroundMusic.Play();
                 }
             }
             
@@ -231,6 +248,7 @@ namespace Game
         public void ReturnClick(object sender, EventArgs e)
         {
             Program.ChangeGame = Program.GameName.Menu;
+            BackgroundMusic.Stop();
         }
 
         public void ReturnEnter(object sender, EventArgs e)
@@ -251,6 +269,13 @@ namespace Game
 
         public void GameOver()
         {
+            void playSound(string filePath){
+                var sound = new Sound(new SoundBuffer(filePath));
+                sound.Loop = false;
+                sound.Volume = Program.sound;
+                sound.Play();
+            }
+
             if(SnakeList[0].Position.X <= -1 || SnakeList[0].Position.Y <= -1 || SnakeList[0].Position.X >= 221 || SnakeList[0].Position.Y >= 191)
             {
                 GameOverText = new SText("Game over!", 11);
@@ -262,6 +287,10 @@ namespace Game
                 }
 
                 SnakeList.Clear();
+
+                BackgroundMusic.Stop();
+
+                playSound("content/snake/dead.wav");
 
                 GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
                 Color textColor = new Color(255, 255, 255);
@@ -285,6 +314,10 @@ namespace Game
                         }
 
                         SnakeList.Clear();
+
+                        BackgroundMusic.Stop();
+
+                        playSound("content/snake/dead.wav");
 
                         GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
                         Color textColor = new Color(255, 255, 255);

@@ -53,6 +53,8 @@ namespace Game
 
         public static List<Text> Strings = new List<Text> { };
 
+        public static int sound = 33;
+
         // "RunningGame" is the GameLoop that is currently running.
         // GameLoop is an abstract class, so RunningGame can only ever be one of its child classes.
         // The child class that occupies RunningGame at any one given point signifies what game is being played.

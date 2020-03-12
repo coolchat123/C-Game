@@ -4,6 +4,7 @@ using SFML;
 using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
+using SFML.Audio;
 
 namespace Game
 {
@@ -155,6 +156,15 @@ namespace Game
             }
         }
 
+        //to play a sound.
+        public static void PlaySound(string filename)
+        {
+            var sound = new Sound(new SoundBuffer(filename));
+            sound.Loop = true;
+            sound.Volume = 50;
+            sound.Play();
+        }
+
         // Update is called once every tick from the game loop.
         public static void Update(GameTime gameTime)
         {
@@ -204,6 +214,8 @@ namespace Game
             {
                 LeftPressed = false;
             }
+
+
 
             // Check for keyboard input.
             if (Keyboard.IsKeyPressed(Keyboard.Key.A))

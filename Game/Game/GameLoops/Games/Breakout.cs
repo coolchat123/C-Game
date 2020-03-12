@@ -18,6 +18,10 @@ namespace Game
         static SText ScoreText;
         static int Score;
 
+        static SText LevelInfoText;
+        static SText LevelText;
+        static int Level;
+
         static SText LivesInfoText;
         static SText LivesText;
         static int Lives;
@@ -28,6 +32,7 @@ namespace Game
         static SSprite Ball;
         static Vector2i BallSpeed;
         static bool BallMoving;
+        static int BallMovingCountDown;
         static bool LevelOver;
 
         static SText GameOverText;
@@ -58,6 +63,10 @@ namespace Game
             ScoreInfoText = new SText("Score", 11);
             ScoreText = new SText("0", 11);
 
+            Level = 1;
+            LevelInfoText = new SText("Level", 11);
+            LevelText = new SText("1", 11);
+
             Lives = 2;
             LivesInfoText = new SText("Lives", 11);
             LivesText = new SText("2", 11);
@@ -65,6 +74,7 @@ namespace Game
             Ball = new SSprite(Color.White, 3, 3);
             BallSpeed = new Vector2i(0, 0);
             BallMoving = false;
+            BallMovingCountDown = 15;
             LevelOver = false;
             GameOver = false;
 
@@ -96,10 +106,13 @@ namespace Game
 
             int scoreboardLeft = (int)WallRight.Position.X + (int)WallRight.Texture.Size.X + 2;
             int scoreboardWidth = (int)Program.Texture.Size.X - scoreboardLeft;
-            ScoreInfoText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - ScoreInfoText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2);
+            LevelInfoText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LevelInfoText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 4 - 13);
+            LevelText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LevelText.GetGlobalBounds().Width / 2, LevelInfoText.Position.Y + LevelInfoText.GetGlobalBounds().Height + 3);
+
+            ScoreInfoText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - ScoreInfoText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - 13);
             ScoreText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - ScoreText.GetGlobalBounds().Width / 2, ScoreInfoText.Position.Y + ScoreInfoText.GetGlobalBounds().Height + 3);
 
-            LivesInfoText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesInfoText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 4 * 3);
+            LivesInfoText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesInfoText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 4 * 3 - 13);
             LivesText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesText.GetGlobalBounds().Width / 2, LivesInfoText.Position.Y + LivesInfoText.GetGlobalBounds().Height + 3);
 
             GameOverText.SetPosition((WallRight.Position.X + WallRight.Texture.Size.X) / 2 - GameOverText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y);
@@ -108,6 +121,11 @@ namespace Game
 
         public override void Update(GameTime gameTime)
         {
+            if(BallMovingCountDown > 0)
+            {
+                BallMovingCountDown -= 1;
+            }
+
             if (GameOver)
             {
                 if(GameOverText.Position.Y > Program.Texture.Size.Y / 2 + 5)
@@ -191,6 +209,7 @@ namespace Game
                         GenerateLevel();
                         LevelOver = false;
                         SetLives(Lives + 1);
+                        SetLevel(Level + 1);
                     }
                     else
                     {
@@ -219,6 +238,10 @@ namespace Game
                 if (Ball.Position.Y > Program.Texture.Size.Y)
                 {
                     BallMoving = false;
+                    BallSpeed = new Vector2i(0, 0);
+
+                    Ball.SetPosition(Paddle.Position.X + Paddle.Texture.Size.X / 2 - Ball.Texture.Size.X / 2,
+                        Paddle.Position.Y - Ball.Texture.Size.Y);
 
                     if (Lives == 0)
                     {
@@ -246,16 +269,16 @@ namespace Game
 
                         SetScore(Score + 1);
 
-                        if ((Ball.Position.X + Ball.Texture.Size.X - brick.Position.X > 0 && Ball.Position.X + Ball.Texture.Size.X - brick.Position.X < BallSpeed.X)
-                            || (Ball.Position.X - (brick.Position.X + brick.Texture.Size.X) < 0 && Ball.Position.X - (brick.Position.X + brick.Texture.Size.X) > BallSpeed.X))
-                        {
-                            BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
-                        }
-
-                        if ((Ball.Position.Y + Ball.Texture.Size.Y - brick.Position.Y > 0 && Ball.Position.Y + Ball.Texture.Size.Y - brick.Position.Y < BallSpeed.Y)
-                            || (Ball.Position.Y - (brick.Position.Y + brick.Texture.Size.Y) < 0 && Ball.Position.Y - (brick.Position.Y + brick.Texture.Size.Y) > BallSpeed.Y))
+                        if ((BallSpeed.Y > 0 && Ball.Position.Y + Ball.Texture.Size.Y > brick.Position.Y && Ball.Position.Y + Ball.Texture.Size.Y - BallSpeed.Y <= brick.Position.Y) ||
+                            (BallSpeed.Y < 0 && Ball.Position.Y < brick.Position.Y + brick.Texture.Size.Y && Ball.Position.Y - BallSpeed.Y >= brick.Position.Y + brick.Texture.Size.Y))
                         {
                             BallSpeed = new Vector2i(BallSpeed.X, -BallSpeed.Y);
+                        }
+
+                        if ((BallSpeed.X > 0 && Ball.Position.X + Ball.Texture.Size.X > brick.Position.X && Ball.Position.X + Ball.Texture.Size.X - BallSpeed.X <= brick.Position.X) ||
+                            (BallSpeed.X < 0 && Ball.Position.X < brick.Position.X + brick.Texture.Size.X && Ball.Position.X - BallSpeed.X >= brick.Position.X + brick.Texture.Size.X))
+                        {
+                            BallSpeed = new Vector2i(-BallSpeed.X, BallSpeed.Y);
                         }
 
                         break;
@@ -294,7 +317,7 @@ namespace Game
                 // If signal is space, and ball is not yet moving, set ball to moving
                 else if (key == Keyboard.Key.Space)
                 {
-                    if (!BallMoving)
+                    if (!BallMoving && BallMovingCountDown == 0)
                     {
                         BallMoving = true;
                         BallSpeed = new Vector2i(1, -2);
@@ -319,6 +342,15 @@ namespace Game
             Lives = newLives;
             LivesText.DisplayedString = newLives.ToString();
             LivesText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LivesText.GetGlobalBounds().Width / 2, LivesInfoText.Position.Y + LivesInfoText.GetGlobalBounds().Height + 3);
+        }
+
+        public void SetLevel(int newLevel)
+        {
+            int scoreboardLeft = (int)WallRight.Position.X + (int)WallRight.Texture.Size.X + 2;
+            int scoreboardWidth = (int)Program.Texture.Size.X - scoreboardLeft;
+            Level = newLevel;
+            LevelText.DisplayedString = newLevel.ToString();
+            LevelText.SetPosition(scoreboardLeft + scoreboardWidth / 2 - LevelText.GetGlobalBounds().Width / 2, LevelInfoText.Position.Y + LevelInfoText.GetGlobalBounds().Height + 3);
         }
 
         public void GenerateLevel()
@@ -358,8 +390,10 @@ namespace Game
 
             SetLives(2);
             SetScore(0);
+            SetLevel(1);
 
             BallMoving = false;
+            BallMovingCountDown = 15;
 
             Paddle.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X / 2 - Paddle.Texture.Size.X / 2, 176);
 
@@ -393,7 +427,7 @@ namespace Game
             string returnString = "";
             bool[,] result = new bool[13, 12];
 
-            int rand = random.Next() % 9;
+            int rand = random.Next() % 15;
 
             switch (rand)
             {
@@ -475,15 +509,15 @@ namespace Game
                 case 5:
                     returnString =
                         "             " +
-                        "             " +
+                        "   ##   ##   " +
                         "   ##   ##   " +
                         "   ##   ##   " +
                         "   ##   ##   " +
                         "             " +
                         "  #########  " +
                         "  #########  " +
-                        "   #######   " +
-                        "             " +
+                        "  #########  " +
+                        "    ######   " +
                         "             " +
                         "             ";
                     break;
@@ -495,7 +529,7 @@ namespace Game
                         "###  ###  ###" +
                         "###  ###  ###" +
                         "###  ###  ###" +
-                        "##### #######" +
+                        "#############" +
                         "  # # # # #  " +
                         "  ## # # ##  " +
                         "   #######   " +
@@ -530,6 +564,111 @@ namespace Game
                         "   ###  #    " +
                         "   ###    #  " +
                         "   ###       " +
+                        "             ";
+                    break;
+                case 9:
+                    returnString =
+                        "  #          " +
+                        " #  #######  " +
+                        "#  #       # " +
+                        "# #  #####  #" +
+                        "# # #     # #" +
+                        "# # #  #  # #" +
+                        "# # #   # # #" +
+                        "# #  ###  # #" +
+                        "#  #     #  #" +
+                        " #  #####  # " +
+                        "  #       #  " +
+                        "   #######   ";
+                    break;
+                case 10:
+                    returnString =
+                        "             " +
+                        "   #     #   " +
+                        "    #   #    " +
+                        "   #######   " +
+                        "  ## ### ##  " +
+                        " ########### " +
+                        " # ####### # " +
+                        " # #     # # " +
+                        "    ## ##    " +
+                        "             " +
+                        "             " +
+                        "             ";
+                    break;
+                case 11:
+                    returnString =
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # " +
+                        " # # # # # # ";
+                    break;
+                case 12:
+                    returnString =
+                        "  ###   ###  " +
+                        " ##### ##### " +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        " ########### " +
+                        "  #########  " +
+                        "   #######   " +
+                        "    #####    " +
+                        "     ###     " +
+                        "      #      ";
+                    break;
+                case 13:
+                    returnString =
+                        "      #      " +
+                        "     ###     " +
+                        "    #####    " +
+                        "   #######   " +
+                        "  #########  " +
+                        " ########### " +
+                        "  #########  " +
+                        "   #######   " +
+                        "    #####    " +
+                        "     ###     " +
+                        "      #      " +
+                        "             ";
+                    break;
+                case 14:
+                    returnString =
+                        "             " +
+                        "    #####    " +
+                        "  #########  " +
+                        " ########### " +
+                        "#############" +
+                        "#############" +
+                        "#############" +
+                        " ########### " +
+                        "  #########  " +
+                        "    #####    " +
+                        "             " +
+                        "             ";
+                    break;
+                case 99:
+                    returnString =
+                        "             " +
+                        "             " +
+                        "             " +
+                        "             " +
+                        "             " +
+                        "             " +
+                        "             " +
+                        "             " +
+                        "             " +
+                        "             " +
+                        "             " +
                         "             ";
                     break;
             }

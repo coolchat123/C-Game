@@ -16,6 +16,7 @@ namespace Game
         // 0 = W; 1 = A; 2 = S; 3 = D;
         // GameState 0=BeginScreen; 1=Game; 2=GameOver
         bool GameState = false;
+        bool Hunt;
         int WantedDirection = 1;
         int Direction = 1;
         int Life = 2;
@@ -26,10 +27,7 @@ namespace Game
         static SSprite Map;
         public static Image CollisionMap;
         static SSprite PacMan;
-        static SSprite GhostPink;
-        static SSprite GhostBlue;
-        static SSprite GhostOrange;
-        static SSprite GhostRed;
+        static Ghost[] Ghosts;
         static SText ScoreText;
         static int ScoreP;
         static SSprite BeginScreen;
@@ -39,6 +37,7 @@ namespace Game
 
         public override void LoadContent()
         {
+            Hunt = false;
             // 1 point = 20 points
             // eat ghost = 60 points
             SuperPoints = new List<SSprite>();
@@ -57,10 +56,11 @@ namespace Game
             Map.Position = new Vector2f(10, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
             Points = PointSet();
             PacMan = new SSprite(Color.Yellow, 16, 12);
-            GhostRed = new SSprite(Color.Red, 16, 12);
-            GhostBlue = new SSprite(Color.Blue, 16, 12);
-            GhostPink = new SSprite(new Color(255, 0, 200), 16, 12);
-            GhostOrange = new SSprite(new Color(255, 200, 0), 16, 12);
+            Ghosts = new Ghost[4];
+            Ghosts[0] = new Ghost(Color.Red);
+            Ghosts[1] = new Ghost(Color.Blue);
+            Ghosts[2] = new Ghost(new Color(255, 0, 200));
+            Ghosts[3] = new Ghost(new Color(255, 200, 0));
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
             BeginScreen = new SSprite(new Texture("Content/Pacman/BGscreenpm.png"));
 
@@ -76,10 +76,11 @@ namespace Game
             ScoreText.Color = new Color(173,216,230);
             PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
             Vector2u jailPosition = new Vector2u(88, 80);
-            GhostBlue.Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
-            GhostPink.Position = new Vector2f(Map.Position.X + jailPosition.X + 16, Map.Position.Y + jailPosition.Y);
-            GhostRed.Position = new Vector2f(Map.Position.X + jailPosition.X + 32, Map.Position.Y + jailPosition.Y);
-            GhostOrange.Position = new Vector2f(Map.Position.X + jailPosition.X + 10, Map.Position.Y + jailPosition.Y - 20);
+            Ghosts[0].Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
+            Ghosts[1].Position = new Vector2f(Map.Position.X + jailPosition.X + 16, Map.Position.Y + jailPosition.Y);
+            Ghosts[2].Position = new Vector2f(Map.Position.X + jailPosition.X + 32, Map.Position.Y + jailPosition.Y);
+            Ghosts[3].Position = new Vector2f(Map.Position.X + jailPosition.X + 10, Map.Position.Y + jailPosition.Y - 20);
+            Ghosts[3].Jailed = false;
             BeginScreen.Position = Map.Position;
         }
 

@@ -34,6 +34,8 @@ namespace Game
         static int ScoreP;
         static SSprite BeginScreen;
         string music = "Content/Pacman/eatpcS.wav";
+        static List<SSprite> Lives;
+        static SText LivesText;
         
         public Pacman() : base() { }
 
@@ -63,16 +65,20 @@ namespace Game
             GhostOrange = new SSprite(new Color(255, 200, 0), 16, 12);
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
             BeginScreen = new SSprite(new Texture("Content/Pacman/BGscreenpm.png"));
-
+            LivesText = new SText("lives",11);
+            Lives = new List<SSprite>();
+            SetLives(3);
         }
 
         public override void Initialise()
         {
+            int scoreboardLeft = (int)Map.Position.X + (int)Map.Texture.Size.X + 2;
+            int scoreboardWidth = (int)Program.Texture.Size.X - scoreboardLeft;
             SuperPoints[0].Position = new Vector2f(19, 17);
             SuperPoints[1].Position = new Vector2f(Map.Texture.Size.X - 5, 17);
             SuperPoints[2].Position = new Vector2f(19, Map.Texture.Size.Y - 35);
             SuperPoints[3].Position = new Vector2f(Map.Texture.Size.X - 5 , Map.Texture.Size.Y - 35);
-            ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 18, 10);
+            ScoreText.Position = new Vector2f(scoreboardLeft+ scoreboardWidth /2 - ScoreText.GetGlobalBounds().Width /2 , 10);
             ScoreText.Color = new Color(173,216,230);
             PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
             Vector2u jailPosition = new Vector2u(88, 80);
@@ -81,12 +87,23 @@ namespace Game
             GhostRed.Position = new Vector2f(Map.Position.X + jailPosition.X + 32, Map.Position.Y + jailPosition.Y);
             GhostOrange.Position = new Vector2f(Map.Position.X + jailPosition.X + 10, Map.Position.Y + jailPosition.Y - 20);
             BeginScreen.Position = Map.Position;
+            LivesText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 5, 20);
+            for (int i = 0; i < Lives.Count; i++)
+            {
+                Lives[i].Position = new Vector2f(LivesText.Position.X , LivesText.Position.Y + LivesText.GetGlobalBounds().Height + 17 * i + 5);
+            } 
         }
 
         public override void Update(GameTime gameTime)
         {
             if (!GameState)
             {
+                foreach(SSprite point in Points)
+                {
+                    Program.Sprites.Remove(point);
+                }
+                Points.Clear();
+
                 if (Score == 0)
                 {
                     ScoreText.Position = new Vector2f(2555, 2555);
@@ -99,10 +116,12 @@ namespace Game
             }
             else
             {
-                ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X , 10);
+                int scoreboardLeft = (int)Map.Position.X + (int)Map.Texture.Size.X + 2;
+                int scoreboardWidth = (int)Program.Texture.Size.X - scoreboardLeft;
                 BeginScreen.Position = new Vector2f(2555, 2555);
                 //Console.WriteLine(PacMan.Position);
                 ScoreText.DisplayedString = Score.ToString();
+                ScoreText.Position = new Vector2f(scoreboardLeft + scoreboardWidth / 2 - ScoreText.GetGlobalBounds().Width / 2, 10);
                 for (int i = 0; i < Points.Count; i++)
                 {
                     if (PacMan.GetGlobalBounds().Intersects(Points[i].GetGlobalBounds()))
@@ -125,11 +144,9 @@ namespace Game
                 {
                     if (PacMan.GetGlobalBounds().Intersects(SuperPoints[i].GetGlobalBounds()))
                     {
-                        Console.WriteLine("test");
                         Program.Sprites.Remove(SuperPoints[i]);
                         SuperPoints.RemoveAt(i);
                         SuperMode();
-
                     }
                 }
                 if (PacMan.Position == new Vector2f(10, 86))
@@ -214,6 +231,8 @@ namespace Game
 
         public List<SSprite> PointSet()
         {
+            Console.WriteLine("ey");
+
             List<SSprite> result = new List<SSprite>();
             Image pointMap = new Image("Content/Pacman/pointmap.png");
             for (uint i = 0; i < pointMap.Size.X; i++)
@@ -238,7 +257,7 @@ namespace Game
         {
             if (key == Keyboard.Key.Return && !GameState)
             {
-                GameState = true;
+                RestartLevel();
             }
             if (key == Keyboard.Key.W)
             {
@@ -263,7 +282,11 @@ namespace Game
 
                 
             }
-            } 
+            if (key == Keyboard.Key.Space)
+            {
+                SetLives(Lives.Count - 1);
+            }
+        } 
         public bool CheckCollision(float x, float y, float x2, float y2)
         {
             bool canMove = true;
@@ -273,7 +296,6 @@ namespace Game
                 {
                     if (CollisionMap.GetPixel((uint)xCheck, (uint)yCheck) == Color.Blue)
                     {
-
                         canMove = false;
                     }
                 }
@@ -305,11 +327,53 @@ namespace Game
             }
             return Score;
         }
+
+        public void SetLives(int newLives)
+        {
+            Console.WriteLine(Lives.Count + " -> " + newLives);
+            while (Lives.Count != newLives)
+            {
+                if (Lives.Count > newLives)
+                {
+                    if (Lives.Count > 0)
+                    {
+                        Program.Sprites.Remove(Lives[Lives.Count - 1]);
+                        Lives.RemoveAt(Lives.Count - 1);
+                    }
+                    else
+                    {
+                        GameState = false;
+                        return;
+                    }
+                }
+                else
+                {
+                    SSprite newLife = new SSprite(Color.Yellow, 16, 12);
+                    newLife.Position = new Vector2f(LivesText.Position.X, LivesText.Position.Y + LivesText.GetGlobalBounds().Height + 17 * Lives.Count + 5);
+                    Program.Sprites.Add(newLife);
+                    Lives.Add(newLife);
+                }
+            }
+     
+        }
+
         public void SuperMode()
         {
             //if ghost = eaten Score += 200
             bool GhostsEat = true;
             Score += 50;
+        }
+
+        public void RestartLevel()
+        {
+            foreach (SSprite pellet in Points)
+            {
+                Program.Sprites.Remove(pellet);
+            }
+            Points.Clear();
+            Points = PointSet();
+            GameState = true;
+            SetLives(3);
         }
     }
 }

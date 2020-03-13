@@ -20,12 +20,13 @@ namespace Game
         int WantedDirection = 1;
         int Direction = 1;
         int Life = 2;
-        int Score = 0;
+        static int Score = 0;
         static Color MapCol = new Color(252,188,176);
         static List<SSprite> SuperPoints;
         static List<SSprite> Points;
-        static SSprite Map;
+        public static SSprite Map;
         public static Image CollisionMap;
+        public static Image GhostCollisionMap;
         static SSprite PacMan;
         static Ghost[] Ghosts;
         static SText ScoreText;
@@ -62,6 +63,7 @@ namespace Game
             Ghosts[2] = new Ghost(new Color(255, 0, 200));
             Ghosts[3] = new Ghost(new Color(255, 200, 0));
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
+            GhostCollisionMap = new Image("Content/Pacman/GhostCollisionMap.png");
             BeginScreen = new SSprite(new Texture("Content/Pacman/BGscreenpm.png"));
 
         }
@@ -210,6 +212,11 @@ namespace Game
 
                     }
                 }
+
+                foreach(Ghost ghost in Ghosts)
+                {
+                    ghost.Move();
+                }
             }
         }
 
@@ -232,9 +239,6 @@ namespace Game
             return result;
         }
 
-
-
-        // 0 = W; 1 = A; 2 = S; 3 = D;
         public override void KeyInput(Keyboard.Key key)
         {
             if (key == Keyboard.Key.Return && !GameState)
@@ -249,23 +253,24 @@ namespace Game
             if (key == Keyboard.Key.A)
             {
                 WantedDirection = 1;
-                
+
             }
             if (key == Keyboard.Key.S)
             {
 
                 WantedDirection = 2;
-               
+
 
             }
             if (key == Keyboard.Key.D)
             {
                 WantedDirection = 3;
 
-                
+
             }
-            } 
-        public bool CheckCollision(float x, float y, float x2, float y2)
+        }
+
+        public static bool CheckCollision(float x, float y, float x2, float y2)
         {
             bool canMove = true;
             for (float xCheck = x; xCheck < x2; xCheck++)
@@ -283,7 +288,7 @@ namespace Game
         }
 
         // Point is 2px/2px color of a point is Color.Red;
-        public int CheckPoints()
+        public static int CheckPoints()
         {
             Image MapImage = Map.Texture.CopyToImage();
 

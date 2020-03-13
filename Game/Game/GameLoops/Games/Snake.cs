@@ -183,7 +183,7 @@ namespace Game
                 {
                     NewDirection = "up";
                 }
-            }             
+            }                
             else
             {
                 if(key == Keyboard.Key.Space)
@@ -196,8 +196,7 @@ namespace Game
                     ScoreHeadsUp.DisplayedString = "";
                     BackgroundMusic.Play();
                 }
-            }
-            
+            }            
         }
 
         public void SetScore() 
@@ -209,6 +208,7 @@ namespace Game
             ScoreNumber.SetPosition(Scoreboard.Position.X + Scoreboard.Texture.Size.X / 2 - ScoreNumber.GetGlobalBounds().Width / 2,
                 Scoreboard.Texture.Size.Y / 2 - ScoreNumber.GetGlobalBounds().Height / 2);
         }
+
         public void SnakeMove()
         {
             if (!bGame)
@@ -299,7 +299,9 @@ namespace Game
                 ScoreHeadsUp.Position = new SFML.System.Vector2f((Program.Texture.Size.X / 2), (Program.Texture.Size.Y / 2) + 15);
                 ResetScore();
 
-            } else
+            } 
+            
+            else
             {
                 for (int i = 1; i < SnakeList.Count; i++)
                 {

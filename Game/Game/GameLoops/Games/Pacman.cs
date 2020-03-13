@@ -59,8 +59,8 @@ namespace Game
             PacMan = new SSprite(Color.Yellow, 16, 12);
             GhostRed = new SSprite(Color.Red, 16, 12);
             GhostBlue = new SSprite(Color.Blue, 16, 12);
-            GhostPink = new SSprite(Color.Yellow, 16, 12);
-            GhostOrange = new SSprite(Color.Green, 16, 12);
+            GhostPink = new SSprite(new Color(255, 0, 200), 16, 12);
+            GhostOrange = new SSprite(new Color(255, 200, 0), 16, 12);
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
             BeginScreen = new SSprite(new Texture("Content/Pacman/BGscreenpm.png"));
 
@@ -75,11 +75,11 @@ namespace Game
             ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 18, 10);
             ScoreText.Color = new Color(173,216,230);
             PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
-            GhostBlue.Position = new Vector2f(90, Map.Position.Y + 100);
-            GhostOrange.Position = new Vector2f(200, Map.Position.Y + 100);
-            GhostPink.Position = new Vector2f(90, Map.Position.Y + 80);
-            GhostBlue.Position = new Vector2f(90, Map.Position.Y + 80);
-            GhostRed.Position = new Vector2f(90, Map.Position.Y + 100);
+            Vector2u jailPosition = new Vector2u(88, 80);
+            GhostBlue.Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
+            GhostPink.Position = new Vector2f(Map.Position.X + jailPosition.X + 16, Map.Position.Y + jailPosition.Y);
+            GhostRed.Position = new Vector2f(Map.Position.X + jailPosition.X + 32, Map.Position.Y + jailPosition.Y);
+            GhostOrange.Position = new Vector2f(Map.Position.X + jailPosition.X + 10, Map.Position.Y + jailPosition.Y - 20);
             BeginScreen.Position = Map.Position;
         }
 
@@ -143,7 +143,7 @@ namespace Game
 
                 if (WantedDirection == 0)
                 {
-                    if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
+                    if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 1f - Map.Position.Y,
                         PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
                     {
                         Direction = 0;
@@ -152,16 +152,16 @@ namespace Game
 
                 if (Direction == 0)
                 {
-                    if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 2 - Map.Position.Y,
+                    if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y - 1f - Map.Position.Y,
                         PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y))
                     {
-                        PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 2);
+                        PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y - 1f);
                     }
                 }
 
                 if (WantedDirection == 1)
                 {
-                    if (CheckCollision(PacMan.Position.X - 2 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                    if (CheckCollision(PacMan.Position.X - 1f - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
                        PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
                     {
                         Direction = 1;
@@ -169,16 +169,16 @@ namespace Game
                 }
                 if (Direction == 1)
                 {
-                    if (CheckCollision(PacMan.Position.X - 2 - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
+                    if (CheckCollision(PacMan.Position.X - 1f - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
                        PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
                     {
-                        PacMan.SetPosition(PacMan.Position.X - 2, PacMan.Position.Y);
+                        PacMan.SetPosition(PacMan.Position.X - 1f, PacMan.Position.Y);
                     }
                 }
                 if (WantedDirection == 2)
                 {
                     if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
-                        PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 2 - Map.Position.Y))
+                        PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 1f - Map.Position.Y))
                     {
                         Direction = 2;
                     }
@@ -186,16 +186,16 @@ namespace Game
                 if (Direction == 2)
                 {
                     if (CheckCollision(PacMan.Position.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y,
-                        PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 2 - Map.Position.Y))
+                        PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y + 1f - Map.Position.Y))
                     {
-                        PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y + 2);
+                        PacMan.SetPosition(PacMan.Position.X, PacMan.Position.Y + 1f);
                     }
                 }
 
                 if (WantedDirection == 3)
                 {
                     if (CheckCollision(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
-                    PacMan.Position.X + PacMan.Texture.Size.X + 2 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                    PacMan.Position.X + PacMan.Texture.Size.X + 1f - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
                     {
                         Direction = 3;
                     }
@@ -203,9 +203,9 @@ namespace Game
                 if (Direction == 3)
                 {
                     if (CheckCollision(PacMan.Position.X + PacMan.Texture.Size.X - Map.Position.X, PacMan.Position.Y - Map.Position.Y,
-                     PacMan.Position.X + PacMan.Texture.Size.X + 2 - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
+                     PacMan.Position.X + PacMan.Texture.Size.X + 1f - Map.Position.X, PacMan.Position.Y + PacMan.Texture.Size.Y - Map.Position.Y))
                     {
-                        PacMan.SetPosition(PacMan.Position.X + 2, PacMan.Position.Y);
+                        PacMan.SetPosition(PacMan.Position.X + 1f, PacMan.Position.Y);
 
                     }
                 }

@@ -26,6 +26,8 @@ namespace Game
         static SText LivesText;
         static int Lives;
 
+        static int BricksHit;
+
         static SSprite Paddle;
         static int PaddleSpeed;
 
@@ -49,6 +51,8 @@ namespace Game
         {
             Paddle = new SSprite(Color.White, 28, 6);
             PaddleSpeed = 0;
+
+            BricksHit = 0;
 
             Restart = new Button(new Texture("Content/Menu/MenuLeft.png"));
             Restart.Click += RestartClick;
@@ -231,6 +235,8 @@ namespace Game
                             newSpeed = BallSpeed.X;
                         }
                         BallSpeed = new Vector2i(newSpeed, -BallSpeed.Y);
+
+                        BricksHit = 0;
                     }
                 }
 
@@ -267,7 +273,20 @@ namespace Game
                             LevelOver = true;
                         }
 
-                        SetScore(Score + 1);
+                        BricksHit += 1;
+
+                        if(BricksHit < 5)
+                        {
+                            SetScore(Score + 1);
+                        }
+                        else
+                        {
+                            SetScore(Score + BricksHit);
+
+                            PickupText yellowScoreText = new PickupText("+ " + BricksHit.ToString());
+                            yellowScoreText.Position = new Vector2f(ScoreInfoText.Position.X + 3, ScoreInfoText.Position.Y - yellowScoreText.GetGlobalBounds().Height);
+                            yellowScoreText.Color = new Color(255, 255, 0);
+                        }
 
                         if ((BallSpeed.Y > 0 && Ball.Position.Y + Ball.Texture.Size.Y > brick.Position.Y && Ball.Position.Y + Ball.Texture.Size.Y - BallSpeed.Y <= brick.Position.Y) ||
                             (BallSpeed.Y < 0 && Ball.Position.Y < brick.Position.Y + brick.Texture.Size.Y && Ball.Position.Y - BallSpeed.Y >= brick.Position.Y + brick.Texture.Size.Y))
@@ -391,6 +410,8 @@ namespace Game
             SetLives(2);
             SetScore(0);
             SetLevel(1);
+
+            BricksHit = 0;
 
             BallMoving = false;
             BallMovingCountDown = 15;

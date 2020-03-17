@@ -260,9 +260,28 @@ namespace Game
                 Texture.Draw(sprite);
             }
 
-            foreach(Text text in Strings)
+            for(int i = 0; i < Strings.Count; i++)
             {
+                Text text = Strings[i];
+
                 Texture.Draw(text);
+
+                PickupText pickupText = text as PickupText;
+
+                if(pickupText != null)
+                {
+                    if(pickupText.Color.A > 5)
+                    {
+                        pickupText.Color = new Color(pickupText.Color.R, pickupText.Color.G, pickupText.Color.B, (byte)(pickupText.Color.A - 5));
+                        pickupText.SetPosition(pickupText.Position.X, pickupText.Position.Y - 1);
+                    }
+                    else
+                    {
+                        Strings.Remove(text);
+                        i -= 1;
+                        continue;
+                    }
+                }
             }
 
             Texture.Display();

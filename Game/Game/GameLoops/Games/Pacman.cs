@@ -16,7 +16,7 @@ namespace Game
         // 0 = W; 1 = A; 2 = S; 3 = D;
         // GameState 0=BeginScreen; 1=Game; 2=GameOver
         bool GameState = false;
-        bool Hunt;
+        public static bool Hunt;
         int WantedDirection = 1;
         int Direction = 1;
         int Life = 2;

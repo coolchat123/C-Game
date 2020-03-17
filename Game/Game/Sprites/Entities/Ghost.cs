@@ -36,6 +36,10 @@ namespace Game
                     Direction = rand.Next() % 4;
                 }
             }
+            else if (Pacman.Hunt)
+            {
+
+            }
 
             if (Direction == 0)
             {

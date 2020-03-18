@@ -15,11 +15,11 @@ namespace Game
     {
         // 0 = W; 1 = A; 2 = S; 3 = D;
         // GameState 0=BeginScreen; 1=Game; 2=GameOver
+        int Life = 3;
         bool GameState = false;
         public static bool Hunt;
         int WantedDirection = 1;
         int Direction = 1;
-        int Life = 2;
         static int Score = 0;
         static Color MapCol = new Color(252,188,176);
         static List<SSprite> SuperPoints;
@@ -28,6 +28,9 @@ namespace Game
         public static Image CollisionMap;
         public static Image GhostCollisionMap;
         static SSprite PacMan;
+        static SSprite Life1;
+        static SSprite Life2;
+        static SSprite Life3;
         static Ghost[] Ghosts;
         static SText ScoreText;
         static int ScoreP;
@@ -54,7 +57,7 @@ namespace Game
             SuperPoints.Add(SuperPoint2);
             SuperPoints.Add(SuperPoint3);
             SuperPoints.Add(SuperPoint4);
-            Map.Position = new Vector2f(10, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
+            Map.Position = new Vector2f(5, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
             Points = PointSet();
             PacMan = new SSprite(Color.Yellow, 16, 12);
             Ghosts = new Ghost[4];
@@ -62,6 +65,9 @@ namespace Game
             Ghosts[1] = new Ghost(Color.Blue);
             Ghosts[2] = new Ghost(new Color(255, 0, 200));
             Ghosts[3] = new Ghost(new Color(255, 200, 0));
+            Life1 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
+            Life2 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
+            Life3 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
             CollisionMap = new Image("Content/Pacman/CollisionMap.png");
             GhostCollisionMap = new Image("Content/Pacman/GhostCollisionMap.png");
             BeginScreen = new SSprite(new Texture("Content/Pacman/BGscreenpm.png"));
@@ -70,11 +76,14 @@ namespace Game
 
         public override void Initialise()
         {
-            SuperPoints[0].Position = new Vector2f(19, 17);
-            SuperPoints[1].Position = new Vector2f(Map.Texture.Size.X - 5, 17);
-            SuperPoints[2].Position = new Vector2f(19, Map.Texture.Size.Y - 35);
-            SuperPoints[3].Position = new Vector2f(Map.Texture.Size.X - 5 , Map.Texture.Size.Y - 35);
+            SuperPoints[0].Position = new Vector2f(14, 17);
+            SuperPoints[1].Position = new Vector2f(Map.Texture.Size.X - 9, 17);
+            SuperPoints[2].Position = new Vector2f(14, Map.Texture.Size.Y - 35);
+            SuperPoints[3].Position = new Vector2f(Map.Texture.Size.X - 9 , Map.Texture.Size.Y - 35);
             ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 18, 10);
+            Life1.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 2, 100);
+            Life2.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 14, 100);
+            Life3.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 26, 100);
             ScoreText.Color = new Color(173,216,230);
             PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
             Vector2u jailPosition = new Vector2u(88, 80);
@@ -102,6 +111,17 @@ namespace Game
             }
             else
             {
+                {
+                    if (PacMan.Position == Ghosts[0].Position) { 
+                        PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
+                        Life -= 1;
+                        if (Life == 0)
+                    {
+                            GameState = false;
+                    }
+                }
+                
+
                 ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X , 10);
                 BeginScreen.Position = new Vector2f(2555, 2555);
                 //Console.WriteLine(PacMan.Position);
@@ -120,9 +140,10 @@ namespace Game
                         Score += 20;
                     }
                 }
-                if (Points.Count == 0 && SuperPoints.Count == 0)
-                {
-                    GameState = false;
+                //if (Points.Count == 0 && SuperPoints.Count == 0)
+                //{
+                //}
+                
                 }
                 for (int i = 0; i < SuperPoints.Count; i++)
                 {
@@ -243,6 +264,7 @@ namespace Game
         {
             if (key == Keyboard.Key.Return && !GameState)
             {
+                //Points = PointSet();
                 GameState = true;
             }
             if (key == Keyboard.Key.W)

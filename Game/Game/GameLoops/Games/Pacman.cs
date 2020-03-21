@@ -99,6 +99,7 @@ namespace Game
         {
             if (!GameState)
             {
+
                 if (Score == 0)
                 {
                     ScoreText.Position = new Vector2f(2555, 2555);
@@ -107,24 +108,38 @@ namespace Game
                 {
                     ScoreText.Position = new Vector2f(Program.Texture.Size.X / 2 - ScoreText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - ScoreText.GetGlobalBounds().Height / 2 - 20);
                 }
+                Life = 3;
+                Life1.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 2, 100);
+                Life2.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 14, 100);
+                Life3.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 26, 100);
                 BeginScreen.Position = Map.Position;
             }
             else
             {
                 {
-                    if (PacMan.Position == Ghosts[0].Position) { 
+                    
+                    if (PacMan.Position == Ghosts[0].Position || PacMan.Position == Ghosts[1].Position || PacMan.Position == Ghosts[2].Position || PacMan.Position == Ghosts[3].Position) { 
                         PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
                         Life -= 1;
+                        Console.WriteLine(Life.ToString());
                         if (Life == 0)
-                    {
+                        {
+                            Life3.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 2, 1000);
                             GameState = false;
+                        }
+                        if (Life == 2)
+                        {
+                            Life1.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 2, 1000);
+                        }
+                        if (Life == 1)
+                        {
+                            Life2.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 2, 1000);
+                        }
                     }
-                }
                 
 
                 ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X , 10);
                 BeginScreen.Position = new Vector2f(2555, 2555);
-                //Console.WriteLine(PacMan.Position);
                 ScoreText.DisplayedString = Score.ToString();
                 for (int i = 0; i < Points.Count; i++)
                 {

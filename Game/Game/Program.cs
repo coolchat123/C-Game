@@ -19,6 +19,7 @@ namespace Game
             Breakout = 4
         }
 
+        static int volume;
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
         public static readonly Color TextureClearColour = Color.Black;
@@ -303,7 +304,7 @@ namespace Game
         {
             var sound = new Sound(new SoundBuffer(filename));
             sound.Loop = true;
-            sound.Volume = 50;
+            sound.Volume = volume;
             sound.Play();
         }
 
@@ -316,12 +317,11 @@ namespace Game
                 Window.Close();
                 Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Fullscreen);
                 Window.Closed += Window_Closed;
-
                 Fullscreen = true;
             }
             else
             {
-                if(Fullscreen)
+                if (Fullscreen)
                 {
                     Window.Close();
                     Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Close);

@@ -15,6 +15,8 @@ namespace Game
     {
         // 0 = W; 1 = A; 2 = S; 3 = D;
         // GameState 0=BeginScreen; 1=Game; 2=GameOver
+        bool GhostsEat = false;
+        int glob = 300;
         int Life = 3;
         bool GameState = false;
         public static bool Hunt;
@@ -63,8 +65,8 @@ namespace Game
             Ghosts = new Ghost[4];
             Ghosts[0] = new Ghost(Color.Red);
             Ghosts[1] = new Ghost(Color.Blue);
-            Ghosts[2] = new Ghost(new Color(255, 0, 200));
-            Ghosts[3] = new Ghost(new Color(255, 200, 0));
+            Ghosts[2] = new Ghost(new Color(Color.Red));
+            Ghosts[3] = new Ghost(new Color(Color.Green));
             Life1 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
             Life2 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
             Life3 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
@@ -87,16 +89,29 @@ namespace Game
             ScoreText.Color = new Color(173,216,230);
             PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
             Vector2u jailPosition = new Vector2u(88, 80);
-            Ghosts[0].Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
-            Ghosts[1].Position = new Vector2f(Map.Position.X + jailPosition.X + 16, Map.Position.Y + jailPosition.Y);
-            Ghosts[2].Position = new Vector2f(Map.Position.X + jailPosition.X + 32, Map.Position.Y + jailPosition.Y);
+            Ghosts[0].Position = new Vector2f(Map.Position.X + jailPosition.X + 0, Map.Position.Y + jailPosition.Y - 20);
+            Ghosts[1].Position = new Vector2f(Map.Position.X + jailPosition.X + 10, Map.Position.Y + jailPosition.Y - 20);
+            Ghosts[2].Position = new Vector2f(Map.Position.X + jailPosition.X + 10, Map.Position.Y + jailPosition.Y - 20);
             Ghosts[3].Position = new Vector2f(Map.Position.X + jailPosition.X + 10, Map.Position.Y + jailPosition.Y - 20);
-            Ghosts[3].Jailed = false;
+            Ghosts[3].Jailed = true;
+            Ghosts[2].Jailed = true;
+            Ghosts[1].Jailed = true;
             BeginScreen.Position = Map.Position;
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (GhostsEat == true)
+            {
+                glob -= 1;
+                Console.WriteLine(glob);
+            }
+            if (glob == 0)
+            {
+                GhostsEat = false;
+                Console.WriteLine("ur out of supermode");
+            }
+
             if (!GameState)
             {
 
@@ -118,7 +133,7 @@ namespace Game
             {
                 {
                     
-                    if (PacMan.Position == Ghosts[0].Position || PacMan.Position == Ghosts[1].Position || PacMan.Position == Ghosts[2].Position || PacMan.Position == Ghosts[3].Position) { 
+                    if (PacMan.Position == Ghosts[0].Position && GhostsEat == false || PacMan.Position == Ghosts[1].Position && GhostsEat == false || PacMan.Position == Ghosts[2].Position && GhostsEat == false || PacMan.Position == Ghosts[3].Position && GhostsEat == false) { 
                         PacMan.Position = new Vector2f(90, Map.Position.Y + 100);
                         Life -= 1;
                         Console.WriteLine(Life.ToString());
@@ -136,9 +151,30 @@ namespace Game
                             Life2.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 2, 1000);
                         }
                     }
-                
+                    Vector2u jailPosition = new Vector2u(88, 80);
+                    if (PacMan.Position == Ghosts[0].Position && GhostsEat == true)
+                    {
+                        Console.WriteLine("pog");
+                        Ghosts[0].Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
+                    }
+                    if (PacMan.Position == Ghosts[1].Position && GhostsEat == true)
+                    {
+                        Console.WriteLine("pog");
+                        Ghosts[1].Position = new Vector2f(Map.Position.X + jailPosition.X + 16, Map.Position.Y + jailPosition.Y);
+                    }
+                    if (PacMan.Position == Ghosts[2].Position && GhostsEat == true)
+                    {
+                        Console.WriteLine("pog");
+                        Ghosts[2].Position = new Vector2f(Map.Position.X + jailPosition.X + 32, Map.Position.Y + jailPosition.Y);
+                    }
+                    if (PacMan.Position == Ghosts[3].Position && GhostsEat == true)
+                    {
+                        Console.WriteLine("pog");
+                        Ghosts[3].Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
+                    }
 
-                ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X , 10);
+
+                    ScoreText.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X , 10);
                 BeginScreen.Position = new Vector2f(2555, 2555);
                 ScoreText.DisplayedString = Score.ToString();
                 for (int i = 0; i < Points.Count; i++)
@@ -165,9 +201,9 @@ namespace Game
                     if (PacMan.GetGlobalBounds().Intersects(SuperPoints[i].GetGlobalBounds()))
                     {
                         Console.WriteLine("test");
+                        SuperMode();
                         Program.Sprites.Remove(SuperPoints[i]);
                         SuperPoints.RemoveAt(i);
-                        SuperMode();
 
                     }
                 }
@@ -351,8 +387,10 @@ namespace Game
         public void SuperMode()
         {
             //if ghost = eaten Score += 200
-            bool GhostsEat = true;
+            GhostsEat = true;
             Score += 50;
+            Console.WriteLine("ur now in supermode");
+            glob = 300;
         }
     }
 }

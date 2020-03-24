@@ -13,6 +13,7 @@ namespace Game
 
         static SSprite Scoreboard;
 
+        //DB score
         static int Score;
 
         static SText ScoreNumber;

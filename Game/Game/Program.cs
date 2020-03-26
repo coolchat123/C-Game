@@ -4,6 +4,8 @@ using SFML;
 using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
 
 namespace Game
 {
@@ -17,6 +19,7 @@ namespace Game
             Pacman = 3,
             Breakout = 4
         }
+
 
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
@@ -49,6 +52,7 @@ namespace Game
             Window.Closed += Window_Closed;
 
             LoadNewGame(new Menu());
+            Database_Connection();
 
             // Create an instance of the Clock class provided by SFML.
             Clock clock = new Clock();
@@ -105,6 +109,17 @@ namespace Game
                     Draw(GameTime);
                 }
             }
+        }
+
+        public void Database_Connection()
+        {
+
+
+            string conts = "Data Source=(localdb)MSSQLLocalDB;Initial Catalog=C:/USERS/COOLC/DESKTOP/C-GAME/GAME/GAME/DATABASE/DATABASE1.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection co = new SqlConnection(conts);
+            co.Open();
+            Console.WriteLine("con is open");
+            co.Close();
         }
 
         private static void Window_Closed(object sender, EventArgs a)

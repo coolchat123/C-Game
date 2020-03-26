@@ -13,7 +13,6 @@ namespace Game.GameLoops.Games
 {
     class Database
     {
-        string conts = "Data Source=(LocalDB)/MSSQLLocalDB;AttachDbFilename=C:/xampp/htdocs/C-Game/Game/Game/Database/Database1.mdf;Integrated Security=True;Connect Timeout=30";
 
     }
 }

@@ -6,7 +6,7 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Audio;
 using System.Threading;
-
+using System.Data.SqlClient;
 
 
 namespace Game
@@ -98,7 +98,15 @@ namespace Game
             Ghosts[1].Jailed = true;
             BeginScreen.Position = Map.Position;
         }
+        static void Database_Connection()
+        {
 
+
+            string conts = "Data Source=(localdb)MSSQLLocalDB;Initial Catalog=C:/USERS/COOLC/DESKTOP/C-GAME/GAME/GAME/DATABASE/DATABASE1.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            SqlConnection co = new SqlConnection(conts);
+            Console.WriteLine("con is open");
+            co.Open();
+        }
         public override void Update(GameTime gameTime)
         {
             if (GhostsEat == true)
@@ -120,7 +128,9 @@ namespace Game
                     ScoreText.Position = new Vector2f(2555, 2555);
                 }
                 else
-                {
+                { 
+                    Database_Connection();
+                    Console.WriteLine("do i work is a question");
                     ScoreText.Position = new Vector2f(Program.Texture.Size.X / 2 - ScoreText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - ScoreText.GetGlobalBounds().Height / 2 - 20);
                 }
                 Life = 3;
@@ -154,22 +164,18 @@ namespace Game
                     Vector2u jailPosition = new Vector2u(88, 80);
                     if (PacMan.Position == Ghosts[0].Position && GhostsEat == true)
                     {
-                        Console.WriteLine("pog");
                         Ghosts[0].Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
                     }
                     if (PacMan.Position == Ghosts[1].Position && GhostsEat == true)
                     {
-                        Console.WriteLine("pog");
                         Ghosts[1].Position = new Vector2f(Map.Position.X + jailPosition.X + 16, Map.Position.Y + jailPosition.Y);
                     }
                     if (PacMan.Position == Ghosts[2].Position && GhostsEat == true)
                     {
-                        Console.WriteLine("pog");
                         Ghosts[2].Position = new Vector2f(Map.Position.X + jailPosition.X + 32, Map.Position.Y + jailPosition.Y);
                     }
                     if (PacMan.Position == Ghosts[3].Position && GhostsEat == true)
                     {
-                        Console.WriteLine("pog");
                         Ghosts[3].Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
                     }
 

@@ -103,9 +103,7 @@ namespace Game
         }
         static void Database_Connection()
         {
-
-
-            string conts = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Scores;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            string conts = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SteenboyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             co = new SqlConnection(conts);
             Console.WriteLine("con is open");
             co.Open();
@@ -153,6 +151,13 @@ namespace Game
                         {
                             Life3.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 2, 1000);
                             GameState = false;
+
+                            SqlCommand command;
+                            string sqlQuery = "Insert into Highscores(Pacman) values (@score)";
+                            command = new SqlCommand(sqlQuery, co);
+                            command.Parameters.AddWithValue("@score", Score);
+                            command.ExecuteNonQuery();
+                            command.Dispose();
                         }
                         if (Life == 2)
                         {

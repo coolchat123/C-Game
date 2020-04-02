@@ -17,3 +17,5 @@ bld/
 
 # Other
 untitled.png
+*.mdf
+*.ldf

@@ -15,6 +15,7 @@ namespace Game
     {
         // 0 = W; 1 = A; 2 = S; 3 = D;
         // GameState 0=BeginScreen; 1=Game; 2=GameOver
+        static SqlConnection co;
         bool GhostsEat = false;
         int glob = 300;
         int Life = 3;
@@ -43,6 +44,8 @@ namespace Game
 
         public override void LoadContent()
         {
+
+            Database_Connection();
             Hunt = false;
             // 1 point = 20 points
             // eat ghost = 60 points
@@ -102,8 +105,8 @@ namespace Game
         {
 
 
-            string conts = "Data Source=(localdb)MSSQLLocalDB;Initial Catalog=C:/USERS/COOLC/DESKTOP/C-GAME/GAME/GAME/DATABASE/DATABASE1.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            SqlConnection co = new SqlConnection(conts);
+            string conts = "Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = C:\\Users\\Coolc\\Desktop\\C - Game/Game\\Game\\Database\\Database1.mdf; Integrated Security = True; Connect Timeout = 30";
+            co = new SqlConnection(conts);
             Console.WriteLine("con is open");
             co.Open();
         }
@@ -129,7 +132,6 @@ namespace Game
                 }
                 else
                 { 
-                    Database_Connection();
                     Console.WriteLine("do i work is a question");
                     ScoreText.Position = new Vector2f(Program.Texture.Size.X / 2 - ScoreText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - ScoreText.GetGlobalBounds().Height / 2 - 20);
                 }
@@ -332,7 +334,6 @@ namespace Game
             if (key == Keyboard.Key.A)
             {
                 WantedDirection = 1;
-
             }
             if (key == Keyboard.Key.S)
             {

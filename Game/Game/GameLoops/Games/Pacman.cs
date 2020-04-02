@@ -105,7 +105,7 @@ namespace Game
         {
 
 
-            string conts = "Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = C:\\Users\\Coolc\\Desktop\\C - Game/Game\\Game\\Database\\Database1.mdf; Integrated Security = True; Connect Timeout = 30";
+            string conts = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Scores;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             co = new SqlConnection(conts);
             Console.WriteLine("con is open");
             co.Open();

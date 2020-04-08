@@ -30,6 +30,9 @@ namespace Game
         public static Image CollisionMap;
         public static Image GhostCollisionMap;
         static SSprite PacMan;
+        static SSprite PacManUp;
+        static SSprite PacManDown;
+        static SSprite PacManL;
         static SSprite Life1;
         static SSprite Life2;
         static SSprite Life3;
@@ -43,6 +46,10 @@ namespace Game
 
         public override void LoadContent()
         {
+            //Pacman = PacmanRight
+            PacManUp =  new SSprite(new Texture("Content/Pacman/PacmanUp.png"));
+            PacManL =  new SSprite(new Texture("Content/Pacman/PacmanL.png"));
+            //PacManDown = new SSprite(new Texture("Content/Pacman/PacmanDown.png"));
             Hunt = false;
             // 1 point = 20 points
             // eat ghost = 60 points
@@ -61,7 +68,7 @@ namespace Game
             SuperPoints.Add(SuperPoint4);
             Map.Position = new Vector2f(5, Program.Texture.Size.Y / 2 - Map.Texture.Size.Y / 2);
             Points = PointSet();
-            PacMan = new SSprite(Color.Yellow, 16, 12);
+            PacMan = new SSprite(new Texture("Content/Pacman/PacmanL.png"));
             Ghosts = new Ghost[4];
             Ghosts[0] = new Ghost(Color.Red);
             Ghosts[1] = new Ghost(Color.Blue);

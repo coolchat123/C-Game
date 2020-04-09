@@ -4,6 +4,8 @@ using SFML;
 using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
+using System.Data.SQLite;
+using System.IO;
 
 namespace Game
 {
@@ -17,6 +19,8 @@ namespace Game
             Pacman = 3,
             Breakout = 4
         }
+
+        public static bool HighscoreScreenUp;
 
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
@@ -45,6 +49,8 @@ namespace Game
 
         public static GameName ChangeGame = GameName.None;
 
+        public static SQLiteConnection SQLiteConn;
+
         // "Sprites" is a list of sprites that should be drawn.
         // It is updated by the GameLoop class and its child classes.
         public static List<Sprite> Sprites = new List<Sprite> { };
@@ -59,6 +65,23 @@ namespace Game
 
         static void Main(string[] args)
         {
+            // Open connection to SQLite Database.
+            string directory = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Environment.CurrentDirectory))), @"Database\Highscores.db");
+            SQLiteConn = new SQLiteConnection(@"URI=file:" + directory);
+            SQLiteConn.Open();
+
+            // Create tables.
+            var command = new SQLiteCommand(SQLiteConn);
+            command.CommandText = "CREATE TABLE IF NOT EXISTS breakout(time DATETIME2 PRIMARY KEY, name TEXT, score INT)";
+            command.ExecuteNonQuery();
+            command.CommandText = "CREATE TABLE IF NOT EXISTS pacman(time DATETIME2 PRIMARY KEY, name TEXT, score INT)";
+            command.ExecuteNonQuery();
+            command.CommandText = "CREATE TABLE IF NOT EXISTS snake(time DATETIME2 PRIMARY KEY, name TEXT, score INT)";
+            command.ExecuteNonQuery();
+            command.CommandText = "CREATE TABLE IF NOT EXISTS pong(time DATETIME2 PRIMARY KEY, name TEXT, score INT)";
+            command.ExecuteNonQuery();
+
+
             // Initialise the RenderWindow and RenderTexture.
             Texture = new RenderTexture(268, 200);
             Window = new RenderWindow(new VideoMode(Resolutions[0].X, Resolutions[0].Y), "Steenboy Color", Styles.Close);
@@ -68,6 +91,8 @@ namespace Game
             MyFont = new Font("Content/arialbd.ttf");
 
             LoadNewGame(new Menu());
+
+            HighscoreScreenUp = false;
 
             // Create an instance of the Clock class provided by SFML.
             Clock clock = new Clock();

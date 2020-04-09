@@ -11,7 +11,6 @@ namespace Game
     {
         static List<SSprite> Bricks;
 
-        static Button Restart;
         static Button Return;
 
         static SText ScoreInfoText;
@@ -53,11 +52,6 @@ namespace Game
             PaddleSpeed = 0;
 
             BricksHit = 0;
-
-            Restart = new Button(new Texture("Content/Menu/MenuLeft.png"));
-            Restart.Click += RestartClick;
-            Restart.MouseEnter += RestartEnter;
-            Restart.MouseLeave += RestartLeave;
             Return = new Button(new Texture("Content/Menu/MenuRight.png"));
             Return.Click += ReturnClick;
             Return.MouseEnter += ReturnEnter;
@@ -102,8 +96,7 @@ namespace Game
 
             Paddle.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X / 2 - Paddle.Texture.Size.X / 2, 176);
 
-            Restart.SetPosition(Program.Texture.Size.X - 2 - Restart.Texture.Size.X, Program.Texture.Size.Y - 2 - Restart.Texture.Size.Y);
-            Return.SetPosition(Restart.Position.X, 2);
+            Return.SetPosition(Program.Texture.Size.X - 2 - Return.Texture.Size.X, 2);
 
             Ball.SetPosition(Paddle.Position.X + Paddle.Texture.Size.X / 2 - Ball.Texture.Size.X / 2,
                 Paddle.Position.Y - Ball.Texture.Size.Y);
@@ -132,16 +125,10 @@ namespace Game
 
             if (GameOver)
             {
-                if(GameOverText.Position.Y > Program.Texture.Size.Y / 2 + 5)
+                if (!Program.HighscoreScreenUp)
                 {
-                    GameOverText.SetPosition(GameOverText.Position.X, GameOverText.Position.Y - (GameOverText.Position.Y - Program.Texture.Size.Y / 2) / 3);
+                    RestartGame();
                 }
-                else
-                {
-                    GameOverText.SetPosition(GameOverText.Position.X, Program.Texture.Size.Y / 2);
-                }
-
-                GameOverText2.SetPosition(GameOverText2.Position.X, GameOverText.Position.Y + GameOverText.GetGlobalBounds().Height);
             }
             else
             {
@@ -235,9 +222,9 @@ namespace Game
                             newSpeed = BallSpeed.X;
                         }
                         BallSpeed = new Vector2i(newSpeed, -BallSpeed.Y);
-
-                        BricksHit = 0;
                     }
+
+                    BricksHit = 0;
                 }
 
                 // If ball goes below screen, reset ball and remove life.
@@ -252,11 +239,15 @@ namespace Game
                     if (Lives == 0)
                     {
                         GameOver = true;
+
+                        HighscoreScreen highscoreScreen = new HighscoreScreen("breakout", Score);
                     }
                     else
                     {
                         SetLives(Lives - 1);
                     }
+
+                    BricksHit = 0;
                 }
 
                 foreach (SSprite brick in Bricks)
@@ -314,11 +305,6 @@ namespace Game
         {
             if (GameOver)
             {
-                // If we're game over and the signal is space, then restart.
-                if(key == Keyboard.Key.Space)
-                {
-                    Restart.PerformClick();
-                }
             }
             // If we're not game over
             else
@@ -343,6 +329,31 @@ namespace Game
                     }
                 }
             }
+        }
+
+        // RestartGame restarts the game.
+        public void RestartGame()
+        {
+            foreach (SSprite brick in Bricks)
+            {
+                Program.Sprites.Remove(brick);
+            }
+            Bricks.Clear();
+
+            GenerateLevel();
+
+            SetLives(2);
+            SetScore(0);
+            SetLevel(1);
+
+            BricksHit = 0;
+
+            BallMoving = false;
+            BallMovingCountDown = 15;
+
+            Paddle.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X / 2 - Paddle.Texture.Size.X / 2, 176);
+
+            GameOver = false;
         }
 
         public void SetScore(int newScore)
@@ -396,50 +407,23 @@ namespace Game
             }
         }
 
-        // Restart button
-        public void RestartClick(object sender, EventArgs e)
-        {
-            foreach (SSprite brick in Bricks)
-            {
-                Program.Sprites.Remove(brick);
-            }
-            Bricks.Clear();
-
-            GenerateLevel();
-
-            SetLives(2);
-            SetScore(0);
-            SetLevel(1);
-
-            BricksHit = 0;
-
-            BallMoving = false;
-            BallMovingCountDown = 15;
-
-            Paddle.SetPosition(WallTop.Position.X + WallTop.Texture.Size.X / 2 - Paddle.Texture.Size.X / 2, 176);
-
-            GameOver = false;
-        }
-        public void RestartEnter(object sender, EventArgs e)
-        {
-            Restart.SetScale(1.1f, SSprite.Pin.Middle);
-        }
-        public void RestartLeave(object sender, EventArgs e)
-        {
-            Restart.SetScale(1f, SSprite.Pin.Middle);
-        }
-
         // Return button
         public void ReturnClick(object sender, EventArgs e)
         {
         }
         public void ReturnEnter(object sender, EventArgs e)
         {
-            Return.SetScale(1.1f, SSprite.Pin.Middle);
+            if (!GameOver)
+            {
+                Return.SetScale(1.1f, SSprite.Pin.Middle);
+            }
         }
         public void ReturnLeave(object sender, EventArgs e)
         {
-            Return.SetScale(1f, SSprite.Pin.Middle);
+            if (!GameOver)
+            {
+                Return.SetScale(1f, SSprite.Pin.Middle);
+            }
         }
 
         bool[,] RandomLevel()

@@ -12,7 +12,7 @@ namespace Game
 
         public bool Jailed;
 
-        // 0 = W; 1 = A; 2 = S; 3 = D;
+        
         public int Direction;
 
         public Ghost() { }
@@ -40,7 +40,7 @@ namespace Game
             {
 
             }
-
+            // 0 = W; 1 = A; 2 = S; 3 = D;
             if (Direction == 0)
             {
                 if (Pacman.CheckCollision(this.Position.X - Pacman.Map.Position.X, this.Position.Y - 1f - Pacman.Map.Position.Y,

@@ -13,6 +13,7 @@ namespace Game
 {
     public class Pacman : GameLoop
     {
+       
         // 0 = W; 1 = A; 2 = S; 3 = D;
         // GameState 0=BeginScreen; 1=Game; 2=GameOver
         bool GhostsEat = false;
@@ -49,12 +50,15 @@ namespace Game
         static SText ScoreText;
         static int ScoreP;
         static SSprite BeginScreen;
-        string music = "Content/Pacman/eatpcS.wav";
-        
+        string eatm = "Content/Pacman/eatpcS.wav";
+        string beginm = "Content/Pacman/beginpcS.wav";
+        string diem = "Content/Pacman/diepcS.wav";
+
         public Pacman() : base() { }
 
         public override void LoadContent()
         {
+            PlaySound(beginm, true);
             Hunt = false;
             // 1 point = 20 points
             // eat ghost = 60 points
@@ -79,10 +83,10 @@ namespace Game
             PacManL = new SSprite(new Texture("Content/Pacman/PacmanL.png"));
             PacManDown = new SSprite(new Texture("Content/Pacman/PacmanDown.png"));
             Ghosts = new Ghost[4];
-            Ghosts[0] = new Ghost(new Texture("Content/Pacman/PacmanDown.png"));
-            Ghosts[1] = new Ghost(new Texture("Content/Pacman/PacmanDown.png"));
-            Ghosts[2] = new Ghost(new Texture("Content/Pacman/PacmanDown.png"));
-            Ghosts[3] = new Ghost(new Texture("Content/Pacman/PacmanDown.png"));
+            Ghosts[0] = new Ghost(new Texture("Content/Pacman/PacManLife.png"));
+            Ghosts[1] = new Ghost(new Texture("Content/Pacman/PacManLife.png"));
+            Ghosts[2] = new Ghost(new Texture("Content/Pacman/PacManLife.png"));
+            Ghosts[3] = new Ghost(new Texture("Content/Pacman/PacManLife.png"));
             Life1 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
             Life2 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
             Life3 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
@@ -158,6 +162,7 @@ namespace Game
                         Life -= 1;
                         if (Life == 0)
                         {
+                            PlaySound(diem, false);
                             Life3.Position = new Vector2f(Map.Position.X + Map.Texture.Size.X + 2, 1000);
                             GameState = false;
                         }
@@ -173,21 +178,25 @@ namespace Game
                     Vector2u jailPosition = new Vector2u(88, 80);
                     if (PacMan.Position == Ghosts[0].Position && GhostsEat == true)
                     {
+                        Score += 100;
                         Ghost1D = true;
                         Ghosts[0].Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
                     }
                     if (PacMan.Position == Ghosts[1].Position && GhostsEat == true)
                     {
+                        Score += 100;
                         Ghost2D = true;
                         Ghosts[1].Position = new Vector2f(Map.Position.X + jailPosition.X + 16, Map.Position.Y + jailPosition.Y);
                     }
                     if (PacMan.Position == Ghosts[2].Position && GhostsEat == true)
                     {
+                        Score += 100;
                         Ghost3D = true;
                         Ghosts[2].Position = new Vector2f(Map.Position.X + jailPosition.X + 32, Map.Position.Y + jailPosition.Y);
                     }
                     if (PacMan.Position == Ghosts[3].Position && GhostsEat == true)
                     {
+                        Score += 100;
                         Ghost4D = true;
                         Ghosts[3].Position = new Vector2f(Map.Position.X + jailPosition.X, Map.Position.Y + jailPosition.Y);
                     }
@@ -351,6 +360,7 @@ namespace Game
             if (key == Keyboard.Key.Return && !GameState)
             {
                 //Points = PointSet();
+                PlaySound(eatm, false);
                 GameState = true;
             }
             if (key == Keyboard.Key.W)
@@ -425,13 +435,28 @@ namespace Game
             Score += 50;
             glob = 300;
         }
+        public static void PlaySound(string filename, bool loop)
+        {
+            var sound = new Sound(new SoundBuffer(filename));
+            if (loop == false)
+            {
+                sound.Loop = false;
+            }
+            if (loop == true)
+            {
+                sound.Loop = true;
+            }
+            int volume = 50;
+            sound.Volume = volume;
+            sound.Play();
+            
+        }
         public void CheckIfDead()
         {
             Vector2u jailPosition = new Vector2u(88, 80);
             if (Ghost1D == true)
             {
                 Ghost1Timer -= 1;
-                Console.WriteLine(Ghost1Timer);
                 if (Ghost1Timer < 10)
                 {
                     Ghost1Timer = 280;
@@ -442,7 +467,7 @@ namespace Game
             if (Ghost2D == true)
             {
                 Ghost2Timer -= 1;
-                if (Ghost3Timer < 10)
+                if (Ghost2Timer < 10)
                 {
                     Ghost2Timer = 280;
                     Ghost2D = false;

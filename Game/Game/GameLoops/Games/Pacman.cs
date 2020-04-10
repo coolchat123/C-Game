@@ -83,10 +83,10 @@ namespace Game
             PacManL = new SSprite(new Texture("Content/Pacman/PacmanL.png"));
             PacManDown = new SSprite(new Texture("Content/Pacman/PacmanDown.png"));
             Ghosts = new Ghost[4];
-            Ghosts[0] = new Ghost(new Texture("Content/Pacman/PacManLife.png"));
-            Ghosts[1] = new Ghost(new Texture("Content/Pacman/PacManLife.png"));
-            Ghosts[2] = new Ghost(new Texture("Content/Pacman/PacManLife.png"));
-            Ghosts[3] = new Ghost(new Texture("Content/Pacman/PacManLife.png"));
+            Ghosts[0] = new Ghost(Color.Red);
+            Ghosts[1] = new Ghost(Color.Blue);
+            Ghosts[2] = new Ghost(new Color(Color.Red));
+            Ghosts[3] = new Ghost(new Color(Color.Green));
             Life1 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
             Life2 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));
             Life3 = new SSprite(new Texture("Content/Pacman/PacManLife.png"));

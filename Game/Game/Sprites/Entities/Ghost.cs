@@ -17,7 +17,7 @@ namespace Game
 
         public Ghost() { }
 
-        public Ghost(Texture SSprite) : base()
+        public Ghost(Color color) : base(color, 16, 12)
         {
             MoveList = new Vector2f[5];
             Jailed = true;

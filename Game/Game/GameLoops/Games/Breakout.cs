@@ -240,7 +240,7 @@ namespace Game
                     {
                         GameOver = true;
 
-                        HighscoreScreen highscoreScreen = new HighscoreScreen("breakout", Score);
+                        HighscoreScreen highscoreScreen = new HighscoreScreen("breakout", Score, Level);
                     }
                     else
                     {

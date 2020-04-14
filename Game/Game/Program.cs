@@ -72,7 +72,7 @@ namespace Game
 
             // Create tables.
             var command = new SQLiteCommand(SQLiteConn);
-            command.CommandText = "CREATE TABLE IF NOT EXISTS breakout(time DATETIME2 PRIMARY KEY, name TEXT, score INT)";
+            command.CommandText = "CREATE TABLE IF NOT EXISTS breakout(time DATETIME2 PRIMARY KEY, name TEXT, score INT, level INT)";
             command.ExecuteNonQuery();
             command.CommandText = "CREATE TABLE IF NOT EXISTS pacman(time DATETIME2 PRIMARY KEY, name TEXT, score INT)";
             command.ExecuteNonQuery();

@@ -18,13 +18,15 @@ namespace Game
         Button SubmitButton;
         string GameName;
         int Score;
+        int Level;
 
         public HighscoreScreen() { }
 
-        public HighscoreScreen(string game, int score, string group1 = null, string group2 = null) : base(new Texture("Content/HighscoreScreen/Background.png"), group1, group2)
+        public HighscoreScreen(string game, int score, int level = 0, string group1 = null, string group2 = null) : base(new Texture("Content/HighscoreScreen/Background.png"), group1, group2)
         {
             this.GameName = game;
             this.Score = score;
+            this.Level = level;
             if (Position.X == 0 && Position.Y == 0)
             {
                 Position = new Vector2f(Program.Texture.Size.X / 2 - Texture.Size.X / 2, Program.Texture.Size.Y / 2 - Texture.Size.Y / 2);
@@ -103,7 +105,8 @@ namespace Game
         public void SubmitScore(object sender, EventArgs e)
         {
             var command = new SQLiteCommand(Program.SQLiteConn);
-            command.CommandText = "INSERT INTO " + GameName + "(time, name, score) VALUES('" + DateTime.Now + "', '"+ Initials[0].DisplayedString + Initials[1].DisplayedString + Initials[2].DisplayedString + "', " + Score + ")";
+            bool level = GameName == "breakout";
+            command.CommandText = "INSERT INTO " + GameName + "(time, name, score" + (level ? ", level" : "") + ") VALUES('" + DateTime.Now + "', '"+ Initials[0].DisplayedString + Initials[1].DisplayedString + Initials[2].DisplayedString + "', " + Score + (level ? ", " + Level : " ") + ")";
             command.ExecuteNonQuery();
         }
 

@@ -82,7 +82,7 @@ namespace Game
             command.ExecuteNonQuery();
             command.CommandText = "CREATE TABLE IF NOT EXISTS snake(time DATETIME2 PRIMARY KEY, name TEXT, score INT)";
             command.ExecuteNonQuery();
-            command.CommandText = "CREATE TABLE IF NOT EXISTS pong(time DATETIME2 PRIMARY KEY, name TEXT, score INT)";
+            command.CommandText = "CREATE TABLE IF NOT EXISTS pong(time DATETIME2 PRIMARY KEY, nameleft TEXT, nameright TEXT, scoreleft INT, scoreright INT)";
             command.ExecuteNonQuery();
 
 

@@ -164,6 +164,7 @@ namespace Game
                     if (scoreLeft == 10)
                     {
                         GameOver = true;
+                        HighscoreScreenMP highscoreScreen = new HighscoreScreenMP("pong", scoreLeft, scoreRight);
                     }
                 }
 
@@ -176,29 +177,38 @@ namespace Game
                     if (scoreRight == 10)
                     {
                         GameOver = true;
-
+                        HighscoreScreenMP highscoreScreen = new HighscoreScreenMP("pong", scoreLeft, scoreRight);
                     }
 
                 }
             }
             else
             {
-                GameOverText.DisplayedString = "You Won";
-                RestartText.DisplayedString = "press space to restart";
-                ReturnText.DisplayedString = "press esc to return";
-                if (scoreLeft == 10)
+                if (Program.HighscoreScreenUp)
                 {
-                    GameOverText.SetPosition(Program.Texture.Size.X / 4 - GameOverText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - GameOverText.GetGlobalBounds().Height / 2);
-
-                    RestartText.SetPosition(Program.Texture.Size.X / 4 - RestartText.GetGlobalBounds().Width / 2, GameOverText.Position.Y  + GameOverText.GetGlobalBounds().Height);
-                    ReturnText.SetPosition(Program.Texture.Size.X / 4 - ReturnText.GetGlobalBounds().Width / 2, RestartText.Position.Y + RestartText.GetGlobalBounds().Height);
+                    GameOverText.DisplayedString = "";
+                    RestartText.DisplayedString = "";
+                    ReturnText.DisplayedString = "";
                 }
-                else 
+                else
                 {
-                    GameOverText.SetPosition(Program.Texture.Size.X / 4 * 3 - GameOverText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - GameOverText.GetGlobalBounds().Height / 2);
+                    GameOverText.DisplayedString = "You Won";
+                    RestartText.DisplayedString = "press space to restart";
+                    ReturnText.DisplayedString = "press esc to return";
+                    if (scoreLeft == 10)
+                    {
+                        GameOverText.SetPosition(Program.Texture.Size.X / 4 - GameOverText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - GameOverText.GetGlobalBounds().Height / 2);
 
-                    RestartText.SetPosition(Program.Texture.Size.X / 4 * 3 - RestartText.GetGlobalBounds().Width / 2, GameOverText.Position.Y + GameOverText.GetGlobalBounds().Height);
-                    ReturnText.SetPosition(Program.Texture.Size.X / 4 * 3 - ReturnText.GetGlobalBounds().Width / 2, RestartText.Position.Y + RestartText.GetGlobalBounds().Height);
+                        RestartText.SetPosition(Program.Texture.Size.X / 4 - RestartText.GetGlobalBounds().Width / 2, GameOverText.Position.Y + GameOverText.GetGlobalBounds().Height);
+                        ReturnText.SetPosition(Program.Texture.Size.X / 4 - ReturnText.GetGlobalBounds().Width / 2, RestartText.Position.Y + RestartText.GetGlobalBounds().Height);
+                    }
+                    else
+                    {
+                        GameOverText.SetPosition(Program.Texture.Size.X / 4 * 3 - GameOverText.GetGlobalBounds().Width / 2, Program.Texture.Size.Y / 2 - GameOverText.GetGlobalBounds().Height / 2);
+
+                        RestartText.SetPosition(Program.Texture.Size.X / 4 * 3 - RestartText.GetGlobalBounds().Width / 2, GameOverText.Position.Y + GameOverText.GetGlobalBounds().Height);
+                        ReturnText.SetPosition(Program.Texture.Size.X / 4 * 3 - ReturnText.GetGlobalBounds().Width / 2, RestartText.Position.Y + RestartText.GetGlobalBounds().Height);
+                    }
                 }
             }
         }
@@ -226,7 +236,10 @@ namespace Game
             {
                 if (GameOver)
                 {
-                    Restart();
+                    if (Program.HighscoreScreenUp)
+                    {
+                        Restart();
+                    }
                 }
                 else if (!BallMoving)
                 {
@@ -234,7 +247,6 @@ namespace Game
                    Ballspeed = new Vector2i(4, -2);
                 }
             }
-
         }
 
         public void Restart()

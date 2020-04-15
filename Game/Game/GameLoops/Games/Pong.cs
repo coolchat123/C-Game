@@ -236,7 +236,7 @@ namespace Game
             {
                 if (GameOver)
                 {
-                    if (Program.HighscoreScreenUp)
+                    if (!Program.HighscoreScreenUp)
                     {
                         Restart();
                     }
@@ -245,6 +245,16 @@ namespace Game
                 {
                     BallMoving = true;
                    Ballspeed = new Vector2i(4, -2);
+                }
+            }
+            if(key == Keyboard.Key.Escape)
+            {
+                if (GameOver)
+                {
+                    if (!Program.HighscoreScreenUp)
+                    {
+                        Program.ChangeGame = Program.GameName.Menu;
+                    }
                 }
             }
         }

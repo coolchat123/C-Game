@@ -6,6 +6,7 @@ using SFML.Window;
 using SFML.System;
 using System.Data.SQLite;
 using System.IO;
+using SFML.Audio;
 
 namespace Game
 {
@@ -17,7 +18,8 @@ namespace Game
             Pong = 1,
             Snake = 2,
             Pacman = 3,
-            Breakout = 4
+            Breakout = 4,
+            Menu = 5
         }
 
         public static bool HighscoreScreenUp;
@@ -25,7 +27,7 @@ namespace Game
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
         public static readonly Color TextureClearColour = Color.Black;
-        public static readonly Color WindowClearColour = Color.Black;
+        public static readonly Color WindowClearColour = Color.White;
 
         public static RenderTexture Texture;
         public static Vector2f TexturePosition;
@@ -56,6 +58,8 @@ namespace Game
         public static List<Sprite> Sprites = new List<Sprite> { };
 
         public static List<Text> Strings = new List<Text> { };
+
+        public static int sound = 33;
 
         // "RunningGame" is the GameLoop that is currently running.
         // GameLoop is an abstract class, so RunningGame can only ever be one of its child classes.
@@ -90,7 +94,7 @@ namespace Game
 
             MyFont = new Font("Content/arialbd.ttf");
 
-            LoadNewGame(new Menu());
+            LoadNewGame(new Snake());
 
             HighscoreScreenUp = false;
 
@@ -133,6 +137,9 @@ namespace Game
                             case GameName.Breakout:
                                 LoadNewGame(new Breakout());
                                 break;
+                            case GameName.Menu:
+                                LoadNewGame(new Menu());
+                                break;
                         }
 
                         ChangeGame = GameName.None;
@@ -174,6 +181,15 @@ namespace Game
                     }
                 }
             }
+        }
+
+        //to play a sound.
+        public static void PlaySound(string filename)
+        {
+            var sound = new Sound(new SoundBuffer(filename));
+            sound.Loop = true;
+            sound.Volume = 50;
+            sound.Play();
         }
 
         // Update is called once every tick from the game loop.
@@ -225,6 +241,8 @@ namespace Game
             {
                 LeftPressed = false;
             }
+
+
 
             // Check for keyboard input.
             if (Keyboard.IsKeyPressed(Keyboard.Key.A))
@@ -324,6 +342,7 @@ namespace Game
         {
             // Clear list of sprites.
             Sprites.Clear();
+            Strings.Clear();
             
             // Set our new GameLoop to run.
             RunningGame = gameLoop;
@@ -336,6 +355,10 @@ namespace Game
             foreach(SSprite sprite in Sprites)
             {
                 sprite.RealPosition = sprite.Position;
+            }
+            foreach(SText text in Strings)
+            {
+                text.RealPosition = text.Position;
             }
         }
 

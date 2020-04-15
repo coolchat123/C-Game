@@ -32,6 +32,10 @@ namespace Game
         static Button OptionFullscreen;
         static Button OptionWindow;
         static Button OptionReturn;
+        static Button Geluid0;
+        static Button Geluid1;
+        static Button Geluid2;
+        static Button Geluid3;
 
         static Button GalleryReturn;
 
@@ -113,6 +117,22 @@ namespace Game
             OptionWindow.Click += OptionWindowClick;
             OptionWindow.MouseEnter += OptionWindowEnter;
             OptionWindow.MouseLeave += OptionWindowLeave;
+            Geluid0 = new Button(new Texture("Content/Menu/geluid0.png"), "options");
+            Geluid1 = new Button(new Texture("content/menu/geluid1.png"), "options");
+            Geluid2 = new Button(new Texture("content/menu/geluid2.png"), "options");
+            Geluid3 = new Button(new Texture("content/menu/geluid3.png"), "options");
+            Geluid0.Click += Geluid0Click;
+            Geluid0.MouseEnter += Geluid0Enter;
+            Geluid0.MouseLeave += Geluid0Leave;
+            Geluid1.Click += Geluid1Click;
+            Geluid1.MouseEnter += Geluid1Enter;
+            Geluid1.MouseLeave += Geluid1Leave;
+            Geluid2.Click += Geluid2Click;
+            Geluid2.MouseEnter += Geluid2Enter;
+            Geluid2.MouseLeave += Geluid2Leave;
+            Geluid3.Click += Geluid3Click;
+            Geluid3.MouseEnter += Geluid3Enter;
+            Geluid3.MouseLeave += Geluid3Leave;
 
             // Load all SSprites of the gallery menu and add functions to events.
             GalleryReturn = new Button(new Texture("Content/Menu/MenuLeft.png"), "options");
@@ -149,6 +169,10 @@ namespace Game
             OptionReturn.SetPosition(MenuGallery.Position.X - Program.Texture.Size.X, MenuGallery.Position.Y);
             OptionFullscreen.SetPosition(-Program.Texture.Size.X / 2 - OptionFullscreen.Texture.Size.X - 2, OptionResolution.Position.Y - OptionFullscreen.Texture.Size.Y - 4); ;
             OptionWindow.SetPosition(-Program.Texture.Size.X / 2 + 2, OptionFullscreen.Position.Y);
+            Geluid0.SetPosition(-Program.Texture.Size.X / 2 - 95, OptionFullscreen.Position.Y + 75);
+            Geluid1.SetPosition(-Program.Texture.Size.X / 2 - 45, OptionFullscreen.Position.Y + 75);
+            Geluid2.SetPosition(-Program.Texture.Size.X / 2 + 5, OptionFullscreen.Position.Y + 75);
+            Geluid3.SetPosition(-Program.Texture.Size.X / 2 + 55, OptionFullscreen.Position.Y + 75);
 
             // Place all SSprites on the gallery menu.
             GalleryReturn.SetPosition(MenuOptions.Position.X + Program.Texture.Size.X, MenuOptions.Position.Y);
@@ -400,6 +424,62 @@ namespace Game
             OptionWindow.SetScale(1.1f, SSprite.Pin.MiddleLeft);
         }
         public void OptionWindowLeave(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1f, SSprite.Pin.MiddleLeft);
+        }
+
+        public void Geluid0Click(object sender, EventArgs e)
+        {
+            Program.sound = 0;
+            Console.Write("New sound: {0}", Program.sound);
+        }
+        public void Geluid0Enter(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1.1f, SSprite.Pin.MiddleLeft);
+        }
+        public void Geluid0Leave(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1f, SSprite.Pin.MiddleLeft);
+        }
+
+        public void Geluid1Click(object sender, EventArgs e)
+        {
+            Program.sound = 33;
+            Console.Write("New sound: {0}", Program.sound);
+        }
+        public void Geluid1Enter(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1.1f, SSprite.Pin.MiddleLeft);
+        }
+        public void Geluid1Leave(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1f, SSprite.Pin.MiddleLeft);
+        }
+
+        public void Geluid2Click(object sender, EventArgs e)
+        {
+            Program.sound = 67;
+            Console.Write("New sound: {0}", Program.sound);
+        }
+        public void Geluid2Enter(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1.1f, SSprite.Pin.MiddleLeft);
+        }
+        public void Geluid2Leave(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1f, SSprite.Pin.MiddleLeft);
+        }
+
+        public void Geluid3Click(object sender, EventArgs e)
+        {
+            Program.sound = 100;
+            Console.Write("New sound: {0}", Program.sound);
+        }
+        public void Geluid3Enter(object sender, EventArgs e)
+        {
+            OptionWindow.SetScale(1.1f, SSprite.Pin.MiddleLeft);
+        }
+        public void Geluid3Leave(object sender, EventArgs e)
         {
             OptionWindow.SetScale(1f, SSprite.Pin.MiddleLeft);
         }

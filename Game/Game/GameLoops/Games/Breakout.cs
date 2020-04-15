@@ -410,6 +410,7 @@ namespace Game
         // Return button
         public void ReturnClick(object sender, EventArgs e)
         {
+            Program.ChangeGame = Program.GameName.Menu;
         }
         public void ReturnEnter(object sender, EventArgs e)
         {

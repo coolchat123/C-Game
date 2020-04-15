@@ -94,7 +94,7 @@ namespace Game
 
             MyFont = new Font("Content/arialbd.ttf");
 
-            LoadNewGame(new Snake());
+            LoadNewGame(new Menu());
 
             HighscoreScreenUp = false;
 

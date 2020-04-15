@@ -38,8 +38,6 @@ namespace Game
 
         static List<SSprite> SnakeList;
 
-        static SText ScoreHeadsUp;
-
         static Sound BackgroundMusic;
 
         public Snake() : base() { }
@@ -110,7 +108,16 @@ namespace Game
                 GameOver();
 
             if (!bGame)
-                return;
+            {
+                if (!Program.HighscoreScreenUp)
+                {
+                    Restart();
+                }
+                else
+                {
+                    return;
+                }
+            }
 
             if (Timer == 0) 
             {
@@ -187,17 +194,17 @@ namespace Game
             }                
             else
             {
-                if(key == Keyboard.Key.Space)
-                {
-                    SSprite SnakeBody = new SSprite(new Texture("content/snake/snakeHead.png"));
-                    SnakeBody.Position = new SFML.System.Vector2f(110, 90);
-                    SnakeList.Add(SnakeBody);
-                    bGame = true;
-                    GameOverText.DisplayedString = "";
-                    ScoreHeadsUp.DisplayedString = "";
-                    BackgroundMusic.Play();
-                }
             }            
+        }
+
+        public void Restart()
+        {
+            SSprite SnakeBody = new SSprite(new Texture("content/snake/snakeHead.png"));
+            SnakeBody.Position = new SFML.System.Vector2f(110, 90);
+            SnakeList.Add(SnakeBody);
+            bGame = true;
+            GameOverText.DisplayedString = "";
+            BackgroundMusic.Play();
         }
 
         public void SetScore() 
@@ -223,25 +230,21 @@ namespace Game
             if (NewDirection == "left")
             {
                 SnakeList[0].SetPosition(SnakeList[0].Position.X-10, SnakeList[0].Position.Y);
-                Console.WriteLine(SnakeList[0].Position);
             }
 
             if (NewDirection == "down")
             {
                 SnakeList[0].SetPosition(SnakeList[0].Position.X, SnakeList[0].Position.Y + 10);
-                Console.WriteLine(SnakeList[0].Position);
             }
 
             if (NewDirection == "right")
             {
                 SnakeList[0].SetPosition(SnakeList[0].Position.X + 10, SnakeList[0].Position.Y);
-                Console.WriteLine(SnakeList[0].Position);
             }
 
             if (NewDirection == "up")
             {
                 SnakeList[0].SetPosition(SnakeList[0].Position.X, SnakeList[0].Position.Y - 10);
-                Console.WriteLine(SnakeList[0].Position);
             }
             Direction = NewDirection;
         }
@@ -293,11 +296,13 @@ namespace Game
 
                 playSound("content/snake/dead.wav");
 
-                GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
-                Color textColor = new Color(255, 255, 255);
-                GameOverText.Color = textColor;
-                ScoreHeadsUp = new SText("Your score: " + Score.ToString(), 12);
-                ScoreHeadsUp.Position = new SFML.System.Vector2f((Program.Texture.Size.X / 2), (Program.Texture.Size.Y / 2) + 15);
+            //    GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+            //    Color textColor = new Color(255, 255, 255);
+            //    GameOverText.Color = textColor;
+            //    ScoreHeadsUp = new SText("Your score: " + Score.ToString(), 12);
+            //    ScoreHeadsUp.Position = new SFML.System.Vector2f((Program.Texture.Size.X / 2), (Program.Texture.Size.Y / 2) + 15);
+
+                HighscoreScreen highscoreScreen = new HighscoreScreen("snake", Score);
                 ResetScore();
 
             } 
@@ -322,11 +327,13 @@ namespace Game
 
                         playSound("content/snake/dead.wav");
 
-                        GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
-                        Color textColor = new Color(255, 255, 255);
-                        GameOverText.Color = textColor;
-                        ScoreHeadsUp = new SText("Your score: " + Score.ToString(), 12);
-                        ScoreHeadsUp.Position = new SFML.System.Vector2f((Program.Texture.Size.X / 2), (Program.Texture.Size.Y / 2) + 15);
+                    //    GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
+                    //    Color textColor = new Color(255, 255, 255);
+                    //    GameOverText.Color = textColor;
+                    //    ScoreHeadsUp = new SText("Your score: " + Score.ToString(), 12);
+                    //    ScoreHeadsUp.Position = new SFML.System.Vector2f((Program.Texture.Size.X / 2), (Program.Texture.Size.Y / 2) + 15);
+
+                        HighscoreScreen highscoreScreen = new HighscoreScreen("snake", Score);
                         ResetScore();
                     }
                 }

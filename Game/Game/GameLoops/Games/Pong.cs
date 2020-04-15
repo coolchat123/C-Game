@@ -9,10 +9,10 @@ namespace Game
 {
     public class Pong : GameLoop
     {
-        static int scoreLeft = 0;
-        static int scoreRight = 0;
-        static SText scoreLText = new SText(scoreLeft.ToString(),11);
-        static SText scoreRText = new SText(scoreRight.ToString(), 11);
+        int scoreLeft = 0;
+        int scoreRight = 0;
+        SText scoreLText;
+        SText scoreRText;
 
         
         //int score = 100000;
@@ -62,7 +62,9 @@ namespace Game
             GameOverText = new SText("", 11);
             RestartText = new SText("", 11);
             ReturnText = new SText("", 11);
-            
+            scoreLText = new SText(scoreLeft.ToString(), 11);
+            scoreRText = new SText(scoreRight.ToString(), 11);
+
 
 
             for (int i = 0; i < 17; i++)
@@ -70,10 +72,10 @@ namespace Game
                 MiddleLine[i] = new SSprite(Color.White, 3, 3);
             }
             //scoreLText.DisplayedString = score.ToString();
-            scoreLText.Position = new Vector2f(67,50);
+            scoreLText.Position = new Vector2f(67, 40);
             scoreLText.Color = Color.White;
 
-            scoreRText.Position = new Vector2f(197, 50);
+            scoreRText.Position = new Vector2f(197, 40);
             scoreRText.Color = Color.White;
         }
 
@@ -253,6 +255,7 @@ namespace Game
                 {
                     if (!Program.HighscoreScreenUp)
                     {
+                        Console.WriteLine("test");
                         Program.ChangeGame = Program.GameName.Menu;
                     }
                 }
@@ -268,6 +271,8 @@ namespace Game
             BallMoving = false;
             scoreLeft = 0;
             scoreRight = 0;
+            scoreLText.DisplayedString = scoreLeft.ToString();
+            scoreRText.DisplayedString = scoreRight.ToString();
             Ballspeed = new Vector2i();
         }
     }

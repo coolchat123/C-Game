@@ -301,6 +301,10 @@ namespace Game
             {
                 RunningGame.KeyInput(Keyboard.Key.Z);
             }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
+            {
+                RunningGame.KeyInput(Keyboard.Key.Escape);
+            }
         }
 
         // Draw is called once every tick by the game loop.

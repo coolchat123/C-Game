@@ -296,12 +296,6 @@ namespace Game
 
                 playSound("content/snake/dead.wav");
 
-            //    GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
-            //    Color textColor = new Color(255, 255, 255);
-            //    GameOverText.Color = textColor;
-            //    ScoreHeadsUp = new SText("Your score: " + Score.ToString(), 12);
-            //    ScoreHeadsUp.Position = new SFML.System.Vector2f((Program.Texture.Size.X / 2), (Program.Texture.Size.Y / 2) + 15);
-
                 HighscoreScreen highscoreScreen = new HighscoreScreen("snake", Score);
                 ResetScore();
 
@@ -326,12 +320,6 @@ namespace Game
                         BackgroundMusic.Stop();
 
                         playSound("content/snake/dead.wav");
-
-                    //    GameOverText.SetPosition(Program.Texture.Size.X / 2, Program.Texture.Size.Y / 2);
-                    //    Color textColor = new Color(255, 255, 255);
-                    //    GameOverText.Color = textColor;
-                    //    ScoreHeadsUp = new SText("Your score: " + Score.ToString(), 12);
-                    //    ScoreHeadsUp.Position = new SFML.System.Vector2f((Program.Texture.Size.X / 2), (Program.Texture.Size.Y / 2) + 15);
 
                         HighscoreScreen highscoreScreen = new HighscoreScreen("snake", Score);
                         ResetScore();
